@@ -1,39 +1,37 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const addToCartBtns = document.querySelectorAll('.add-to-cart-btn');
-    const cartPopup = document.getElementById('cart-popup');
-    const cartItemsContainer = document.getElementById('cart-items');
-    let cart = [];
-  
-    addToCartBtns.forEach((btn, index) => {
-      btn.addEventListener('click', () => {
-        // Get the product name and price
-        const productName = btn.previousElementSibling.innerText.split(' - ')[0];
-        const productPrice = btn.previousElementSibling.innerText.split(' - ')[1];
-        
-        // Add to cart array
-        cart.push({ name: productName, price: productPrice });
-  
-        // Update cart popup
-        updateCartPopup();
-      });
+document.addEventListener("DOMContentLoaded", function () {
+  var userName = localStorage.getItem("felhasznaloNev");
+
+  // Ha van felhasználó név, akkor változtassuk meg a bejelentkezés linket
+  if (userName) {
+    var userLink = document.getElementById("user-name");
+    userLink.textContent = userName; // A link szövege a felhasználó neve
+    userLink.href = "#"; // Ne vezessen sehova
+
+    // Modális ablak megjelenítése a felhasználó nevére kattintáskor
+    userLink.addEventListener("click", function () {
+      var modal = document.getElementById("logoutModal");
+      modal.style.display = "flex"; // Flex használata a modal középre helyezéséhez
     });
-  
-    function updateCartPopup() {
-      if (cart.length > 0) {
-        cartItemsContainer.innerHTML = cart.map(item => `<p>${item.name} - ${item.price}</p>`).join('');
-      } else {
-        cartItemsContainer.innerHTML = 'Nincs termék a kosárban';
-      }
-    }
-  
-    // Show cart popup
-    document.getElementById('cart-icon').addEventListener('click', () => {
-      cartPopup.style.display = 'block';
+
+    // Kijelentkezés gomb
+    var logoutConfirmBtn = document.getElementById("logoutConfirm");
+    logoutConfirmBtn.addEventListener("click", function () {
+      // Töröljük a felhasználói adatokat a localStorage-ból
+      localStorage.removeItem("felhasznaloNev");
+
+      // Frissítsük az oldalt, hogy visszatérjen a "Bejelentkezés" szöveg
+      window.location.reload();
     });
-  
-    // Close cart popup
-    document.getElementById('close-btn').addEventListener('click', () => {
-      cartPopup.style.display = 'none';
+
+    // Mégse gomb (bezárja a modális ablakot)
+    var logoutCancelBtn = document.getElementById("logoutCancel");
+    logoutCancelBtn.addEventListener("click", function () {
+      var modal = document.getElementById("logoutModal");
+      modal.style.display = "none"; // Modális ablak bezárása
     });
-  });
-  
+  } else {
+    var loginLink = document.getElementById("user-name");
+    loginLink.textContent = "Bejelentkezés";
+    loginLink.href = "../bejelentkezes/bejelentkezes.html";
+  }
+});

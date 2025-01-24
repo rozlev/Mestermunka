@@ -13,18 +13,27 @@
       <ul>
         <li><a href="../index.html">Főoldal</a></li>
         <li><a href="../palinka_blog/index.html">Pálinka készítés</a></li>
-        <li><a href="../bejelentkezes/bejelentkezes.html">Bejelentkezés</a></li>
-        <li><a href="kosar/index.html" id="cart-link">Kosár</a></li> 
+        <li><a href="#" id="user-name"></a></li>
+        <li><a href="kosar/index.html" id="cart-link">Kosár</a></li>
       </ul>
     </nav>
   </header>
 
-  <main>
+  <div id="logoutModal" class="modal">
+    <div class="modal-content">
+      <h2>Kijelentkezés</h2>
+      <p>Biztosan ki szeretnél jelentkezni?</p>
+      <button id="logoutConfirm">Igen</button>
+      <button id="logoutCancel">Mégse</button>
+    </div>
+  </div>
+  
+
+  <main> 
     <section id="webshop">
       <h2>Pálinkák</h2>
       <div class="container">
         <div class="product-container">
-          <!-- Pálinkák listája -->
           <div class="product">
             <img src="img/malna-removebg-preview.png" alt="Málna Pálinka">
             <p>Málna Pálinka - 44% - 2200 HUF</p>
@@ -41,7 +50,7 @@
              <button class="add-to-cart-btn">Kosárba</button>
           </div>
           <div class="product">
-            <img src="img/cseresznye-removebg-preview.png" alt="Vadrózsa Pálinka">
+            <img src="img/cseresznye-removebg-preview.png" alt="Cseresznye Pálinka">
             <p>Cseresznye Pálinka - 38% - 2000 HUF</p>
              <button class="add-to-cart-btn">Kosárba</button>
           </div>
@@ -54,9 +63,7 @@
             <img src="img/kajszi-removebg-preview.png" alt="Kajszi Pálinka">
             <p>Kajszi Pálinka - 49% - 2600 HUF</p>
              <button class="add-to-cart-btn">Kosárba</button>
-            
           </div>
-         
           <div class="product">
             <img src="img/tok-removebg-preview.png" alt="Tök Pálinka">
             <p>Tök Pálinka - 43% - 2400 HUF</p>
@@ -72,41 +79,25 @@
             <p>Fekete Ribizli Pálinka - 45% - 2300 HUF</p>
              <button class="add-to-cart-btn">Kosárba</button>
           </div>
-
+        </div>
+      </div>
+    </section>
   </main>
-
-</section>
 
   <footer>
     <div class="footer-container">
       <div class="footer-logo">
         <img src="../img/logo.png" alt="A pálinka mesterei logo" id="logo">
       </div>
-
       <div class="footer-contact">
         <h3>Elérhetőség</h3>
         <p>Telefonszám: +36 30 546 5432</p>
         <p>Email: rozlev404@hengersor.hu</p>
         <p>Hely: Ócsa Kossuth Lajos utca 114</p>
       </div>
-
-      <div class="image-gallery">
-        <div class="image-item">
-          <img src="image1.jpg" alt="Kovács Bence">
-          <p>Kovács Bence</p>
-        </div>
-        <div class="image-item">
-          <img src="image2.jpg" alt="Rózsa Levente">
-          <p>Rózsa Levente</p>
-        </div>
-        <div class="image-item">
-          <img src="image3.jpg" alt="Németh Bence">
-          <p>Németh Bence</p>
-        </div>
-      </div>
     </div>
   </footer>
 
-  <script src="script.js"></script>
+  <script src="java.js"></script>
 </body>
 </html>
