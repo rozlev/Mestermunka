@@ -5,21 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>A pálinka mesterei</title>
   <link rel="stylesheet" href="styles.css">
-<link rel="stylesheet" href="..//../FRONTEND/bootstrap/css/bootstrap-mi">
+  <link rel="stylesheet" href="..//../FRONTEND/bootstrap/css/bootstrap-mi">
 </head>
 <body>
   <header>
-   
     <h1>A pálinka mesterei</h1>
     <nav>
       <ul>
         <li><a href="webshop/index.html">Weboldal</a></li>
-        
         <li><a href="palinka_blog/index.html">Pálinka készítés</a></li>
-        <li><a href="bejelentkezes/bejelentkezes.html">Bejelentkezés</a></li>
+        <li id="felhasznaloNev">
+          <a href="bejelentkezes/bejelentkezes.html" id="loginLink">Bejelentkezés</a>
+        </li>
       </ul>
     </nav>
   </header>
+  
   <section id="udvozlo">
     <h2>Üdvözöljük a weboldalon!</h2>
     <p>
@@ -27,6 +28,7 @@
       Ismerkedjen meg a falusi élet különleges szokásaival, és tudjon meg többet erről az ősi mesterségről.
     </p>
   </section>
+
   <main>
     <section id="bemutatkozas">
       <h2>Bemutatkozás</h2>
@@ -46,9 +48,8 @@
         felélesztheti a régi tradíciókat a fiatalok körében.
       </p>
     </section>
-
-   
   </main>
+
   <section id="images-with-text">
     <div class="content-item-left">
       <img src="img/szollo.jfif" alt="Szőlő kép" class="rounded-image">
@@ -81,7 +82,6 @@
     </div>
   </section>
   
- 
   <footer>
     <div class="footer-container">
       <!-- Logo (ha szükséges) -->
@@ -115,7 +115,8 @@
     </div>
   </footer>
   
-  
+  <!-- Linkeljük a JavaScript fájlt -->
+  <script src="java.js"></script>
 
 </body>
 </html>

@@ -1,36 +1,35 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     // Az űrlap beküldése
-    document.getElementById("loginForm").addEventListener("submit", function(event){
-        event.preventDefault(); // Megakadályozzuk az alapértelmezett űrlap elküldést
-        
-        // űrlap adatainak lekérése
+    document.getElementById("loginForm").addEventListener("submit", function (event) {
+        event.preventDefault(); // Alapértelmezett működés megakadályozása
+
+        // Adatok lekérése az űrlapból
         var email = document.getElementById("email").value;
         var password = document.getElementById("password").value;
-        
-        // FormData létrehozása az adatok küldésére
+
+        // FormData objektum
         var formData = new FormData();
         formData.append("email", email);
         formData.append("password", password);
-        
+
         // AJAX kérés
         var xhr = new XMLHttpRequest();
         xhr.open("POST", "bejelentkezes.php", true);
-        
-        // A válasz kezelése
-        xhr.onload = function() {
+        xhr.onload = function () {
             var response = JSON.parse(xhr.responseText);
-            if(response.status === "success") {
-                // Ha sikeres a bejelentkezés, átirányítjuk a felhasználót
-                window.location.href = "../index.html"; // Itt átirányítjuk a főoldalra vagy bárhová
+            if (response.status === "success") {
+                // Felhasználó név elmentése a localStorage-be
+                localStorage.setItem("felhasznaloNev", response.name);
+
+                // Átirányítás a főoldalra
+                window.location.href = "../index.html";
             } else {
-                // Ha hiba történt, megjelenítjük a hibaüzenetet
+                // Hiba megjelenítése
                 var errorMessageDiv = document.getElementById("errorMessage");
                 errorMessageDiv.innerText = response.message;
-                errorMessageDiv.style.display = "block"; // Megjelenítjük a hibaüzenetet
+                errorMessageDiv.style.display = "block";
             }
         };
-        
-        // Kérés küldése
         xhr.send(formData);
     });
 });
