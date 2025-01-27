@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bejelentkezés</title>
+    <link rel="stylesheet" href="bejel.css">
+</head>
+<body>
+  <div class="screen-1">
+    <!-- Logo Image -->
+    <img class="logo" src="../img/logo.png" alt="Logo" />
+    
+    <!-- Bejelentkezési űrlap -->
+    <form id="loginForm" method="POST">
+        <div class="email">
+            <label for="email">E-mail cím</label>
+            <div class="sec-2">
+                <ion-icon name="mail-outline"></ion-icon>
+                <input type="email" id="email" name="email" placeholder="Username@gmail.com" required/>
+            </div>
+        </div>
+        
+        <div class="password">
+            <label for="password">Jelszó</label>
+            <div class="sec-2">
+                <ion-icon name="lock-closed-outline"></ion-icon>
+                <input class="pas" type="password" id="password" name="password" placeholder="············" required/>
+                <ion-icon class="show-hide" name="eye-outline"></ion-icon>
+            </div>
+        </div>
+        
+        <button type="submit" class="login">Bejelentkezés</button>
+    </form>
+
+    <!-- Hibaüzenet megjelenítése -->
+    <div class="error-message" id="errorMessage" style="display:none;"></div>
+
+    <div class="footer">
+        <span><a href="../regisztracio/index.html">Regisztrálás</a></span><span>Elfelejtette a jelszavát?</span>
+    </div>
+  
+    <a href="../index.html" class="homepage-link">Főoldal</a>
+  </div>
+
+  <!-- Bejelentkezéshez szükséges JavaScript fájl betöltése -->
+  <script src="bejelentkezes.js"></script>
+</body>
+</html>

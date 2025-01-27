@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A pálinka mesterei</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="..//../FRONTEND/bootstrap/css/bootstrap-mi">
+</head>
+<body>
+  <header>
+    <h1>A pálinka mesterei</h1>
+    <nav>
+      <ul>
+        <li><a href="webshop/index.html">Weboldal</a></li>
+        <li><a href="palinka_blog/index.html">Pálinka készítés</a></li>
+        <li id="felhasznaloNev">
+          <a href="bejelentkezes/bejelentkezes.html" id="loginLink">Bejelentkezés</a>
+        </li>
+        <li><a href="jatek/index.html">Játék</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div id="logoutModal" class="modal">
+    <div class="modal-content">
+      <h2>Kijelentkezés</h2>
+      <p>Biztosan ki szeretnél jelentkezni?</p>
+      <button id="logoutConfirm">Igen</button>
+      <button id="logoutCancel">Mégse</button>
+    </div>
+  </div>
+  
+
+
+  <section id="udvozlo">
+    <h2>Üdvözöljük a weboldalon!</h2>
+    <p>
+      Örömmel üdvözöljük a látogatót! Fedezze fel a pálinkafőzés hagyományait és a legfontosabb lépéseket a készítésében. 
+      Ismerkedjen meg a falusi élet különleges szokásaival, és tudjon meg többet erről az ősi mesterségről.
+    </p>
+  </section>
+
+  <main>
+    <section id="bemutatkozas">
+      <h2>Bemutatkozás</h2>
+      <p>
+        A csapatunkba mindenki faluról származik, így közösen tapasztaltuk meg a hagyományos falusi életet és a helyi szokásokat. 
+        Egyik ilyen szokás, amit már sokszor átélhettünk, a pálinkafőzés. A falvakban egyre inkább háttérbe szorul ez a tevékenység, 
+        és mi úgy gondoltuk, hogy fontos megőrizni és továbbadni ezt a hagyományt.
+      </p>
+      <p>
+        A pálinkafőzés iránti érdeklődés egyre inkább csökken, különösen a fiatalok körében, pedig sok faluban még mindig a közösségi 
+        események része. Mi úgy véltük, hogy egy ilyen helyszín felkeresése és bemutatása nemcsak a hagyományok ápolása miatt fontos, 
+        hanem azért is, hogy felkeltsük az érdeklődést a pálinkafőzés iránt. Lehet, hogy ez a látogatás másokat is inspirálni fog arra, 
+        hogy felfedezzék a pálinkakészítés világát, és esetleg ők maguk is kipróbálják.
+      </p>
+      <p>
+        Ezért úgy éreztük, hogy ez egy aktuális téma, amely hozzájárulhat a kulturális örökség megőrzéséhez, és egyúttal újra 
+        felélesztheti a régi tradíciókat a fiatalok körében.
+      </p>
+    </section>
+  </main>
+
+  <section id="images-with-text">
+    <div class="content-item-left">
+      <img src="img/szollo.jfif" alt="Szőlő kép" class="rounded-image">
+      <p>
+        Bevezetjük Önt a pálinkafőzés művészetébe, ahol a szőlő az alapanyagok királya. 
+        A gondosan válogatott gyümölcs az alapja a kiváló minőségű pálinkának. 
+        Ismerje meg, hogyan befolyásolja az alapanyag minősége az ital aromáját és ízvilágát, és fedezze fel a legjobb szőlőfajtákat!
+        A szőlőpálinkák különlegessége abban rejlik, hogy gazdag, gyümölcsös karakterrel bírnak, amely egyedivé teszi őket.
+      </p>
+    </div>
+  
+    <div class="content-item-right">
+      <img src="img/palinkaprogram.jpg" alt="Pálinkaprogram" class="rounded-image">
+      <p>
+        Ismerje meg a pálinkaprogramokat, amelyek segítségével autentikus élményben lehet része. 
+        Programjaink során megismerheti a hagyományos pálinkafőzési eljárásokat, a modern technológia előnyeit és a helyi kultúrát. 
+        Részt vehet borkóstolással egybekötött túrákon, amelyek betekintést nyújtanak a pálinkakészítés titkaiba. 
+        Ez egy remek lehetőség, hogy közvetlen kapcsolatba kerüljön a mesterséggel, miközben élvezi a finom ízeket.
+      </p>
+    </div>
+  
+    <div class="content-item-right">
+      <p>
+        Fedezze fel a hagyományos pálinkás üvegek mögött rejlő történeteket és titkokat. 
+        Az üvegek formája és díszítése évszázadokon át tükrözte a helyi kultúrát és mesterségbeli tudást. 
+        A kézműves üvegek ma már igazi műalkotások, amelyek nemcsak tárolóeszközök, hanem a tradíciók hordozói is. 
+        Ismerje meg, hogyan készülnek ezek az egyedi darabok, és hogyan őrzik meg a pálinka aromáját és minőségét.
+      </p>
+      <img src="img/palinka.jpg" alt="Pálinkás üveg" class="rounded-image">
+    </div>
+  </section>
+  
+  <footer>
+    <div class="footer-container">
+      <!-- Logo (ha szükséges) -->
+      <div class="footer-logo">
+        <img src="img/logo.png" alt="A pálinka mesterei logo" id="logo">
+      </div>
+  
+      <!-- Elérhetőség szekció -->
+      <div class="footer-contact">
+        <h3>Elérhetőség</h3>
+        <p>Telefonszám: +36 30 546 5432</p>
+        <p>Email: rozlev404@hengersor.hu</p>
+        <p>Hely: Ócsa Kossuth Lajos utca 114</p>
+      </div>
+  
+      <!-- Képgaléria -->
+      <div class="image-gallery">
+        <div class="image-item">
+          <img src="image1.jpg" alt="Kovács Bence">
+          <p>Kovács Bence</p>
+        </div>
+        <div class="image-item">
+          <img src="image2.jpg" alt="Rózsa Levente">
+          <p>Rózsa Levente</p>
+        </div>
+        <div class="image-item">
+          <img src="image3.jpg" alt="Németh Bence">
+          <p>Németh Bence</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Linkeljük a JavaScript fájlt -->
+  <script src="java.js"></script>
+
+</body>
+</html>
