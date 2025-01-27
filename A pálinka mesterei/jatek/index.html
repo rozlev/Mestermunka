@@ -21,35 +21,19 @@
 <body>
     <canvas id="gameCanvas"></canvas>
     <script>
-        async function fetchPlayerName() {
-    try {
-        const response = await fetch('getPlayerName.php', {
-            method: 'GET',
-            credentials: 'include', // A sütik és session adatok küldése a kérésben
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            if (data.status === "success" && data.username) {
-                playerName = data.username; // Beállítjuk a kapott nevet
-                console.log(`Üdvözlünk, ${playerName}!`);
-            } else {
-                console.error(`Hiba az adatbázisból: ${data.message}`);
-            }
-        } else {
-            console.error(`Hiba a kérés során: ${response.status}`);
-        }
-    } catch (error) {
-        console.error('Hiba történt a név lekérése során:', error);
-    }
-}
-
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
         canvas.width = 800;
         canvas.height = 600;
 
         let playerName = "Névtelen Játékos"; // Alapértelmezett név, ha a backend nem ad vissza adatot
+
+        // Képek betöltése
+        const stickmanImage = new Image();
+        stickmanImage.src = "stickman.png";
+
+        const palinkaImage = new Image();
+        palinkaImage.src = "palinka.png";
 
         // Játékos adatok
         let player = {
@@ -58,9 +42,10 @@
             width: 50,
             height: 50,
             speed: 10,
-            direction: "right",
+            direction: "right", // Játékos iránya
             lives: 3,
-            isVisible: true
+            isVisible: true,
+            invulnerable: false
         };
 
         let bottle = {
@@ -105,13 +90,13 @@
             try {
                 const response = await fetch('getPlayerName.php', {
                     method: 'GET',
-                    credentials: 'include' // Session kezelés
+                    credentials: 'include'
                 });
 
                 if (response.ok) {
                     const data = await response.json();
                     if (data.status === "success") {
-                        playerName = data.username; // A backend visszaadja a nevet
+                        playerName = data.username;
                         console.log(`Üdvözlünk, ${playerName}!`);
                     } else {
                         console.error(data.message);
@@ -134,8 +119,14 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             // Játékos mozgása
-            if (keys["a"] && player.x > 0) player.x -= player.speed;
-            if (keys["d"] && player.x < canvas.width - player.width) player.x += player.speed;
+            if (keys["a"] && player.x > 0) {
+                player.x -= player.speed;
+                player.direction = "left";
+            }
+            if (keys["d"] && player.x < canvas.width - player.width) {
+                player.x += player.speed;
+                player.direction = "right";
+            }
             if (keys["w"] && player.y > 0) player.y -= player.speed;
             if (keys["s"] && player.y < canvas.height - player.height) player.y += player.speed;
 
@@ -161,10 +152,20 @@
             }
 
             for (let obstacle of obstacles) {
-                if (isColliding(player, obstacle)) {
+                if (isColliding(player, obstacle) && !player.invulnerable) {
                     player.lives--;
                     player.x = canvas.width / 2 - player.width / 2;
                     player.y = canvas.height - 100;
+                    player.invulnerable = true;
+                    let flashInterval = setInterval(() => {
+                        player.isVisible = !player.isVisible;
+                    }, 200);
+
+                    setTimeout(() => {
+                        clearInterval(flashInterval);
+                        player.isVisible = true;
+                        player.invulnerable = false;
+                    }, 3000);
 
                     if (player.lives <= 0) {
                         running = false;
@@ -173,12 +174,19 @@
             }
 
             // Játékos kirajzolása
-            ctx.fillStyle = player.isVisible ? "blue" : "rgba(0, 0, 255, 0.5)";
-            ctx.fillRect(player.x, player.y, player.width, player.height);
+            if (player.isVisible) {
+                if (player.direction === "left") {
+                    ctx.drawImage(stickmanImage, player.x, player.y, player.width, player.height);
+                } else if (player.direction === "right") {
+                    ctx.save();
+                    ctx.scale(-1, 1);
+                    ctx.drawImage(stickmanImage, -player.x - player.width, player.y, player.width, player.height);
+                    ctx.restore();
+                }
+            }
 
             // Palack kirajzolása
-            ctx.fillStyle = "green";
-            ctx.fillRect(bottle.x, bottle.y, bottle.width, bottle.height);
+            ctx.drawImage(palinkaImage, bottle.x, bottle.y, bottle.width, bottle.height);
 
             // Akadályok kirajzolása
             ctx.fillStyle = "red";
