@@ -1,4 +1,3 @@
-/* Alap stílusok */
 * {
   margin: 0;
   padding: 0;
@@ -10,9 +9,9 @@ body {
   background: #f4f4f9;
   color: #333;
   line-height: 1.6;
+  position: relative;
 }
 
-/* Header */
 header {
   background: linear-gradient(90deg, #333, #555);
   color: #fff;
@@ -25,14 +24,16 @@ header {
 }
 
 header h1 {
-  font-size: 2.5rem;
+  font-size: 2.8rem;
   font-weight: bold;
+  margin: 0;
 }
 
 nav ul {
   list-style: none;
   display: flex;
   gap: 20px;
+  flex-wrap: wrap;
 }
 
 nav ul li a {
@@ -51,7 +52,6 @@ nav ul li a:hover {
   color: #333;
 }
 
-/* Webshop */
 #webshop {
   padding: 3rem 2rem;
   background: #fff;
@@ -60,7 +60,7 @@ nav ul li a:hover {
 }
 
 #webshop h2 {
-  font-size: 2.2rem;
+  font-size: 2.5rem;
   color: #333;
   margin-bottom: 2rem;
   text-align: center;
@@ -74,7 +74,7 @@ nav ul li a:hover {
 
 .product-container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px;
   width: 100%;
 }
@@ -132,11 +132,21 @@ footer {
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 30px;
+  align-items: center;
+}
+
+.footer-logo,
+.footer-contact,
+.image-gallery {
+  flex: 1;
+  text-align: center;
 }
 
 .footer-logo img {
-  width: 150px;
+  width: 200px;
   height: auto;
+  border-radius: 8px;
+  margin-bottom: 10px;
 }
 
 .footer-contact {
@@ -144,65 +154,140 @@ footer {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 }
 
 .footer-contact h3 {
   font-size: 1.8rem;
+  margin-bottom: 1rem;
 }
 
 .footer-contact p {
   font-size: 1.1rem;
+  margin: 0.5rem 0;
   color: #cfcfcf;
 }
 
-@media (max-width: 1024px) {
-  .product-container {
-    grid-template-columns: repeat(2, 1fr);
-  }
+.image-gallery {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 20px;
+}
 
-  header h1 {
-    font-size: 2rem;
+.image-item {
+  text-align: center;
+}
+
+.image-item img {
+  width: 80px;
+  height: auto;
+  border-radius: 5px;
+  border: 2px solid #fff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.image-item img:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+}
+
+.image-item p {
+  color: #fff;
+  margin-top: 0.5rem;
+  font-size: 1rem;
+}
+
+/* Reszponzív módosítások */
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    align-items: center;
   }
 
   nav ul {
-    gap: 15px;
+    justify-content: center;
   }
-}
 
-@media (max-width: 768px) {
   .footer-container {
     flex-direction: column;
     align-items: center;
   }
 
-  nav ul {
+  .footer-contact {
+    margin-top: 1rem;
+  }
+
+  .image-gallery {
     flex-direction: column;
-    align-items: center;
+    justify-content: center;
+    gap: 10px;
   }
 
-  .product-container {
-    grid-template-columns: 1fr;
-  }
-
-  header h1 {
-    font-size: 1.8rem;
+  .image-item img {
+    width: 100px;
   }
 }
 
 @media (max-width: 480px) {
   header h1 {
-    font-size: 1.5rem;
+    font-size: 2rem;
   }
 
-  .product img {
-    max-width: 80%;
+  .footer-contact h3 {
+    font-size: 1.4rem;
   }
 
   .footer-contact p {
-    font-size: 0.9rem;
+    font-size: 1rem;
   }
+}
 
-  .footer-container {
-    gap: 20px;
-  }
+/* Modális ablak */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 300px;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+button {
+  padding: 0.8rem 1.5rem;
+  background-color: #000;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+button:hover {
+  background-color: #45a049;
 }
