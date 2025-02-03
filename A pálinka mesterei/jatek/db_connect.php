@@ -4,6 +4,7 @@ $username = "root";
 $password = ""; 
 $database = "palinka_mesterei"; // Az adatbázis neve
 
+
 $conn = new mysqli($servername, $username, $password, $database);
 
 // Kapcsolat ellenőrzése

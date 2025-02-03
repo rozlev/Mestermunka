@@ -4,8 +4,9 @@ $servername = "localhost"; // vagy a saját adatbázis szervered IP-je
 $username = "root"; // adatbázis felhasználó neve
 $password = ""; // adatbázis jelszó
 $dbname = "palinka_mesterei"; // adatbázis neve
+$port = 3307; // Az adatbázis szerver portja
 
-$conn = new mysqli($servername, $username, $password, $dbname);
+$conn = new mysqli($servername, $username, $password, $dbname,$port );
 
 // Ellenőrizzük a kapcsolatot
 if ($conn->connect_error) {

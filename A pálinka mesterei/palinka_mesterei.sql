@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1:3307
--- Létrehozás ideje: 2025. Jan 29. 11:18
--- Kiszolgáló verziója: 10.4.32-MariaDB
--- PHP verzió: 8.2.12
+-- Létrehozás ideje: 2025. Feb 03. 14:47
+-- Kiszolgáló verziója: 10.4.28-MariaDB
+-- PHP verzió: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -32,7 +32,8 @@ CREATE TABLE `palinka` (
   `Nev` varchar(255) NOT NULL,
   `AlkoholTartalom` decimal(5,2) NOT NULL,
   `Ar` decimal(10,2) NOT NULL,
-  `Kategoria` varchar(50) NOT NULL
+  `Kategoria` varchar(50) NOT NULL,
+  `DB_szam` int(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
 -- --------------------------------------------------------
@@ -91,6 +92,13 @@ CREATE TABLE `user` (
   `Eletkor` int(11) DEFAULT NULL,
   `Szerepkor` enum('admin','felhasználó') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+
+--
+-- A tábla adatainak kiíratása `user`
+--
+
+INSERT INTO `user` (`UserID`, `Nev`, `Email`, `Jelszo`, `RegisztracioDatum`, `Eletkor`, `Szerepkor`) VALUES
+(1, 'Dozsa', 'rozlev404@hegnersor.hu', '$2y$10$5F48DDdsypndoN9MKBAnnuG3TJDjtWDQZy0D0R3prAnH/NaA8T5be', '2025-02-03', 0, 'felhasználó');
 
 -- --------------------------------------------------------
 
@@ -159,7 +167,7 @@ ALTER TABLE `scores`
 -- AUTO_INCREMENT a táblához `user`
 --
 ALTER TABLE `user`
-  MODIFY `UserID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `UserID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Megkötések a kiírt táblákhoz
