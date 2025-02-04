@@ -155,8 +155,6 @@ function gameLoop() {
         bottle.x = Math.random() * (canvas.width - bottle.width);
         bottle.y = Math.random() * (canvas.height / 2 - bottle.height);
 
-        // Pontszám elküldése a szervernek
-        updateScore(playerName, score);
     }
 
     for (let obstacle of obstacles) {
@@ -206,7 +204,7 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);
 }
 
-// Játék vége
+// Játék vége - felugró ablak újraindításra
 function gameOver() {
     ctx.fillStyle = "black";
     ctx.font = "40px Arial";
@@ -214,6 +212,39 @@ function gameOver() {
     ctx.fillText("Játék vége", canvas.width / 2, canvas.height / 2);
     ctx.font = "20px Arial";
     ctx.fillText(`Pontszám: ${score}`, canvas.width / 2, canvas.height / 2 + 40);
+
+    // Pontszám mentése
+    updateScore(playerName, score);
+
+    // Megjelenítjük a popupot
+    showGameOverPopup();
+}
+
+// Felugró ablak az újrajátszáshoz
+function showGameOverPopup() {
+    const popup = document.createElement("div");
+    popup.id = "gameOverPopup";
+    popup.innerHTML = `
+        <div class="popup-content">
+            <h2>Játék vége!</h2>
+            <p>Elért pontszámod: ${score}</p>
+            <button id="restartGame">Újra játszom</button>
+            <button id="exitGame">Kilépés</button>
+        </div>
+    `;
+    document.body.appendChild(popup);
+
+    document.getElementById("restartGame").addEventListener("click", restartGame);
+    document.getElementById("exitGame").addEventListener("click", () => popup.remove());
+}
+
+// Játék újraindítása
+function restartGame() {
+    document.getElementById("gameOverPopup").remove();
+    score = 0;
+    player.lives = 3;
+    running = true;
+    gameLoop();
 }
 
 // Játék indítása

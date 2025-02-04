@@ -1,0 +1,135 @@
+body {
+  margin: 0;
+  overflow: hidden;
+  background: url('background.jpg') no-repeat center center fixed;
+  background-size: cover;
+  font-family: 'Comic Sans MS', Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Játék vászon (canvas) középre és lejjebb */
+#gameCanvas {
+  display: block;
+  margin-top: 20px; /* Az eredeti 0px helyett lejjebb helyezzük */
+  border: 3px solid #FFD700;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+
+.ui-panel {
+  position: absolute;
+  top: 140px; /* Az eredeti 10px helyett lejjebb rakjuk */
+  left: 10px;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 18px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.ui-panel span {
+    display: block;
+    margin-bottom: 5px;
+}
+/* HEADER */
+header {
+  background: linear-gradient(90deg, #333, #555); /* Fekete-szürke átmenetes háttér */
+  color: #fff; /* Fehér szöveg */
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between; /* A cím és a menü két szélre kerül */
+  align-items: center;
+  flex-wrap: wrap;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  width: 100%;
+}
+
+/* Cím balra igazítása */
+header h1 {
+  font-size: 2.8rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+/* Navigáció jobbra igazítása */
+nav {
+  margin-left: auto; /* Jobbra tolja a menüt */
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  padding: 0;
+  margin: 0;
+}
+
+/* Menüelemek */
+nav ul li {
+  display: inline;
+}
+
+nav ul li a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 0.6rem 1rem;
+  border: 2px solid transparent;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+nav ul li a:hover {
+  border: 2px solid #fff;
+  background: #fff;
+  color: #333;
+}
+
+
+/* Popup ablak */
+#gameOverPopup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  width: 300px;
+}
+
+/* Popup belső tartalom */
+.popup-content h2 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.popup-content p {
+  font-size: 18px;
+  margin: 10px 0;
+}
+
+/* Gombok */
+.popup-content button {
+  background: #FFD700;
+  color: black;
+  font-size: 16px;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 10px;
+  transition: 0.3s;
+}
+
+.popup-content button:hover {
+  background: #FFA500;
+}
+

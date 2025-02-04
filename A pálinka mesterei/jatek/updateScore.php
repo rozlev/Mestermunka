@@ -1,11 +1,7 @@
 <?php
-require 'db_connection.php'; // Adatbázis kapcsolat
+require 'db_connection.php'; // Adatbázis kapcsolat betöltése
 
 header('Content-Type: application/json');
-
-// PHP hibajelentések bekapcsolása
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents('php://input'), true);
@@ -18,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $data['username'];
     $score = intval($data['score']);
 
-    // Játékos ID lekérdezése
+    // Játékos ID lekérése
     $query = $conn->prepare("SELECT UserID FROM user WHERE Nev = ?");
     $query->bind_param("s", $username);
     $query->execute();
@@ -32,18 +28,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $row = $result->fetch_assoc();
     $player_id = $row['UserID'];
 
-    // Pontszám mentése vagy frissítése
-    $insertQuery = $conn->prepare("
-        INSERT INTO scores (player_id, points, date) 
-        VALUES (?, ?, NOW()) 
-        ON DUPLICATE KEY UPDATE points = GREATEST(points, VALUES(points))
-    ");
-    $insertQuery->bind_param("ii", $player_id, $score);
+    // Megnézzük, van-e már rekordja a játékosnak a scores táblában
+    $scoreQuery = $conn->prepare("SELECT points FROM scores WHERE player_id = ?");
+    $scoreQuery->bind_param("i", $player_id);
+    $scoreQuery->execute();
+    $scoreResult = $scoreQuery->get_result();
 
-    if ($insertQuery->execute()) {
-        echo json_encode(["status" => "success", "message" => "Pontszám mentve"]);
+    if ($scoreResult->num_rows > 0) {
+        // Ha már van pontszám, csak akkor frissítjük, ha az új nagyobb
+        $row = $scoreResult->fetch_assoc();
+        $currentHighScore = intval($row['points']);
+
+        if ($score > $currentHighScore) {
+            $updateQuery = $conn->prepare("UPDATE scores SET points = ? WHERE player_id = ?");
+            $updateQuery->bind_param("ii", $score, $player_id);
+            if ($updateQuery->execute()) {
+                echo json_encode(["status" => "success", "message" => "Pontszám frissítve"]);
+            } else {
+                echo json_encode(["status" => "error", "message" => "Hiba a pontszám frissítésekor"]);
+            }
+        } else {
+            echo json_encode(["status" => "success", "message" => "Pontszám nem változott"]);
+        }
     } else {
-        echo json_encode(["status" => "error", "message" => "Hiba a pontszám mentésekor"]);
+        // Ha még nincs rekordja, akkor újként beszúrjuk
+        $insertQuery = $conn->prepare("INSERT INTO scores (player_id, points) VALUES (?, ?)");
+        $insertQuery->bind_param("ii", $player_id, $score);
+        if ($insertQuery->execute()) {
+            echo json_encode(["status" => "success", "message" => "Új pontszám mentve"]);
+        } else {
+            echo json_encode(["status" => "error", "message" => "Hiba a pontszám mentésekor"]);
+        }
     }
 } else {
     echo json_encode(["status" => "error", "message" => "Érvénytelen kérés"]);
