@@ -23,7 +23,7 @@ let player = {
     width: 50,
     height: 50,
     speed: 10,
-    direction: "right", // Játékos iránya
+    direction: "right",
     lives: 3,
     isVisible: true,
     invulnerable: false
@@ -91,6 +91,28 @@ async function fetchPlayerName() {
     }
 }
 
+// Pontszám frissítése szerveren
+async function updateScore(username, score) {
+    try {
+        const response = await fetch('updateScore.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, score })
+        });
+
+        const data = await response.json();
+        if (data.status !== "success") {
+            console.error("Hiba a pontszám mentésekor:", data.message);
+        } else {
+            console.log("Pontszám sikeresen mentve:", score);
+        }
+    } catch (error) {
+        console.error("Nem sikerült elküldeni a pontszámot:", error);
+    }
+}
+
 // Játék ciklus
 function gameLoop() {
     if (!running) {
@@ -132,6 +154,9 @@ function gameLoop() {
         scoreElement.textContent = `Pontszám: ${score}`;
         bottle.x = Math.random() * (canvas.width - bottle.width);
         bottle.y = Math.random() * (canvas.height / 2 - bottle.height);
+
+        // Pontszám elküldése a szervernek
+        updateScore(playerName, score);
     }
 
     for (let obstacle of obstacles) {
@@ -193,8 +218,8 @@ function gameOver() {
 
 // Játék indítása
 async function startGame() {
-    await fetchPlayerName(); // A név lekérése a játék betöltése előtt
-    gameLoop(); // A játék elindítása
+    await fetchPlayerName();
+    gameLoop();
 }
 
-startGame(); // Indítsd el a játékot
+startGame();
