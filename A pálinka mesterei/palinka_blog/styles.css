@@ -40,7 +40,9 @@ header h1 {
     font-weight: bold;
     margin: 0;
     text-align: center;
-    color: #ffffff;
+    color: #ffffff; /* Fehér szín */
+    text-decoration: none; /* Sárga vonal eltávolítása */
+    border-bottom: none;
 }
 
 nav ul {
@@ -65,10 +67,10 @@ nav ul li a:hover {
     color: #333;
 }
 
-/* FŐTARTALOM */
+/* MAIN */
 .container {
-    width: 100%; /* Teljes szélesség */
-    max-width: 1200px; /* Maximum szélesség, hogy ne legyen túl széles */
+    width: 100%;
+    max-width: 1200px;
     margin: auto;
     background: white;
     padding: 20px;
@@ -76,21 +78,15 @@ nav ul li a:hover {
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 
-#egy {
-    color: white;
-}
-
 h1, h2 {
     color: #000000;
-}
-
-h2 {
     text-align: center;
 }
 
 p {
     text-align: justify;
     font-size: 1.2rem;
+    color: #555;
 }
 
 /* FOOTER */
@@ -127,4 +123,43 @@ footer {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+/* IMAGE STYLING */
+.image-gallery {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 20px;
+}
+
+.image-item img {
+    width: 80px;
+    height: auto;
+    border-radius: 5px;
+    border: 2px solid #fff;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.image-item img:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 768px) {
+    .footer-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .image-gallery {
+        flex-direction: column;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .image-item img {
+        width: 100px;
+    }
 }
