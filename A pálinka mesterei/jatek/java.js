@@ -7,7 +7,7 @@ const scoreElement = document.getElementById('score');
 const livesElement = document.getElementById('lives');
 const playerNameElement = document.getElementById('player-name');
 
-let playerName = "Névtelen Játékos";
+let playerName = "Névtelen Játékos"; // Alapértelmezett név, ha a backend nem ad vissza adatot
 
 // Képek betöltése
 const stickmanImage = new Image();
@@ -23,7 +23,7 @@ let player = {
     width: 50,
     height: 50,
     speed: 10,
-    direction: "right",
+    direction: "right", // Játékos iránya
     lives: 3,
     isVisible: true,
     invulnerable: false
@@ -38,10 +38,22 @@ let bottle = {
     speedY: Math.random() > 0.5 ? 3 : -3
 };
 
+let obstacles = [];
+for (let i = 0; i < 5; i++) {
+    obstacles.push({
+        x: Math.random() * (canvas.width - 60),
+        y: canvas.height / 2 + Math.random() * (canvas.height / 2 - 60),
+        width: 60,
+        height: 60,
+        speedX: Math.random() > 0.5 ? 2 : -2,
+        speedY: Math.random() > 0.5 ? 2 : -2
+    });
+}
+
 let score = 0;
 let running = true;
 
-// Billentyűk figyelése
+// Billentyűk
 let keys = {};
 window.addEventListener("keydown", (e) => keys[e.key] = true);
 window.addEventListener("keyup", (e) => keys[e.key] = false);
@@ -89,8 +101,14 @@ function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Játékos mozgása
-    if (keys["a"] && player.x > 0) player.x -= player.speed;
-    if (keys["d"] && player.x < canvas.width - player.width) player.x += player.speed;
+    if (keys["a"] && player.x > 0) {
+        player.x -= player.speed;
+        player.direction = "left";
+    }
+    if (keys["d"] && player.x < canvas.width - player.width) {
+        player.x += player.speed;
+        player.direction = "right";
+    }
     if (keys["w"] && player.y > 0) player.y -= player.speed;
     if (keys["s"] && player.y < canvas.height - player.height) player.y += player.speed;
 
@@ -100,12 +118,64 @@ function gameLoop() {
     if (bottle.x <= 0 || bottle.x >= canvas.width - bottle.width) bottle.speedX *= -1;
     if (bottle.y <= 0 || bottle.y >= canvas.height - bottle.height) bottle.speedY *= -1;
 
-    // Pontszám növelése
+    // Akadályok mozgása
+    for (let obstacle of obstacles) {
+        obstacle.x += obstacle.speedX;
+        obstacle.y += obstacle.speedY;
+        if (obstacle.x <= 0 || obstacle.x >= canvas.width - obstacle.width) obstacle.speedX *= -1;
+        if (obstacle.y <= canvas.height / 2 || obstacle.y >= canvas.height - obstacle.height) obstacle.speedY *= -1;
+    }
+
+    // Ütközések kezelése
     if (isColliding(player, bottle)) {
         score++;
         scoreElement.textContent = `Pontszám: ${score}`;
         bottle.x = Math.random() * (canvas.width - bottle.width);
         bottle.y = Math.random() * (canvas.height / 2 - bottle.height);
+    }
+
+    for (let obstacle of obstacles) {
+        if (isColliding(player, obstacle) && !player.invulnerable) {
+            player.lives--;
+            livesElement.textContent = `Életek: ${player.lives}`;
+            player.x = canvas.width / 2 - player.width / 2;
+            player.y = canvas.height - 100;
+            player.invulnerable = true;
+            let flashInterval = setInterval(() => {
+                player.isVisible = !player.isVisible;
+            }, 200);
+
+            setTimeout(() => {
+                clearInterval(flashInterval);
+                player.isVisible = true;
+                player.invulnerable = false;
+            }, 3000);
+
+            if (player.lives <= 0) {
+                running = false;
+            }
+        }
+    }
+
+    // Játékos kirajzolása
+    if (player.isVisible) {
+        if (player.direction === "left") {
+            ctx.drawImage(stickmanImage, player.x, player.y, player.width, player.height);
+        } else if (player.direction === "right") {
+            ctx.save();
+            ctx.scale(-1, 1);
+            ctx.drawImage(stickmanImage, -player.x - player.width, player.y, player.width, player.height);
+            ctx.restore();
+        }
+    }
+
+    // Palack kirajzolása
+    ctx.drawImage(palinkaImage, bottle.x, bottle.y, bottle.width, bottle.height);
+
+    // Akadályok kirajzolása
+    ctx.fillStyle = "red";
+    for (let obstacle of obstacles) {
+        ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
     }
 
     requestAnimationFrame(gameLoop);
@@ -119,43 +189,12 @@ function gameOver() {
     ctx.fillText("Játék vége", canvas.width / 2, canvas.height / 2);
     ctx.font = "20px Arial";
     ctx.fillText(`Pontszám: ${score}`, canvas.width / 2, canvas.height / 2 + 40);
-
-    // Pontszám mentése
-    console.log("Pontszám mentése:", score);
-    saveScore(score);
-}
-
-// Pontszám mentése az adatbázisba
-async function saveScore(score) {
-    if (score > 0) {
-        try {
-            const response = await fetch('saveScore.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: `score=${encodeURIComponent(score)}`,
-                credentials: 'include' // Session cookie küldése
-            });
-
-            const data = await response.json();
-            if (data.status === "success") {
-                console.log("Pontszám sikeresen mentve!");
-            } else {
-                console.error("Hiba a pontszám mentésekor:", data.message);
-            }
-        } catch (error) {
-            console.error("Hálózati hiba a pontszám mentésekor:", error);
-        }
-    } else {
-        console.log("Nem menthető pontszám: 0");
-    }
 }
 
 // Játék indítása
 async function startGame() {
-    await fetchPlayerName();
-    gameLoop();
+    await fetchPlayerName(); // A név lekérése a játék betöltése előtt
+    gameLoop(); // A játék elindítása
 }
 
-startGame();
+startGame(); // Indítsd el a játékot
