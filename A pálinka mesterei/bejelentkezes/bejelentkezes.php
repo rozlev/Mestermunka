@@ -6,9 +6,9 @@ $servername = "localhost";
 $username = "root";
 $password = "";
 $dbname = "palinka_mesterei";
-$port = 3307; // Az adatbázis szerver portja
 
-$conn = new mysqli($servername, $username, $password, $dbname,$port);
+
+$conn = new mysqli($servername, $username, $password, $dbname,);
 
 if ($conn->connect_error) {
     die("Kapcsolódás sikertelen: " . $conn->connect_error);
