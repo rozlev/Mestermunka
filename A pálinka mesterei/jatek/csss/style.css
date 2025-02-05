@@ -30,6 +30,19 @@ body {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
+#bemutato{
+
+    position: absolute;
+    top: 300px; /* Az eredeti 10px helyett lejjebb rakjuk */
+    left: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 18px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  
+}
 .ui-panel span {
     display: block;
     margin-bottom: 5px;
@@ -76,9 +89,9 @@ nav ul li a {
   color: #fff;
   text-decoration: none;
   font-weight: bold;
-  padding: 0.6rem 1rem;
-  border: 2px solid transparent;
-  border-radius: 5px;
+  padding: 0.6rem 3rem;
+  border: 10px solid transparent;
+  border-radius: 100px;
   transition: all 0.3s ease;
 }
 
@@ -133,3 +146,35 @@ nav ul li a:hover {
   background: #FFA500;
 }
 
+/* Leaderboard stílus */
+.leaderboard {
+    position: absolute;
+    top: 140px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 18px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    width: 200px;
+}
+
+.leaderboard h2 {
+    margin: 0;
+    font-size: 20px;
+    text-align: center;
+}
+
+.leaderboard ol {
+    padding: 0;
+    list-style: none;
+}
+
+.leaderboard li {
+    margin: 5px 0;
+    padding: 5px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    text-align: center;
+}

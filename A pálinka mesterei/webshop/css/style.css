@@ -243,51 +243,36 @@ footer {
   }
 }
 
-/* Modális ablak */
+/* A felugró ablak (modal) stílusai */
 .modal {
-  display: none;
+  display: none; /* Kezdetben rejtve */
   position: fixed;
-  z-index: 1;
-  left: 0;
   top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.5); /* Fekete háttér áttetsző */
+  justify-content: center; /* Középre igazítja vízszintesen */
+  align-items: center; /* Középre igazítja függőlegesen */
+  z-index: 1000; /* A felugró ablak legyen a legfelső réteg */
 }
 
 .modal-content {
-  background-color: #fefefe;
-  margin: 15% auto;
+  background-color: white;
   padding: 20px;
-  border: 1px solid #888;
-  width: 80%;
-  max-width: 300px;
-}
-
-.close {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
+  border-radius: 8px;
+  text-align: center;
+  width: 300px; /* Korlátozott szélesség */
+  margin: auto; /* Középre igazítja a tartalmat */
 }
 
 button {
-  padding: 0.8rem 1.5rem;
-  background-color: #000;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+  margin: 10px;
+  padding: 10px;
   font-size: 1rem;
+  cursor: pointer;
 }
 
 button:hover {
-  background-color: #45a049;
+  background-color: #ddd;
 }

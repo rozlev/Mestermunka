@@ -41,14 +41,15 @@ let bottle = {
 let obstacles = [];
 for (let i = 0; i < 5; i++) {
     obstacles.push({
-        x: Math.random() * (canvas.width - 60),
-        y: canvas.height / 2 + Math.random() * (canvas.height / 2 - 60),
+        x: Math.random() * (canvas.width - 60),  // Akadály bárhol megjelenhet vízszintesen
+        y: Math.random() * (canvas.height - 60), // Akadály bárhol megjelenhet függőlegesen (NEM CSAK A FELÉIG)
         width: 60,
         height: 60,
-        speedX: Math.random() > 0.5 ? 2 : -2,
-        speedY: Math.random() > 0.5 ? 2 : -2
+        speedX: Math.random() > 0.5 ? 3 : 7,
+        speedY: Math.random() > 0.5 ? 3: 7,
     });
 }
+
 
 let score = 0;
 let running = true;
@@ -139,15 +140,19 @@ function gameLoop() {
     bottle.y += bottle.speedY;
     if (bottle.x <= 0 || bottle.x >= canvas.width - bottle.width) bottle.speedX *= -1;
     if (bottle.y <= 0 || bottle.y >= canvas.height - bottle.height) bottle.speedY *= -1;
+// Akadályok mozgása (TELJES pályán)
+for (let obstacle of obstacles) {
+    obstacle.x += obstacle.speedX;
+    obstacle.y += obstacle.speedY;
 
-    // Akadályok mozgása
-    for (let obstacle of obstacles) {
-        obstacle.x += obstacle.speedX;
-        obstacle.y += obstacle.speedY;
-        if (obstacle.x <= 0 || obstacle.x >= canvas.width - obstacle.width) obstacle.speedX *= -1;
-        if (obstacle.y <= canvas.height / 2 || obstacle.y >= canvas.height - obstacle.height) obstacle.speedY *= -1;
+    // Ha akadály eléri a pálya szélét, pattogjon vissza
+    if (obstacle.x <= 0 || obstacle.x >= canvas.width - obstacle.width) {
+        obstacle.speedX *= -1;
     }
-
+    if (obstacle.y <= 0 || obstacle.y >= canvas.height - obstacle.height) {
+        obstacle.speedY *= -1;
+    }
+}
     // Ütközések kezelése
     if (isColliding(player, bottle)) {
         score++;
@@ -204,21 +209,6 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);
 }
 
-// Játék vége - felugró ablak újraindításra
-function gameOver() {
-    ctx.fillStyle = "black";
-    ctx.font = "40px Arial";
-    ctx.textAlign = "center";
-    ctx.fillText("Játék vége", canvas.width / 2, canvas.height / 2);
-    ctx.font = "20px Arial";
-    ctx.fillText(`Pontszám: ${score}`, canvas.width / 2, canvas.height / 2 + 40);
-
-    // Pontszám mentése
-    updateScore(playerName, score);
-
-    // Megjelenítjük a popupot
-    showGameOverPopup();
-}
 
 // Felugró ablak az újrajátszáshoz
 function showGameOverPopup() {
@@ -238,18 +228,75 @@ function showGameOverPopup() {
     document.getElementById("exitGame").addEventListener("click", () => popup.remove());
 }
 
+
+
 // Játék újraindítása
 function restartGame() {
     document.getElementById("gameOverPopup").remove();
     score = 0;
     player.lives = 3;
     running = true;
+    
+    // Játékos halhatatlan az első 3 másodpercben
+    player.invulnerable = true;
+    setTimeout(() => {
+        player.invulnerable = false;
+    }, 3000);
     gameLoop();
+
+}
+// Leaderboard betöltése és megjelenítése
+async function fetchLeaderboard() {
+    try {
+        const response = await fetch('getLeaderboard.php');
+        const leaderboard = await response.json();
+
+        let leaderboardHTML = "<h2>Leaderboard</h2><ol>";
+        leaderboard.forEach((player, index) => {
+            leaderboardHTML += `<li>${index + 1}. ${player.username}: ${player.points} pont</li>`;
+        });
+        leaderboardHTML += "</ol>";
+
+        document.getElementById("leaderboard").innerHTML = leaderboardHTML;
+    } catch (error) {
+        console.error("Hiba a ranglista betöltésekor:", error);
+    }
+}
+
+
+// Játék vége és leaderboard frissítés
+function gameOver() {
+    ctx.fillStyle = "black";
+    ctx.font = "40px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText("Játék vége", canvas.width / 2, canvas.height / 2);
+    ctx.font = "20px Arial";
+    ctx.fillText(`Pontszám: ${score}`, canvas.width / 2, canvas.height / 2 + 40);
+
+    // Pontszám mentése és leaderboard frissítése
+    updateScore(playerName, score).then(fetchLeaderboard);
+
+    // Megjelenítjük a popupot
+    showGameOverPopup();
 }
 
 // Játék indítása
 async function startGame() {
     await fetchPlayerName();
+    await fetchLeaderboard(); // Betöltjük a leaderboardot az elején
+    gameLoop();
+}
+
+async function startGame() {
+    await fetchPlayerName();
+    await fetchLeaderboard(); // Betöltjük a leaderboardot az elején
+
+    // Játékos halhatatlan az első 3 másodpercben
+    player.invulnerable = true;
+    setTimeout(() => {
+        player.invulnerable = false;
+    }, 3000);
+
     gameLoop();
 }
 
