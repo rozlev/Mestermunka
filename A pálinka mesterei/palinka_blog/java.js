@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Kijelentkezés megerősítése
     document.getElementById("logoutConfirm").addEventListener("click", function() {
       localStorage.removeItem("felhasznaloNev"); // Töröljük a felhasználó nevét
-      document.getElementById("felhasznaloNev").innerHTML = '<a href="bejelentkezes/bejelentkezes.html" id="loginLink">Bejelentkezés</a>';
+      document.getElementById("felhasznaloNev").innerHTML = '<a href="../bejelentkezes/bejelentkezes.html" id="loginLink">Bejelentkezés</a>';
       document.getElementById("logoutModal").style.display = 'none'; // Bezárjuk a modális ablakot
     });
   
