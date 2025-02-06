@@ -4,10 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>A pálinka mesterei</title>
+  <!-- Bootstrap Link -->
+  <link rel="stylesheet" href="bootstrap-5.3.3-dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="css/styles.css">
-  <link rel="stylesheet" href="..//../FRONTEND/bootstrap/css/bootstrap-mi">
 </head>
 <body>
+  <!-- Header -->
   <header>
     <h1>A pálinka mesterei</h1>
     <nav>
@@ -22,17 +24,18 @@
     </nav>
   </header>
 
+  <!-- Modal for logout -->
   <div id="logoutModal" class="modal">
     <div class="modal-content">
       <h2>Kijelentkezés</h2>
       <p>Biztosan ki szeretnél jelentkezni?</p>
       <button id="logoutConfirm">Igen</button>
+      <br>
       <button id="logoutCancel">Mégse</button>
     </div>
   </div>
-  
 
-
+  <!-- Welcome Section -->
   <section id="udvozlo">
     <h2>Üdvözöljük a weboldalon!</h2>
     <p>
@@ -41,6 +44,7 @@
     </p>
   </section>
 
+  <!-- Main Content Section -->
   <main>
     <section id="bemutatkozas">
       <h2>Bemutatkozás</h2>
@@ -62,6 +66,7 @@
     </section>
   </main>
 
+  <!-- Image and Text Section -->
   <section id="images-with-text">
     <div class="content-item-left">
       <img src="img/szollo.jfif" alt="Szőlő kép" class="rounded-image">
@@ -94,14 +99,13 @@
     </div>
   </section>
   
+  <!-- Footer Section -->
   <footer>
     <div class="footer-container">
-      <!-- Logo (ha szükséges) -->
       <div class="footer-logo">
         <img src="img/logo.png" alt="A pálinka mesterei logo" id="logo">
       </div>
   
-      <!-- Elérhetőség szekció -->
       <div class="footer-contact">
         <h3>Elérhetőség</h3>
         <p>Telefonszám: +36 30 546 5432</p>
@@ -109,7 +113,6 @@
         <p>Hely: Ócsa Kossuth Lajos utca 114</p>
       </div>
   
-      <!-- Képgaléria -->
       <div class="image-gallery">
         <div class="image-item">
           <img src="image1.jpg" alt="Kovács Bence">
@@ -127,8 +130,7 @@
     </div>
   </footer>
   
-  <!-- Linkeljük a JavaScript fájlt -->
   <script src="java.js"></script>
-
 </body>
 </html>
+
