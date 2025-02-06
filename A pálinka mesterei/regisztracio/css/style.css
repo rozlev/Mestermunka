@@ -123,3 +123,21 @@ button {
 .homepage-link:hover {
     transform: scale(1.1);
 }
+.message {
+    display: none;
+    padding: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+.error-message {
+    background-color: #d9534f;
+    color: white;
+}
+
+.success-message {
+    background-color: #5cb85c;
+    color: white;
+}

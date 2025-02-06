@@ -1,35 +1,32 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // Az űrlap beküldése
-    document.getElementById("loginForm").addEventListener("submit", function (event) {
-        event.preventDefault(); // Alapértelmezett működés megakadályozása
+    const form = document.getElementById("loginForm");
+    const errorMessageDiv = document.getElementById("errorMessage");
 
-        // Adatok lekérése az űrlapból
-        var email = document.getElementById("email").value;
-        var password = document.getElementById("password").value;
+    form.addEventListener("submit", function (event) {
+        event.preventDefault(); // Megakadályozza az oldal újratöltését
 
-        // FormData objektum
-        var formData = new FormData();
-        formData.append("email", email);
-        formData.append("password", password);
+        const formData = new FormData(form);
 
-        // AJAX kérés
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "bejelentkezes.php", true);
-        xhr.onload = function () {
-            var response = JSON.parse(xhr.responseText);
-            if (response.status === "success") {
-                // Felhasználó név elmentése a localStorage-be
-                localStorage.setItem("felhasznaloNev", response.name);
-
-                // Átirányítás a főoldalra
+        fetch("bejelentkezes.php", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === "success") {
+                // Mentse a felhasználói nevet és irányítsa át a főoldalra
+                localStorage.setItem("felhasznaloNev", data.name);
                 window.location.href = "../index.html";
             } else {
-                // Hiba megjelenítése
-                var errorMessageDiv = document.getElementById("errorMessage");
-                errorMessageDiv.innerText = response.message;
+                // Hibaüzenet megjelenítése az oldalon
+                errorMessageDiv.textContent = data.message;
                 errorMessageDiv.style.display = "block";
             }
-        };
-        xhr.send(formData);
+        })
+        .catch(error => {
+            console.error("Hiba történt:", error);
+            errorMessageDiv.textContent = "Szerverhiba történt. Próbáld újra később!";
+            errorMessageDiv.style.display = "block";
+        });
     });
 });

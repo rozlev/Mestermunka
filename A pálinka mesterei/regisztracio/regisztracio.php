@@ -1,45 +1,46 @@
 <?php
-// Kapcsolódás az adatbázishoz
-$servername = "localhost"; // vagy a saját adatbázis szervered IP-je
-$username = "root"; // adatbázis felhasználó neve
-$password = ""; // adatbázis jelszó
-$dbname = "palinka_mesterei"; // adatbázis neve
+session_start();
+$conn = new mysqli("localhost", "root", "", "palinka_mesterei");
 
-
-$conn = new mysqli($servername, $username, $password, $dbname,);
-
-// Ellenőrizzük a kapcsolatot
 if ($conn->connect_error) {
-    die("Kapcsolódás sikertelen: " . $conn->connect_error);
+    die("Adatbázis kapcsolat sikertelen: " . $conn->connect_error);
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Adatok lekérése a POST kérésből
-    $username = $_POST['username'];
-    $email = $_POST['email'];
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Jelszó hashelése
-    $birthdate = $_POST['birthdate'];
+    $nev = trim($_POST["username"]); // Módosítás: Nev
+    $email = trim($_POST["email"]); // Email helyesen
+    $jelszo = password_hash($_POST["password"], PASSWORD_BCRYPT); // Jelszó hashelése
+    $regisztracio_datum = date("Y-m-d"); // Automatikusan a mai dátum
+    $eletkor = NULL; // Nem számolunk életkort most
 
-    // Ellenőrizzük, hogy az email már létezik
-    $sql = "SELECT * FROM user WHERE Email = '$email'";
-    $result = $conn->query($sql);
+    // Felhasználónév és e-mail ellenőrzése
+    $check_query = "SELECT * FROM user WHERE Nev = ? OR Email = ?";
+    $stmt = $conn->prepare($check_query);
+    $stmt->bind_param("ss", $nev, $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
-        // Ha létezik már az e-mail, hibaüzenet
-        echo "Ez az e-mail már regisztrálva van.";
-    } else {
-        // Felhasználó hozzáadása az adatbázishoz
-        $sql = "INSERT INTO user (Nev, Email, Jelszo, RegisztracioDatum, Eletkor, Szerepkor) 
-                VALUES ('$username', '$email', '$password', CURDATE(), TIMESTAMPDIFF(YEAR, '$birthdate', CURDATE()), 'felhasználó')";
-
-        if ($conn->query($sql) === TRUE) {
-            // Ha sikeres volt az adatbázis művelet, akkor átirányítjuk a bejelentkezés oldalra
-            header("Location: ../bejelentkezes/bejelentkezes.html");
-            exit(); // Fontos, hogy kilépjünk a scriptből, hogy az átirányítás érvényesüljön
-        } else {
-            // Ha hiba történik, kiírjuk a hibát
-            echo "Hiba történt a regisztráció során: " . $conn->error;
+        $existing = $result->fetch_assoc();
+        if ($existing["Nev"] === $nev) {
+            echo json_encode(["error" => "A felhasználónév már foglalt!"]);
+            exit;
         }
+        if ($existing["Email"] === $email) {
+            echo json_encode(["error" => "Az e-mail cím már foglalt!"]);
+            exit;
+        }
+    }
+
+    // Ha nincs ilyen felhasználó, beszúrás az adatbázisba
+    $insert_query = "INSERT INTO user (Nev, Email, Jelszo, RegisztracioDatum, Eletkor, Szerepkor) VALUES (?, ?, ?, ?, ?, 'felhasználó')";
+    $stmt = $conn->prepare($insert_query);
+    $stmt->bind_param("ssssi", $nev, $email, $jelszo, $regisztracio_datum, $eletkor);
+
+    if ($stmt->execute()) {
+        echo json_encode(["success" => "Sikeres regisztráció!"]);
+    } else {
+        echo json_encode(["error" => "Hiba történt a regisztráció során."]);
     }
 }
 
