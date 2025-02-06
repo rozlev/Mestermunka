@@ -6,26 +6,26 @@
 
 body {
   font-family: "Arial", sans-serif;
-  background: #f4f4f9; /* Világos szürke háttér */
-  color: #333; /* Mély szürke szöveg */
+  background: #f8e1e7; /* Világos háttér a főtéma alapján */
+  color: #222;
   line-height: 1.6;
 }
 
 /* LOGO */
 #logo { 
-  width: 320px; /* Tovább csökkentett szélesség */
+  width: 320px;
   height: auto;
-  border-radius: 50%; /* Enyhén lekerekített */
+  border-radius: 50%;
   object-fit: cover;
-  margin: 0 20px 10px 0; /* Jobb és alsó térköz */
-  float: left; /* Bal oldali pozicionálás */
-  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3)); /* Lágyabb árnyék */
+  margin: 0 20px 10px 0;
+  float: left;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
 }
 
 /* HEADER */
 header {
-  background: linear-gradient(90deg, #333, #555); /* Fekete-szürke átmenetes háttér */
-  color: #fff; /* Fehér szöveg */
+  background: linear-gradient(90deg, #811331, #a61d4d); /* Mély vörös árnyalatok */
+  color: #fff;
   padding: 1.5rem 2rem;
   display: flex;
   justify-content: space-between;
@@ -58,37 +58,37 @@ nav ul li a {
 
 nav ul li a:hover {
   border: 2px solid #fff;
-  background: #fff;
-  color: #333;
+  background: #f5c3cf;
+  color: #811331;
 }
 
 /* MAIN */
 main {
   padding: 3rem 2rem;
-  background: #fff;
+  background: #ffffff;
   margin: 2rem auto;
   border-radius: 10px;
-  max-width: 900px; /* Középre igazítva */
+  max-width: 900px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
 main h2 {
   font-size: 2.5rem;
-  color: #333;
+  color: #811331;
   margin-bottom: 1.5rem;
   text-align: center;
 }
 
 main p {
   font-size: 1.2rem;
-  color: #555; /* Lágyabb szürke */
+  color: #444;
   margin-bottom: 1.5rem;
   text-align: justify;
 }
 
 /* FOOTER */
 footer {
-  background-color: #333;
+  background-color: #811331;
   padding: 3rem 1.5rem;
   text-align: center;
 }
@@ -131,7 +131,7 @@ footer {
 .footer-contact p {
   font-size: 1.1rem;
   margin: 0.5rem 0;
-  color: #cfcfcf;
+  color: #f5c3cf;
 }
 
 .image-gallery {
@@ -199,7 +199,7 @@ footer {
 
 /* WELCOME SECTION */
 #udvozlo {
-  background: linear-gradient(135deg, #333, #555); /* Átmenetes fekete háttér */
+  background: linear-gradient(135deg, #811331, #b02a4d);
   color: #fff;
   padding: 2.5rem;
   margin-top: 3rem;
@@ -219,6 +219,8 @@ footer {
   margin: auto;
   line-height: 1.8;
 }
+
+
 
 /* RESPONSIVE DESIGN */
 @media (max-width: 768px) {
@@ -346,14 +348,17 @@ footer {
 }
 
 button {
-  margin: 10px;
+  background-color: #811331;
+  color: white;
+  border: none;
   padding: 10px;
   font-size: 1rem;
   cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 button:hover {
-  background-color: #ddd;
+  background-color: #660b26;
 }
 
 

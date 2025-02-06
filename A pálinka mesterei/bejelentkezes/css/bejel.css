@@ -11,9 +11,13 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #24282b;
+    background: #70112aaf; /* Fő téma szín */
     height: 100vh;
     margin: 0;
+}
+
+a{
+    color: #811331;
 }
 
 .screen-1 {
@@ -35,7 +39,7 @@ body {
     height: auto;
     border-radius: 50%;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-    border: 3px solid #000000;
+    border: 3px solid #811331;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -43,7 +47,6 @@ body {
     transform: scale(1.1);
 }
 
-.screen-1 .username,
 .screen-1 .email,
 .screen-1 .password {
     background: #f2f2f2;
@@ -56,27 +59,35 @@ body {
     color: #333;
 }
 
-.screen-1 .username input,
 .screen-1 .email input,
 .screen-1 .password input {
     background-color: #ffffff;
     outline: none;
-    border: 1px solid #bdc3c7;
+    border: 1px solid #811331;
     color: #333;
     padding: 0.5em;
     border-radius: 5px;
 }
 
-.screen-1 .username input::placeholder,
 .screen-1 .email input::placeholder,
 .screen-1 .password input::placeholder {
     color: #7f8c8d;
     font-size: 0.9em;
 }
 
+.screen-1 .email ion-icon,
+.screen-1 .password ion-icon {
+    color: #811331;
+    margin-bottom: -0.2em;
+}
+
+.screen-1 .password .show-hide {
+    margin-right: -5em;
+}
+
 .screen-1 .login {
     padding: 1em;
-    background: #000000;
+    background: #811331;
     color: white;
     border: none;
     border-radius: 30px;
@@ -87,7 +98,7 @@ body {
 
 .screen-1 .login:hover {
     transform: scale(1.05);
-    box-shadow: 0 0 1em rgba(0, 0, 0, 0.9);
+    box-shadow: 0 0 1em rgba(129, 19, 49, 0.9);
 }
 
 .screen-1 .footer {
@@ -100,7 +111,7 @@ body {
 
 .screen-1 .footer span {
     cursor: pointer;
-    color: #000000;
+    color: #811331;
     font-weight: 600;
     text-decoration: underline;
 }
@@ -113,7 +124,7 @@ button {
     display: block;
     text-align: center;
     margin-top: 1em;
-    color: #000000;
+    color: #811331;
     font-weight: bold;
     text-decoration: none;
     font-size: 1em;

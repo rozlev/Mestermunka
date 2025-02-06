@@ -1,7 +1,7 @@
 body {
   margin: 0;
   overflow: hidden;
-  background: url('background.jpg') no-repeat center center fixed;
+  background-color: #ffffffaf;
   background-size: cover;
   font-family: 'Comic Sans MS', Arial, sans-serif;
   display: flex;

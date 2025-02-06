@@ -1,4 +1,4 @@
-* {
+* { 
     font-family: "Poppins", sans-serif;
 }
 
@@ -11,20 +11,18 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #24282b; /* Sötét háttér (fekete/ szürke) */
+    background: #70112aaf;
     height: 100vh;
     margin: 0;
 }
-a{
-    color: #000000;
-}
+
 .screen-1 {
-    background: #ffffff; /* Fehér háttér */
+    background: #ffffff;
     padding: 2em;
     display: flex;
     flex-direction: column;
     border-radius: 20px;
-    box-shadow: 0 0 2em rgba(0, 0, 0, 0.3); /* Fekete árnyék */
+    box-shadow: 0 0 2em rgba(0, 0, 0, 0.3);
     gap: 2em;
     width: 100%;
     max-width: 300px;
@@ -36,8 +34,8 @@ a{
     width: 120px;
     height: auto;
     border-radius: 50%;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); /* Fekete fényhatás */
-    border: 3px solid #000000; /* Fekete szegély */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    border: 3px solid #811331;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -45,47 +43,40 @@ a{
     transform: scale(1.1);
 }
 
+.screen-1 .username,
 .screen-1 .email,
 .screen-1 .password {
-    background: #f2f2f2; /* Világos szürke háttér */
-    box-shadow: 0 0 1.5em rgba(0, 0, 0, 0.2); /* Fekete árnyék */
+    background: #f2f2f2;
+    box-shadow: 0 0 1.5em rgba(0, 0, 0, 0.2);
     padding: 1em;
     display: flex;
     flex-direction: column;
     gap: 0.5em;
     border-radius: 10px;
-    color: #333; /* Sötétszürke szöveg */
+    color: #333;
 }
 
+.screen-1 .username input,
 .screen-1 .email input,
 .screen-1 .password input {
-    background-color: #ffffff; /* Fehér háttér a bemeneti mezőknél */
+    background-color: #ffffff;
     outline: none;
-    border: 1px solid #bdc3c7; /* Világos szürke kontúr */
+    border: 1px solid #811331;
     color: #333;
     padding: 0.5em;
     border-radius: 5px;
 }
 
+.screen-1 .username input::placeholder,
 .screen-1 .email input::placeholder,
 .screen-1 .password input::placeholder {
-    color: #7f8c8d; /* Szürke placeholder */
+    color: #7f8c8d;
     font-size: 0.9em;
-}
-
-.screen-1 .email ion-icon,
-.screen-1 .password ion-icon {
-    color: #333;
-    margin-bottom: -0.2em;
-}
-
-.screen-1 .password .show-hide {
-    margin-right: -5em;
 }
 
 .screen-1 .login {
     padding: 1em;
-    background: #000000; /* Fekete háttér */
+    background: #811331;
     color: white;
     border: none;
     border-radius: 30px;
@@ -96,7 +87,7 @@ a{
 
 .screen-1 .login:hover {
     transform: scale(1.05);
-    box-shadow: 0 0 1em rgba(0, 0, 0, 0.9); /* Erősebb fekete árnyék hover esetén */
+    box-shadow: 0 0 1em rgba(129, 19, 49, 0.9);
 }
 
 .screen-1 .footer {
@@ -109,7 +100,7 @@ a{
 
 .screen-1 .footer span {
     cursor: pointer;
-    color: #000000; /* Fekete szöveg */
+    color: #811331;
     font-weight: 600;
     text-decoration: underline;
 }
@@ -122,7 +113,7 @@ button {
     display: block;
     text-align: center;
     margin-top: 1em;
-    color: #000000; /* Fekete szöveg */
+    color: #811331;
     font-weight: bold;
     text-decoration: none;
     font-size: 1em;
