@@ -33,13 +33,13 @@ body {
 #bemutato{
 
     position: absolute;
-    top: 300px; /* Az eredeti 10px helyett lejjebb rakjuk */
-    left: 10px;
+    top: 78%; /* Az eredeti 10px helyett lejjebb rakjuk */
+    left: 35%;
     background: rgba(0, 0, 0, 0.5);
     color: white;
-    padding: 10px;
-    border-radius: 10px;
-    font-size: 18px;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 15px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   
 }
@@ -177,4 +177,58 @@ nav ul li a:hover {
     background: rgba(255, 255, 255, 0.2);
     border-radius: 5px;
     text-align: center;
+}
+
+
+/* Media Query a kisebb képernyőkhöz (pl. mobiltelefonok) */
+@media (max-width: 768px) {
+  /* Játék vászon */
+  #gameCanvas {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* UI Panel */
+  .ui-panel {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  /* Bemutató */
+  #bemutato {
+    font-size: 14px;
+    padding: 10px;
+    width: 80%;
+  }
+
+  /* Header */
+  header {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Cím */
+  header h1 {
+    font-size: 2rem;
+    text-align: center;
+  }
+
+  /* Navigáció */
+  nav ul {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  nav ul li a {
+    font-size: 1.2rem;
+    padding: 0.5rem 2rem;
+  }
+
+  /* Leaderboard */
+  .leaderboard {
+    top: 90px;
+    right: 10px;
+    width: 100%;
+    font-size: 16px;
+  }
 }

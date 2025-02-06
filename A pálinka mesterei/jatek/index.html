@@ -16,20 +16,29 @@
         <li><a href="../webshop/index.html">Weboldal</a></li> 
         <li><a href="../palinka_blog/index.html">Pálinka készítés</a></li>
       </ul>
-
     </nav>
-    </header>
-    <div class="ui-panel">
-        <span id="score">Pontszám: 0</span>
-        <span id="lives">Életek: 3</span>
-        <span id="player-name">Játékos: Névtelen</span>
-    </div>
+  </header>
 
-    <div id="bemutato">
-      <p>rovid tajekoztato</p>
-    </div>
-    <div id="leaderboard" class="leaderboard"></div>
-    <canvas id="gameCanvas"></canvas>
-    <script src="java.js"></script>
+  <div class="ui-panel">
+      <span id="score">Pontszám: 0</span>
+      <span id="lives">Életek: 3</span>
+      <span id="player-name">Játékos: Névtelen</span>
+  </div>
+
+  <div id="bemutato">
+    <h2>Játékszabályzat</h2>
+    <ul>
+      <li>Csak billentyűzettel lehet játszani(Gépen ajánlott a teljes élményért)</li>
+      <li>3 életed van.</li>
+      <li>A pálinkát kell gyűjteni, minden elkapott pálinkáért +1 pontot kapsz.</li>
+      <li>Kerüld el az akadályokat, mert ha nekiütközöl, elvesztesz egy életet.</li>
+      <li>Ha elfogynak az életeid, a játék véget ér.</li>
+      <li>A játékos neve bejelentkezéskor jelenik meg, kijelentkezéskor "Névtelen" lesz.</li>
+    </ul>
+  </div>
+
+  <div id="leaderboard" class="leaderboard"></div>
+  <canvas id="gameCanvas"></canvas>
+  <script src="java.js"></script>
 </body>
 </html>

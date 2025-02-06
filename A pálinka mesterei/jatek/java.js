@@ -69,28 +69,24 @@ function isColliding(obj1, obj2) {
 
 // Játékos nevének lekérése
 async function fetchPlayerName() {
-    try {
-        const response = await fetch('getPlayerName.php', {
-            method: 'GET',
-            credentials: 'include'
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            if (data.status === "success") {
-                playerName = data.username;
-                playerNameElement.textContent = `Játékos: ${playerName}`;
-                console.log(`Üdvözlünk, ${playerName}!`);
-            } else {
-                console.error(data.message);
-            }
-        } else {
-            console.error('Hiba történt a név lekérésekor:', response.status);
-        }
-    } catch (error) {
-        console.error('Hiba a név lekérése során:', error);
+    let storedName = localStorage.getItem("felhasznaloNev");
+    if (storedName) {
+        playerName = storedName;
+    } else {
+        playerName = "Névtelen Játékos";
     }
+    playerNameElement.textContent = `Játékos: ${playerName}`;
 }
+
+async function logout() {
+    localStorage.removeItem("felhasznaloNev");
+    window.location.href = "logout.php";
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    fetchPlayerName();
+});
+
 
 // Pontszám frissítése szerveren
 async function updateScore(username, score) {
@@ -280,12 +276,6 @@ function gameOver() {
     showGameOverPopup();
 }
 
-// Játék indítása
-async function startGame() {
-    await fetchPlayerName();
-    await fetchLeaderboard(); // Betöltjük a leaderboardot az elején
-    gameLoop();
-}
 
 async function startGame() {
     await fetchPlayerName();
