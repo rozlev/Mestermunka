@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Gép: 127.0.0.1:3307
--- Létrehozás ideje: 2025. Feb 03. 14:47
+-- Gép: 127.0.0.1
+-- Létrehozás ideje: 2025. Feb 07. 11:52
 -- Kiszolgáló verziója: 10.4.28-MariaDB
 -- PHP verzió: 8.2.4
 
@@ -20,6 +20,19 @@ SET time_zone = "+00:00";
 --
 -- Adatbázis: `palinka_mesterei`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Tábla szerkezet ehhez a táblához `kepek`
+--
+
+CREATE TABLE `kepek` (
+  `KepID` int(11) NOT NULL,
+  `PalinkaID` int(11) NOT NULL,
+  `KepNev` varchar(255) NOT NULL,
+  `KepURL` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
 -- --------------------------------------------------------
 
@@ -98,7 +111,9 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`UserID`, `Nev`, `Email`, `Jelszo`, `RegisztracioDatum`, `Eletkor`, `Szerepkor`) VALUES
-(1, 'Dozsa', 'rozlev404@hegnersor.hu', '$2y$10$5F48DDdsypndoN9MKBAnnuG3TJDjtWDQZy0D0R3prAnH/NaA8T5be', '2025-02-03', 0, 'felhasználó');
+(9, 'Dozsa', 'levirozsa11@gmail.com', '$2y$10$TeIQWCliKsfI2JKfuEBg4uNG9wA1.rwPmw21ln46EBOOZbUvXqPFC', '2025-02-06', NULL, 'felhasználó'),
+(10, 'Dozsa1', 'rozlev404@hengersor.hu', '$2y$10$cwUVQdxTR9Ka.kRwugqTAuOiLH5WHjBaddd2lIO3wtE7YZntKSuBe', '2025-02-06', NULL, 'felhasználó'),
+(11, 'Dozsa3213', 'levirozsa11@gmail.com2', '$2y$10$/wwy71rL.PRPPyKNHkTiKO7gYrdCT3ImrqcwH6Gi8iDGhoFjTmi2.', '2025-02-06', NULL, 'felhasználó');
 
 -- --------------------------------------------------------
 
@@ -112,6 +127,13 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 -- Indexek a kiírt táblákhoz
 --
+
+--
+-- A tábla indexei `kepek`
+--
+ALTER TABLE `kepek`
+  ADD PRIMARY KEY (`KepID`),
+  ADD KEY `kepek_palinka_fk` (`PalinkaID`);
 
 --
 -- A tábla indexei `palinka`
@@ -146,6 +168,12 @@ ALTER TABLE `user`
 --
 
 --
+-- AUTO_INCREMENT a táblához `kepek`
+--
+ALTER TABLE `kepek`
+  MODIFY `KepID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT a táblához `palinka`
 --
 ALTER TABLE `palinka`
@@ -167,11 +195,17 @@ ALTER TABLE `scores`
 -- AUTO_INCREMENT a táblához `user`
 --
 ALTER TABLE `user`
-  MODIFY `UserID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `UserID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- Megkötések a kiírt táblákhoz
 --
+
+--
+-- Megkötések a táblához `kepek`
+--
+ALTER TABLE `kepek`
+  ADD CONSTRAINT `kepek_palinka_fk` FOREIGN KEY (`PalinkaID`) REFERENCES `palinka` (`PalinkaID`);
 
 --
 -- Megkötések a táblához `rendeles`
