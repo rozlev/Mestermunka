@@ -3,67 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../bootstrap-5.3.3-dist/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-    <title>Pálinkafőzés: A hagyomány és minőség találkozása</title>
+    <title>Pálinkafőzés: Hagyomány és Minőség</title>
+    <style>
+        body {
+            background-color: #ffe6e6;
+        }
+        .content {
+            padding: 50px 0;
+        }
+        .image-container img {
+            width: 100%;
+            border-radius: 10px;
+        }
+        .text-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .container {
+    max-width: 1100px; /* Kicsivel nagyobb szélesség */
+    margin: 0 auto;
+    overflow: hidden;
+    padding: 10px;
+}
+
+.image-container img {
+    width: 100%; /* Kép teljes szélességben a rendelkezésre álló helyen */
+    max-width: 220px; /* Kicsit nagyobb maximális méret */
+    border-radius: 20px; /* Még kerekebb képek */
+    display: block;
+    margin: 0 auto; /* Középre igazítás */
+}
+
+
+    </style>
 </head>
 <body>
-  <header>
-  <nav>
-  <ul>
-    <li><a href="../webshop/index.html">Weboldal</a></li>
-    <li id="felhasznaloNev">
-      <a href="../bejelentkezes/bejelentkezes.html" id="loginLink">Bejelentkezés</a>
-    </li>
-    <li><a href="../jatek/index.html">Játék</a></li>
-  </ul>
-</nav>
-</header>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="../webshop/index.html">Weboldal</a></li>
+                <li id="felhasznaloNev">
+                    <a href="../bejelentkezes/bejelentkezes.html" id="loginLink">Bejelentkezés</a>
+                </li>
+                <li><a href="../jatek/index.html">Játék</a></li>
+            </ul>
+        </nav>
+    </header>
 
-<div id="logoutModal" class="modal">
-  <div class="modal-content">
-    <h2>Kijelentkezés</h2>
-    <p>Biztosan ki szeretnél jelentkezni?</p>
-    <button id="logoutConfirm">Igen</button>
-    <button id="logoutCancel">Mégse</button>
-  </div>
-</div>
-
-      <div class="container">
-        <h1>Pálinkafőzés: A hagyomány és minőség találkozása</h1>
-        <p>A pálinka nemcsak egy ital, hanem a magyar kultúra és hagyomány egyik fontos szimbóluma is. Készítése évszázados múltra tekint vissza, amely során a mesterek minden tudásukat és tapasztalatukat bevetették annak érdekében, hogy a lehető legtisztább és legízletesebb párlatot hozzák létre. A pálinkafőzés mestersége az évszázadok alatt kifinomult, és az újabb technológiai vívmányok ellenére a hagyományos módszerek továbbra is meghatározóak. Ez a cikk részletesen bemutatja a pálinkafőzés folyamatát, a gyümölcs kiválasztásától kezdve egészen a palackozásig, kiemelve minden lépés jelentőségét és az azt kísérő gondos munkát.</p>
-    
-        <h2>1. A gyümölcs: A pálinka lelke</h2>
-        <p>A pálinka minőségét alapvetően az határozza meg, hogy milyen gyümölcsből készül. Érett, egészséges és hibátlan gyümölcs az alapfeltétele annak, hogy a végeredmény egyedi és különleges legyen. A pálinka a gyümölcsök tiszta esszenciáját hordozza magában, így az alapanyag kiválasztása kulcsfontosságú.</p>
-        <p>Előkészítés lépései:</p>
-        <ul>
-            <li><strong>Gyümölcsválogatás:</strong> Az érett és hibátlan darabokat kézzel válogatják ki, biztosítva, hogy csak a legjobb minőségű gyümölcs kerüljön feldolgozásra. Minden egyes gyümölcsnek saját karaktere van, így a választás hatással van az elkészült pálinka ízére és illatára.</li>
-            <li><strong>Magozás és mosás:</strong> Egyes gyümölcsök esetében, mint például az őszibarack, a mag eltávolítása szükséges, hogy a pálinka ne tartalmazzon keserű mellékízeket. A gyümölcsöket alaposan meg is mossák, hogy eltávolítsák róluk a szennyeződéseket és vegyszereket.</li>
-            <li><strong>Pépesítés:</strong> Az előkészített gyümölcsöt pépesítik, hogy az erjesztési folyamat hatékony legyen. A pépesítés segíti a gyümölcsben lévő cukrok felszabadulását, amelyek a fermentáció során alkoholos anyaggá alakulnak.</li>
-        </ul>
-    
-        <h2>2. A cefrézés és az erjesztés titkai</h2>
-        <p>Az erjesztés az a folyamat, mely során a gyümölcs természetes cukortartalma alkohollá alakul. A legfontosabb eleme ennek a szakasznak az élesztőgombák jelenléte, amelyek gyorsan átalakítják a cukrokat etanollá. Az erjesztéshez használt élesztők típusa és minősége szintén alapvető hatással van a készülő pálinka ízére.</p>
-        <p>Fontos, hogy az erjesztés alatt a cefre ne érintkezzen oxigénnel, mert ez oxidációhoz és kellemetlen mellékízekhez vezethet. Az erjesztés során a hőmérsékletet is szigorúan kontrollálni kell, hogy a folyamat ne induljon túl gyorsan vagy túl lassan.</p>
-    
-        <h2>3. A lepárlás művészete</h2>
-        <p>A lepárlás az a folyamat, amely során a cefréből a tiszta alkoholos párlatot kinyerik. A lepárlás a pálinkafőzés egyik legfontosabb és legnagyobb odafigyelést igénylő szakasza, mivel itt kerülnek előtérbe azok az ízek, amelyek meghatározzák a végeredményt. A lepárlás művészete nem csupán a technikai tudásról, hanem az érzékenységről is szól, mivel a legfinomabb illat- és ízjegyek csak a megfelelő körülmények között nyerhetők ki.</p>
-        <ul>
-            <li>A cefre felmelegítése rézüstben történik: A réz, mint anyag, hozzájárul a párlat tisztaságához és segít eltávolítani a nem kívánt mellékízeket.</li>
-            <li>Az elő- és utópárlat elkülönítése: A lepárlás során az előpárlat és az utópárlat elkülönítése is elengedhetetlen, hogy a tiszta pálinkát elérjük. Az előpárlatban található anyagok kellemetlen ízűek lehetnek, míg az utópárlat nem kívánt anyagokat tartalmazhat.</li>
-        </ul>
-    
-        <h2>4. Az érlelés és finomítás</h2>
-        <p>Az érlelési folyamat során az ital karaktere teljessé válik, és az ízek mélyebb, gazdagabb formát öltenek. Az érlelés során a pálinka nemcsak az alkoholtartalmát, hanem a gyümölcsök finom aromáit is megőrzi, miközben új jegyekkel gazdagodik.</p>
-        <ul>
-            <li><strong>Fa hordókban érlelés:</strong> Az érleléshez használt fa hordók különleges hatással vannak a pálinka ízére. Az érlelés során a fa tanninjai és aromái gazdagítják az italt, mélyebb, komplexebb ízvilágot eredményezve.</li>
-            <li><strong>Üvegballonokban tárolás:</strong> A tiszta, gyümölcsös ízek megőrzésére, az üvegballonokban való tárolás is népszerű módszer. Itt a pálinka lassan, de biztosan fejlődik, miközben a gyümölcsaromák változatlanok maradnak.</li>
-        </ul>
-    
-        <h2>5. Palackozás: Az utolsó lépés</h2>
-        <p>Az érlelési folyamat végén a pálinkát szűrik és palackozzák. Az üvegpalackok formája és címkéje gyakran egyedi, hiszen a pálinkafőző mesterek számára a megjelenés is része a termék értékének. A palackozásnál figyelmet kell fordítani arra, hogy az ital minden tulajdonságát megőrizzék. Az üveg formája, színe és a címke stílusa mind hozzájárulnak ahhoz, hogy a pálinka nemcsak a fogyasztói érzékszerveket, hanem a vásárlók szívét is elnyerje. A palackozás után az ital készen áll arra, hogy elnyerje méltó helyét a hagyományos magyar pálinkák között.</p>
+    <div id="logoutModal" class="modal">
+        <div class="modal-content">
+            <h2>Kijelentkezés</h2>
+            <p>Biztosan ki szeretnél jelentkezni?</p>
+            <button id="logoutConfirm">Igen</button>
+            <button id="logoutCancel">Mégse</button>
+        </div>
     </div>
-    
+
+    <div class="container text-center content">
+        <h1 class="mb-4">Pálinkafőzés: Hagyomány és Minőség</h1>
+        <p>A pálinka a magyar kultúra egyik jelképe, amelynek készítése évszázados múltra tekint vissza. A hagyományos módszerek és a modern technológia ötvözésével születik meg a tiszta, ízletes párlat.</p>
+        
+        <div class="row align-items-center my-5">
+            <div class="col-md-4 image-container">
+                <img src="palackozas.jpg" alt="Gyümölcs">
+            </div>
+            <div class="col-md-8 text-box">
+                <h3>1. A Gyümölcs: A Pálinka Lelke</h3>
+                <p>A minőség kulcsa az érett, egészséges gyümölcs. A legnépszerűbb alapanyagok közé tartozik a szilva, barack, körte és cseresznye.</p>
+                <p><strong>Válogatás, mosás, pépesítés:</strong> A gyümölcsöt gondosan előkészítik, hogy a lehető legjobb aromákat nyerjék ki belőle.</p>
+            </div>
+        </div>
+        
+        <div class="row align-items-center my-5">
+            <div class="col-md-8 text-box">
+                <h3>2. Cefrézés és Erjesztés</h3>
+                <p>A cefrét zárt tartályban erjesztik, 20-25°C-on, hogy az élesztő alkohollá alakítsa a cukrot. Az oxigén kizárása elengedhetetlen a minőség megőrzéséhez.</p>
+            </div>
+            <div class="col-md-4 image-container">
+                <img src="https://source.unsplash.com/300x300/?fermentation" alt="Erjesztés">
+            </div>
+        </div>
+        
+        <div class="row align-items-center my-5">
+            <div class="col-md-4 image-container">
+                <img src="https://source.unsplash.com/300x300/?distillation" alt="Lepárlás">
+            </div>
+            <div class="col-md-8 text-box">
+                <h3>3. Lepárlás: Az Ízek Kinyerése</h3>
+                <p>A cefrét rézüstben melegítik, az alkoholos gőzöket lepárolják.</p>
+                <p><strong>Elő- és utópárlat szétválasztása:</strong> Csak a középpárlat ad tiszta, ízletes pálinkát.</p>
+            </div>
+        </div>
+        
+        <div class="row align-items-center my-5">
+            <div class="col-md-8 text-box">
+                <h3>4. Érlelés és Finomítás</h3>
+                <p>A pálinka érlelése hordóban mélyebb, összetettebb ízt ad, míg üvegballonban a gyümölcsös jegyek dominálnak.</p>
+            </div>
+            <div class="col-md-4 image-container">
+                <img src="https://source.unsplash.com/300x300/?barrel" alt="Érlelés">
+            </div>
+        </div>
+        
+        <div class="row align-items-center my-5">
+            <div class="col-md-4 image-container">
+                <img src="https://source.unsplash.com/300x300/?bottle" alt="Palackozás">
+            </div>
+            <div class="col-md-8 text-box">
+                <h3>5. Palackozás</h3>
+                <p>A szűrt, érlelt pálinka üvegbe kerül, megőrizve karakteres aromáit. Az egyedi palackok és címkék a mesterek keze munkáját tükrözik.</p>
+                <p>A kész pálinka méltó folytatása a magyar hagyományoknak, legyen szó családi ünnepekről vagy különleges alkalmakról.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+
+
+
+
     <footer>
         <div class="footer-container">
           <!-- Logo (ha szükséges) -->
@@ -86,7 +151,7 @@
               <p id="egy">Kovács Bence</p>
             </div>
             <div class="image-item">
-              <img src="image2.jpg" alt="Rózsa Levente">
+              <img src="https://th.bing.com/th/id/OIP.3STjyKQXWaLb7N4rADF_CAHaHa?w=162&h=180&c=7&r=0&o=5&pid=1.7" alt="Rózsa Levente">
               <p id="egy">Rózsa Levente</p>
             </div>
             <div class="image-item">
@@ -96,6 +161,7 @@
           </div>
         </div>
       </footer>
+      
       <script src="java.js"></script>
     </body>
 </html>
