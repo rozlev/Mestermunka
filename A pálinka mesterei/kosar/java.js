@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (cart.length === 0) {
             cartItemsContainer.innerHTML = "<tr><td colspan='6'>A kosár üres</td></tr>";
+            totalPriceContainer.textContent = "0 HUF"; // Nullázás, ha üres a kosár
             orderButton.style.display = "none";
             return;
         } else {
@@ -40,7 +41,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         totalPriceContainer.textContent = totalPrice + " HUF";
-
         attachEventListeners();
     }
 
@@ -80,6 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("clear-cart").addEventListener("click", function () {
         localStorage.removeItem("cart");
         cart = [];
+        totalPriceContainer.textContent = "0 HUF"; // Nullázás a kosár törlésekor
         renderCart();
     });
 
@@ -104,6 +105,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 alert("Sikeres rendelés! Köszönjük a vásárlást!");
                 localStorage.removeItem("cart");
                 cart = [];
+                totalPriceContainer.textContent = "0 HUF"; // Nullázás rendelés után
                 renderCart();
                 
                 localStorage.setItem("orderCompleted", "true");

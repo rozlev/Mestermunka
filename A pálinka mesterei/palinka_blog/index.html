@@ -29,7 +29,7 @@
     overflow: hidden;
     padding: 10px;
 }
-
+ 
 .image-container img {
     width: 100%; /* Kép teljes szélességben a rendelkezésre álló helyen */
     max-width: 220px; /* Kicsit nagyobb maximális méret */
@@ -37,8 +37,8 @@
     display: block;
     margin: 0 auto; /* Középre igazítás */
 }
-
-
+ 
+ 
     </style>
 </head>
 <body>
@@ -56,7 +56,7 @@
       </ul>
     </nav>
   </header>
-
+ 
     <div id="logoutModal" class="modal">
         <div class="modal-content">
             <h2>Kijelentkezés</h2>
@@ -65,11 +65,22 @@
             <button id="logoutCancel">Mégse</button>
         </div>
     </div>
-
+    <div class="container text-center mt-4 mb-4">
+        <div class="video-container">
+            <iframe
+                src="https://www.youtube.com/embed/8PaFcyMht6o"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+            </iframe>
+        </div>
+    </div>
+       
+   
     <div class="container text-center content">
         <h1 class="mb-4">Pálinkafőzés: Hagyomány és Minőség</h1>
         <p>A pálinka a magyar kultúra egyik jelképe, amelynek készítése évszázados múltra tekint vissza. A hagyományos módszerek és a modern technológia ötvözésével születik meg a tiszta, ízletes párlat.</p>
-        
+       
         <div class="row align-items-center my-5">
             <div class="col-md-4 image-container">
                 <img src="palackozas.jpg" alt="Gyümölcs">
@@ -80,20 +91,20 @@
                 <p><strong>Válogatás, mosás, pépesítés:</strong> A gyümölcsöt gondosan előkészítik, hogy a lehető legjobb aromákat nyerjék ki belőle.</p>
             </div>
         </div>
-        
+       
         <div class="row align-items-center my-5">
             <div class="col-md-8 text-box">
                 <h3>2. Cefrézés és Erjesztés</h3>
                 <p>A cefrét zárt tartályban erjesztik, 20-25°C-on, hogy az élesztő alkohollá alakítsa a cukrot. Az oxigén kizárása elengedhetetlen a minőség megőrzéséhez.</p>
             </div>
             <div class="col-md-4 image-container">
-                <img src="https://source.unsplash.com/300x300/?fermentation" alt="Erjesztés">
+                <img src="cefre.jpg" alt="Erjesztés">
             </div>
         </div>
-        
+       
         <div class="row align-items-center my-5">
             <div class="col-md-4 image-container">
-                <img src="https://source.unsplash.com/300x300/?distillation" alt="Lepárlás">
+                <img src="lepárlás.jpg" alt="Lepárlás">
             </div>
             <div class="col-md-8 text-box">
                 <h3>3. Lepárlás: Az Ízek Kinyerése</h3>
@@ -101,20 +112,20 @@
                 <p><strong>Elő- és utópárlat szétválasztása:</strong> Csak a középpárlat ad tiszta, ízletes pálinkát.</p>
             </div>
         </div>
-        
+       
         <div class="row align-items-center my-5">
             <div class="col-md-8 text-box">
                 <h3>4. Érlelés és Finomítás</h3>
                 <p>A pálinka érlelése hordóban mélyebb, összetettebb ízt ad, míg üvegballonban a gyümölcsös jegyek dominálnak.</p>
             </div>
             <div class="col-md-4 image-container">
-                <img src="https://source.unsplash.com/300x300/?barrel" alt="Érlelés">
+                <img src="érlelés.jpg" alt="Érlelés">
             </div>
         </div>
-        
+       
         <div class="row align-items-center my-5">
             <div class="col-md-4 image-container">
-                <img src="https://source.unsplash.com/300x300/?bottle" alt="Palackozás">
+                <img src="palackozás.jpg" alt="Palackozás">
             </div>
             <div class="col-md-8 text-box">
                 <h3>5. Palackozás</h3>
@@ -125,20 +136,20 @@
     </div>
 </body>
 </html>
-
-
-
-
-
-
-
+ 
+ 
+ 
+ 
+ 
+ 
+ 
     <footer>
         <div class="footer-container">
           <!-- Logo (ha szükséges) -->
           <div class="footer-logo">
             <img src="../img/logo.png" alt="A pálinka mesterei logo" id="logo">
           </div>
-      
+     
           <!-- Elérhetőség szekció -->
           <div class="footer-contact">
             <h3>Elérhetőség</h3>
@@ -146,7 +157,7 @@
             <p>Email: rozlev404@hengersor.hu</p>
             <p>Hely: Ócsa Kossuth Lajos utca 114</p>
           </div>
-      
+     
           <!-- Képgaléria -->
           <div class="image-gallery">
             <div class="image-item">
@@ -164,7 +175,7 @@
           </div>
         </div>
       </footer>
-      
+     
       <script src="java.js"></script>
     </body>
 </html>
