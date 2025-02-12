@@ -34,47 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
     loginLink.textContent = "Bejelentkezés";
     loginLink.href = "../bejelentkezes/bejelentkezes.html";
   }
-});
-document.addEventListener("DOMContentLoaded", function () {
-  fetch("get_palinka.php")
-      .then(response => {
-          if (!response.ok) {
-              throw new Error(`Hálózati hiba: ${response.status}`);
-          }
-          return response.json();
-      })
-      .then(data => {
-          console.log("Lekért adatok:", data);
-          if (data.error) {
-              console.error("Hiba:", data.error);
-              return;
-          }
-
-          const container = document.querySelector(".product-container");
-          if (!container) {
-              console.error("Nincs .product-container az oldalon!");
-              return;
-          }
-
-          container.innerHTML = "";
-
-          data.forEach(palinka => {
-              const productDiv = document.createElement("div");
-              productDiv.classList.add("product");
-
-              productDiv.innerHTML = `
-                  <img src="${palinka.KepURL}" alt="${palinka.Nev}">
-                  <p>${palinka.Nev} - ${palinka.AlkoholTartalom}% - ${palinka.Ar} HUF</p>
-                  <p><strong>Készlet:</strong> <span class="stock">${palinka.DB_szam}</span> db</p>
-                  <button class="add-to-cart-btn">Kosárba</button>
-              `;
-              container.appendChild(productDiv);
-          });
-      })
-      .catch(error => console.error("Hiba történt:", error));
-});
-
-document.addEventListener("DOMContentLoaded", function () {
+});document.addEventListener("DOMContentLoaded", function () {
   function loadProducts() {
       fetch("get_palinka.php")
           .then(response => response.json())
@@ -91,16 +51,26 @@ document.addEventListener("DOMContentLoaded", function () {
                   const productDiv = document.createElement("div");
                   productDiv.classList.add("product");
 
+                  let buttonHTML = "";
+                  if (palinka.DB_szam > 0) {
+                      buttonHTML = `<button class="add-to-cart-btn" data-id="${palinka.Nev}" data-price="${palinka.Ar}" data-image="${palinka.KepURL}">Kosárba</button>`;
+                  } else {
+                      buttonHTML = `<p class="out-of-stock">❌ Nincs készleten</p>`;
+                  }
+
                   productDiv.innerHTML = `
                       <img src="${palinka.KepURL}" alt="${palinka.Nev}">
-                      <p>${palinka.Nev} - ${palinka.AlkoholTartalom}% - ${palinka.Ar} HUF</p>
+                       <p>${palinka.Nev} 
+                       <br>
+                       ${palinka.AlkoholTartalom} Alk%  
+                       <br>
+                       ${palinka.Ar} HUF</p>
                       <p><strong>Készlet:</strong> <span class="stock">${palinka.DB_szam}</span> db</p>
-                      <button class="add-to-cart-btn" data-id="${palinka.Nev}" data-price="${palinka.Ar}" data-image="${palinka.KepURL}">Kosárba</button>
+                      ${buttonHTML}
                   `;
                   container.appendChild(productDiv);
               });
 
-              // Kosárba gombok működése
               document.querySelectorAll(".add-to-cart-btn").forEach(button => {
                   button.addEventListener("click", function () {
                       const name = this.getAttribute("data-id");
@@ -117,24 +87,20 @@ document.addEventListener("DOMContentLoaded", function () {
   function addToCart(name, price, image) {
       let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-      // Ellenőrzés, hogy már benne van-e a kosárban
       const existingItem = cart.find(item => item.name === name);
       if (existingItem) {
-          existingItem.quantity += 1; // Növeljük a darabszámot
+          existingItem.quantity += 1;
       } else {
           cart.push({ name, price, image, quantity: 1 });
       }
 
       localStorage.setItem("cart", JSON.stringify(cart));
 
-      // Visszajelzés a felhasználónak
       alert(`"${name}" hozzáadva a kosárhoz!`);
   }
 
-  // Termékek betöltése
   loadProducts();
 
-  // Rendelés után frissítsük a készletet
   window.addEventListener("storage", function (event) {
       if (event.key === "orderCompleted") {
           loadProducts();

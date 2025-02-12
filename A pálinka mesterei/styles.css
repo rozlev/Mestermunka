@@ -202,7 +202,7 @@ footer {
   background: linear-gradient(135deg, #811331, #b02a4d);
   color: #fff;
   padding: 2.5rem;
-  margin-top: 3rem;
+  margin: 30px;  
   text-align: center;
   border-radius: 10px;
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);

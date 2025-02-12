@@ -105,7 +105,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 localStorage.removeItem("cart");
                 cart = [];
                 renderCart();
-
+                
                 localStorage.setItem("orderCompleted", "true");
                 window.dispatchEvent(new Event("storage"));
             }
