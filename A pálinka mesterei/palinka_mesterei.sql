@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2025. Feb 07. 11:52
+-- Létrehozás ideje: 2025. Feb 12. 10:31
 -- Kiszolgáló verziója: 10.4.28-MariaDB
 -- PHP verzió: 8.2.4
 
@@ -34,6 +34,21 @@ CREATE TABLE `kepek` (
   `KepURL` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
+--
+-- A tábla adatainak kiíratása `kepek`
+--
+
+INSERT INTO `kepek` (`KepID`, `PalinkaID`, `KepNev`, `KepURL`) VALUES
+(37, 1, 'Málna Pálinka', 'https://zimekpalinka.hu/wp-content/uploads/2020/12/0004_466.jpg-1024x1024.png'),
+(38, 2, 'Eper Pálinka', 'https://eshop.tavlisa.cz/files/prod_images/temp_big/-ef161b6f-34f8-499f-8223-89a58dc6432d-_v.jpg'),
+(39, 3, 'Füge Pálinka', 'https://th.bing.com/th/id/R.62717920c5bab88f47f4e8f611e0cc40?rik=6iREIdAACbMYJg&riu=http%3a%2f%2fwww.natura-antunovic.com%2fwp-content%2fuploads%2f2014%2f11%2fsmokva-boca.jpg&ehk=%2ff%2b2OBgmqLZq9QIV5h1yRnIgpqfDIjJBcouEny2iyyE%3d&risl=&pid=ImgRaw&r=0'),
+(40, 4, 'Cseresznye Pálinka', 'https://th.bing.com/th/id/OIP.rJUNFtRoMJPpOWSZb8ZouAHaHa?rs=1&pid=ImgDetMain'),
+(41, 6, 'Kajszibarack Pálinka', 'https://th.bing.com/th/id/R.b2df27ac5d4bb7da6d16a63e9904e768?rik=bXCN8PNWX9rFcA&pid=ImgRaw&r=0'),
+(42, 7, 'Tök Pálinka', 'https://szicsek.hu/45-large_default/suetotoek-parlat.jpg'),
+(43, 8, 'Dió Pálinka', 'https://italkereso.hu/media/item/palinka/panyolai/panyolai-mezes-zold-dio-likor-0.5l-xxl.jpeg'),
+(44, 9, 'Fekete Ribizli Pálinka', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTkWavMk2uqp-Iv3WoMG-I8i_TdVeiEG0MXw&s'),
+(45, 10, 'Muskotály Pálinka', 'https://www.palinka.com/images/gallery/hu/big/Palotas-Ottonel-Muskotaly-Szolo-Palinka-035liter.jpg');
+
 -- --------------------------------------------------------
 
 --
@@ -48,6 +63,21 @@ CREATE TABLE `palinka` (
   `Kategoria` varchar(50) NOT NULL,
   `DB_szam` int(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+
+--
+-- A tábla adatainak kiíratása `palinka`
+--
+
+INSERT INTO `palinka` (`PalinkaID`, `Nev`, `AlkoholTartalom`, `Ar`, `Kategoria`, `DB_szam`) VALUES
+(1, 'Málna Pálinka', 44.00, 5000.00, 'Gyümölcs', 10),
+(2, 'Eper Pálinka', 40.00, 7300.00, 'Gyümölcs', 0),
+(3, 'Füge Pálinka', 46.00, 9400.00, 'Gyümölcs', 93),
+(4, 'Cseresznye Pálinka', 38.00, 5000.00, 'Gyümölcs', 99),
+(6, 'Kajszi Pálinka', 49.00, 6600.00, 'Gyümölcs', 99),
+(7, 'Tök Pálinka', 43.00, 8400.00, 'Zöldség', 100),
+(8, 'Dió Pálinka', 47.00, 5500.00, 'Magvas', 100),
+(9, 'Fekete Ribizli Pálinka', 45.00, 6300.00, 'Gyümölcs', 100),
+(10, 'Muskotály Pálinka', 45.00, 4500.00, 'Virág', 98);
 
 -- --------------------------------------------------------
 
@@ -89,6 +119,13 @@ CREATE TABLE `scores` (
   `points` int(11) NOT NULL,
   `date` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+
+--
+-- A tábla adatainak kiíratása `scores`
+--
+
+INSERT INTO `scores` (`score_id`, `player_id`, `points`, `date`) VALUES
+(1, 9, 16, '2025-02-12 10:07:58');
 
 -- --------------------------------------------------------
 
@@ -171,13 +208,13 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT a táblához `kepek`
 --
 ALTER TABLE `kepek`
-  MODIFY `KepID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `KepID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- AUTO_INCREMENT a táblához `palinka`
 --
 ALTER TABLE `palinka`
-  MODIFY `PalinkaID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `PalinkaID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT a táblához `rendeles`
@@ -189,7 +226,7 @@ ALTER TABLE `rendeles`
 -- AUTO_INCREMENT a táblához `scores`
 --
 ALTER TABLE `scores`
-  MODIFY `score_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `score_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT a táblához `user`
