@@ -36,127 +36,109 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 document.addEventListener("DOMContentLoaded", function () {
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  fetch("get_palinka.php")
+      .then(response => {
+          if (!response.ok) {
+              throw new Error(`Hálózati hiba: ${response.status}`);
+          }
+          return response.json();
+      })
+      .then(data => {
+          console.log("Lekért adatok:", data);
+          if (data.error) {
+              console.error("Hiba:", data.error);
+              return;
+          }
 
-  // Frissíti a kosár gombot a főoldalon
-  function updateCartButton() {
-      let cartLink = document.getElementById("cart-link");
-      if (cartLink) {
-          cartLink.textContent = `Kosár (${cart.length})`;
-      }
-  }
+          const container = document.querySelector(".product-container");
+          if (!container) {
+              console.error("Nincs .product-container az oldalon!");
+              return;
+          }
 
-  // Termék hozzáadása a kosárhoz
-  function addToCart(event) {
-    let product = event.target.closest(".product");
-    let name = product.querySelector("p").textContent.split(" - ")[0];
-    let price = parseInt(product.querySelector("p").textContent.match(/\d+/)[0]);
-    let image = product.querySelector("img").src;
+          container.innerHTML = "";
 
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+          data.forEach(palinka => {
+              const productDiv = document.createElement("div");
+              productDiv.classList.add("product");
 
-    let existingProduct = cart.find(item => item.name === name);
-    if (existingProduct) {
-        existingProduct.quantity++;
-    } else {
-        cart.push({ name, price, image, quantity: 1 });
-    }
-
-    localStorage.setItem("cart", JSON.stringify(cart));
-
-    console.log("Kosár tartalma:", cart); // Debug kiírás
-    updateCartButton();
-}
-
-
-  // Kosár gombok eseményfigyelője
-  document.querySelectorAll(".add-to-cart-btn").forEach(button => {
-      button.addEventListener("click", addToCart);
-  });
-
-  updateCartButton();
-
-  // Ha a kosár oldalon vagyunk, akkor betöltjük a kosarat
-  if (document.getElementById("cart-items")) {
-      loadCart();
-  }
+              productDiv.innerHTML = `
+                  <img src="${palinka.KepURL}" alt="${palinka.Nev}">
+                  <p>${palinka.Nev} - ${palinka.AlkoholTartalom}% - ${palinka.Ar} HUF</p>
+                  <p><strong>Készlet:</strong> <span class="stock">${palinka.DB_szam}</span> db</p>
+                  <button class="add-to-cart-btn">Kosárba</button>
+              `;
+              container.appendChild(productDiv);
+          });
+      })
+      .catch(error => console.error("Hiba történt:", error));
 });
 
-// Kosár betöltése a kosár oldalon
-function loadCart() {
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  let cartTable = document.getElementById("cart-items");
-  let totalPrice = 0;
-
-  cartTable.innerHTML = ""; // Kiürítjük a táblázatot, hogy ne legyen duplikáció
-
-  if (cart.length === 0) {
-      cartTable.innerHTML = `<tr><td colspan="6" class="text-center">A kosár üres.</td></tr>`;
-  } else {
-      cart.forEach((item, index) => {
-          let row = document.createElement("tr");
-          row.innerHTML = `
-              <td><img src="${item.image}" width="50"></td>
-              <td>${item.name}</td>
-              <td>${item.price} HUF</td>
-              <td><input type="number" min="1" value="${item.quantity}" data-index="${index}" class="cart-quantity"></td>
-              <td>${item.price * item.quantity} HUF</td>
-              <td><button class="btn btn-danger remove-item" data-index="${index}">Törlés</button></td>
-          `;
-          cartTable.appendChild(row);
-          totalPrice += item.price * item.quantity;
-      });
-  }
-
-  document.getElementById("total-price").textContent = totalPrice;
-
-  // Mennyiség módosítása
-  document.querySelectorAll(".cart-quantity").forEach(input => {
-      input.addEventListener("change", updateQuantity);
-  });
-
-  // Termék törlése a kosárból
-  document.querySelectorAll(".remove-item").forEach(button => {
-      button.addEventListener("click", removeItem);
-  });
-
-  console.log("Kosár betöltve:", cart); // Debug kiírás
-}
-
-
-// Mennyiség módosítása
-function updateQuantity(event) {
-  let index = event.target.dataset.index;
-  let cart = JSON.parse(localStorage.getItem("cart"));
-  let newQuantity = parseInt(event.target.value);
-
-  if (newQuantity <= 0) {
-      cart.splice(index, 1); // Törli, ha 0
-  } else {
-      cart[index].quantity = newQuantity;
-  }
-
-  localStorage.setItem("cart", JSON.stringify(cart));
-  loadCart();
-}
-
-// Termék eltávolítása a kosárból
-function removeItem(event) {
-  let index = event.target.dataset.index;
-  let cart = JSON.parse(localStorage.getItem("cart"));
-
-  cart.splice(index, 1);
-  localStorage.setItem("cart", JSON.stringify(cart));
-  loadCart();
-}
-
-// Kosár ürítése
-function clearCart() {
-  localStorage.removeItem("cart");
-  loadCart();
-}
 document.addEventListener("DOMContentLoaded", function () {
-  if (document.getElementById("cart-items")) {
-      loadCart();
+  function loadProducts() {
+      fetch("get_palinka.php")
+          .then(response => response.json())
+          .then(data => {
+              const container = document.querySelector(".product-container");
+              if (!container) {
+                  console.error("Nincs .product-container az oldalon!");
+                  return;
+              }
+
+              container.innerHTML = "";
+
+              data.forEach(palinka => {
+                  const productDiv = document.createElement("div");
+                  productDiv.classList.add("product");
+
+                  productDiv.innerHTML = `
+                      <img src="${palinka.KepURL}" alt="${palinka.Nev}">
+                      <p>${palinka.Nev} - ${palinka.AlkoholTartalom}% - ${palinka.Ar} HUF</p>
+                      <p><strong>Készlet:</strong> <span class="stock">${palinka.DB_szam}</span> db</p>
+                      <button class="add-to-cart-btn" data-id="${palinka.Nev}" data-price="${palinka.Ar}" data-image="${palinka.KepURL}">Kosárba</button>
+                  `;
+                  container.appendChild(productDiv);
+              });
+
+              // Kosárba gombok működése
+              document.querySelectorAll(".add-to-cart-btn").forEach(button => {
+                  button.addEventListener("click", function () {
+                      const name = this.getAttribute("data-id");
+                      const price = parseInt(this.getAttribute("data-price"));
+                      const image = this.getAttribute("data-image");
+
+                      addToCart(name, price, image);
+                  });
+              });
+          })
+          .catch(error => console.error("Hiba történt:", error));
   }
+
+  function addToCart(name, price, image) {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+      // Ellenőrzés, hogy már benne van-e a kosárban
+      const existingItem = cart.find(item => item.name === name);
+      if (existingItem) {
+          existingItem.quantity += 1; // Növeljük a darabszámot
+      } else {
+          cart.push({ name, price, image, quantity: 1 });
+      }
+
+      localStorage.setItem("cart", JSON.stringify(cart));
+
+      // Visszajelzés a felhasználónak
+      alert(`"${name}" hozzáadva a kosárhoz!`);
+  }
+
+  // Termékek betöltése
+  loadProducts();
+
+  // Rendelés után frissítsük a készletet
+  window.addEventListener("storage", function (event) {
+      if (event.key === "orderCompleted") {
+          loadProducts();
+          localStorage.removeItem("orderCompleted");
+      }
+  });
 });
