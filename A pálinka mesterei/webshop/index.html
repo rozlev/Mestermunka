@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pálinkák Webshop</title>
-  <link rel="stylesheet" href="css.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header>
@@ -53,7 +53,15 @@
       </div>
     </div>
   </footer>
+<!-- Kosár értesítési Modal -->
+<div id="cartNotificationModal" class="cart-modal">
+  <div class="cart-modal-content">
+      <h2 id="cartNotificationTitle">Siker!</h2>
+      <p id="cartNotificationMessage"></p>
+      <button id="cartCloseModalBtn" class="cart-modal-btn">Rendben</button>
+  </div>
+</div>
 
-  <script src="javaj.js"></script>
+  <script src="js/javaj.js"></script>
 </body>
 </html>

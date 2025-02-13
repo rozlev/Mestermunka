@@ -1,0 +1,153 @@
+body {
+    background-color: #f8f9fa;
+}
+
+.container {
+    max-width: 1000px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    color: #811331;
+}
+
+.table {
+    margin-top: 20px;
+}
+
+th {
+    background-color: #811331;
+    color: white;
+    text-align: center;
+}
+
+td {
+    vertical-align: middle;
+    text-align: center;
+}
+
+#total-price {
+    font-weight: bold;
+    color: #811331;
+    font-size: 1.5rem;
+}
+
+.btn-danger {
+    width: 100%;
+    font-size: 1.2rem;
+}
+
+
+/* HEADER */
+header {
+    background: linear-gradient(90deg, #811331, #a61d4d); /* Mély vörös árnyalatok */
+    color: #fff;
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  header h1 {
+    font-size: 2.8rem;
+    font-weight: bold;
+    margin: 0;
+    color: white;
+  }
+  
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+  }
+  
+  nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 0.6rem 1rem;
+    border: 2px solid transparent;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+  }
+  
+  nav ul li a:hover {
+    border: 2px solid #fff;
+    background: #f5c3cf;
+    color: #811331;
+  }
+
+    /* Modal háttér */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.4); /* Sötét háttér, de áttetsző */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        display: none;
+    }
+
+    /* Modal tartalom - KIS MÉRETŰ, KÖZÉPEN, LEKEREKÍTETT */
+    .modal-content {
+        background-color: white;
+        padding: 20px;
+        border-radius: 15px; /* Lekerekített szélek */
+        text-align: center;
+        width: 300px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        animation: fadeIn 0.3s ease-in-out;
+    }
+
+    /* Animáció a megjelenéshez */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Modal gomb */
+    .modal-btn {
+        margin-top: 15px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px; /* Gomb is lekerekített */
+        cursor: pointer;
+        background-color: #811331;
+        color: white;
+        font-size: 16px;
+        transition: background 0.3s ease-in-out;
+    }
+
+    .modal-btn:hover {
+        background-color: #811331;
+    }
+
+    /* Modal cím */
+    #notification-title {
+        font-size: 20px;
+        margin-bottom: 10px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    /* Modal szöveg */
+    #notification-message {
+        font-size: 16px;
+        color: #555;
+    }

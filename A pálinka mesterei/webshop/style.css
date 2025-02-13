@@ -320,3 +320,67 @@
   button:hover {
     background-color: #ddd;
   }
+/* Új értesítési modal a kosárhoz */
+.cart-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Modal tartalom */
+.cart-modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    width: 320px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Animáció a megjelenéshez */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Modal gomb */
+.cart-modal-btn {
+    margin-top: 15px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: #811331;
+    color: white;
+    font-size: 16px;
+    transition: background 0.3s ease-in-out;
+}
+
+.cart-modal-btn:hover {
+    background-color: #811331;
+}
+
+/* Modal szöveg */
+#cartNotificationMessage {
+    font-size: 16px;
+    color: #555;
+}

@@ -85,19 +85,22 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function addToCart(name, price, image) {
-      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-      const existingItem = cart.find(item => item.name === name);
-      if (existingItem) {
-          existingItem.quantity += 1;
-      } else {
-          cart.push({ name, price, image, quantity: 1 });
-      }
+    // Ellenőrzés, hogy már benne van-e a kosárban
+    const existingItem = cart.find(item => item.name === name);
+    if (existingItem) {
+        existingItem.quantity += 1; // Növeljük a darabszámot
+    } else {
+        cart.push({ name, price, image, quantity: 1 });
+    }
 
-      localStorage.setItem("cart", JSON.stringify(cart));
+    localStorage.setItem("cart", JSON.stringify(cart));
 
-      alert(`"${name}" hozzáadva a kosárhoz!`);
-  }
+    // Hívjuk meg az értesítési modalt (NEM alert)
+    showCartNotification(`"${name}" hozzáadva a kosárhoz!`);
+}
+
 
   loadProducts();
 
@@ -108,3 +111,21 @@ document.addEventListener("DOMContentLoaded", function () {
       }
   });
 });
+function showCartNotification(message) {
+    const modal = document.getElementById("cartNotificationModal");
+    const messageContainer = document.getElementById("cartNotificationMessage");
+    const closeButton = document.getElementById("cartCloseModalBtn");
+
+    messageContainer.textContent = message;
+    modal.style.display = "flex";
+
+    closeButton.onclick = function () {
+        modal.style.display = "none";
+    };
+
+    modal.addEventListener("click", function (event) {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    });
+}
