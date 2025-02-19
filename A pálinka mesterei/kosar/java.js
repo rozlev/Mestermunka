@@ -9,17 +9,17 @@ document.addEventListener("DOMContentLoaded", function () {
     orderButton.id = "submit-order";
     document.querySelector(".container").appendChild(orderButton);
 
+    const confirmModal = document.getElementById("confirm-modal");
+    const confirmOrderBtn = document.getElementById("confirm-order-btn");
+    const cancelOrderBtn = document.getElementById("cancel-order-btn");
+
     function showNotification(title, message) {
         const modal = document.getElementById("notification-modal");
-        const titleContainer = document.getElementById("notification-title");
-        const messageContainer = document.getElementById("notification-message");
-        const closeButton = document.getElementById("close-modal-btn");
-
-        titleContainer.textContent = title;
-        messageContainer.textContent = message;
+        document.getElementById("notification-title").textContent = title;
+        document.getElementById("notification-message").textContent = message;
         modal.style.display = "flex";
 
-        closeButton.onclick = function () {
+        document.getElementById("close-modal-btn").onclick = function () {
             modal.style.display = "none";
         };
 
@@ -29,6 +29,45 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
+
+    orderButton.addEventListener("click", function () {
+        if (cart.length === 0) {
+            showNotification("Hiba", "A kosár üres!");
+            return;
+        }
+        confirmModal.style.display = "flex";
+    });
+
+    cancelOrderBtn.addEventListener("click", function () {
+        confirmModal.style.display = "none";
+    });
+
+    confirmOrderBtn.addEventListener("click", function () {
+        confirmModal.style.display = "none";
+
+        fetch("process_order.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ cart })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                showNotification("Hiba", data.error);
+            } else {
+                showNotification("Rendelés sikeres", "Köszönjük a vásárlást!");
+                localStorage.removeItem("cart");
+                cart = [];
+                totalPriceContainer.textContent = "0 HUF";
+                renderCart();
+            }
+        })
+        .catch(error => {
+            showNotification("Hiba", "Hiba történt a rendelés során!");
+        });
+    });
 
     function renderCart() {
         cartItemsContainer.innerHTML = "";
@@ -51,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 <td>${item.price} HUF</td>
                 <td>
                     <button class="decrease-qty" data-index="${index}">-</button>
-                    <input type="text" value="${item.quantity}" class="qty-input" data-index="${index}" readonly>
+                    <input type="number" value="${item.quantity}" class="qty-input" data-index="${index}">
                     <button class="increase-qty" data-index="${index}">+</button>
                 </td>
                 <td class="total-item-price" data-index="${index}">${item.price * item.quantity} HUF</td>
@@ -66,6 +105,18 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function attachEventListeners() {
+        document.querySelectorAll(".qty-input").forEach(input => {
+            input.addEventListener("input", function () {
+                const index = this.getAttribute("data-index");
+                let newQuantity = parseInt(this.value);
+                if (isNaN(newQuantity) || newQuantity < 1) {
+                    newQuantity = 1;
+                }
+                cart[index].quantity = newQuantity;
+                updateCart();
+            });
+        });
+
         document.querySelectorAll(".increase-qty").forEach(button => {
             button.addEventListener("click", function () {
                 const index = this.getAttribute("data-index");
@@ -104,36 +155,6 @@ document.addEventListener("DOMContentLoaded", function () {
         totalPriceContainer.textContent = "0 HUF";
         showNotification("Kosár törölve", "A kosár kiürítve!");
         renderCart();
-    });
-
-    document.getElementById("submit-order").addEventListener("click", function () {
-        if (cart.length === 0) {
-            showNotification("Hiba", "A kosár üres!");
-            return;
-        }
-
-        fetch("process_order.php", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ cart })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
-                showNotification("Hiba", data.error);
-            } else {
-                showNotification("Rendelés sikeres", "Köszönjük a vásárlást!");
-                localStorage.removeItem("cart");
-                cart = [];
-                totalPriceContainer.textContent = "0 HUF";
-                renderCart();
-            }
-        })
-        .catch(error => {
-            showNotification("Hiba", "Hiba történt a rendelés során!");
-        });
     });
 
     renderCart();
