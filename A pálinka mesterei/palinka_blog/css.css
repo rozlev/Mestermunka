@@ -11,10 +11,9 @@ body {
     color: #333;
     line-height: 1.6;
 }
- 
-/* HEADER */
+ /* HEADER */
 header {
-    background: linear-gradient(90deg, #811331, #9c1c3a); /* Bordó és egy világosabb árnyalat */
+    background: linear-gradient(90deg, #811331, #9c1c3a);
     color: #fff;
     padding: 1.5rem 2rem;
     display: flex;
@@ -23,35 +22,50 @@ header {
     flex-wrap: wrap;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
- 
+
+/* Nagyobb térköz a fejléc szövegei között */
 header h1 {
     font-size: 2.8rem;
     font-weight: bold;
-    margin: 0;
     color: #fff;
 }
- 
+
+/* Extra térköz a menüpontok között */
 nav ul {
     list-style: none;
     display: flex;
-    gap: 20px;
+    gap: 30px; /* Növelt távolság a menüpontok között */
 }
- 
+
+nav ul li {
+    margin: 0 10px; /* Extra térköz a listaelemek között */
+}
+
 nav ul li a {
     color: #fff;
     text-decoration: none;
     font-weight: bold;
-    padding: 0.6rem 1rem;
+    padding: 0.8rem 2.5rem; /* Nagyobb gombméret */
     border: 2px solid transparent;
     border-radius: 5px;
     transition: all 0.3s ease;
+    display: inline-block; /* Térköz érvényesítése */
 }
- 
+
 nav ul li a:hover {
     border: 2px solid #fff;
     background: #fff;
-    color: #811331; /* Fő szín hover állapotban */
+    color: #811331;
 }
+
+/* Extra térköz mobil nézetben */
+@media (max-width: 768px) {
+    nav ul {
+        flex-direction: column;
+        gap: 15px; /* Nagyobb térköz mobil nézetben */
+    }
+}
+
  
 /* LOGO */
 #logo {
