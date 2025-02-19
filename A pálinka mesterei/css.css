@@ -45,7 +45,7 @@
   nav ul {
     list-style: none;
     display: flex;
-    gap: 10px; /* Növelt távolság a menüpontok között */
+    gap: 30px; /* Növelt távolság a menüpontok között */
   }
   
   nav ul li {
@@ -68,7 +68,13 @@
     background: #fff;
     color: #811331;
   }
-  
+  /* Extra térköz mobil nézetben */
+@media (max-width: 768px) {
+  nav ul {
+      flex-direction: column;
+      gap: 15px; /* Nagyobb térköz mobil nézetben */
+  }
+}
   /* MAIN */
   main {
     padding: 3rem 2rem;
