@@ -79,7 +79,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     productDiv.innerHTML = `
                         <img src="${palinka.KepURL}" alt="${palinka.Nev}">
                         <p>${palinka.Nev} <br>${palinka.AlkoholTartalom} Alk%  <br>${palinka.Ar} HUF</p>
-                        <p><strong>Készlet:</strong> <span class="stock">${palinka.DB_szam}</span> db</p>
+                        <p><strong>Készlet: </strong> <span class="stock">${palinka.DB_szam} </span>  db</p>
                         ${buttonHTML}
                     `;
                     container.appendChild(productDiv);
