@@ -356,7 +356,7 @@
     padding: 20px;
     border-radius: 8px;
     text-align: center;
-    width: 300px; /* Korlátozott szélesség */
+    width: 20%; /* Korlátozott szélesség */
     margin: auto; /* Középre igazítja a tartalmat */
   }
   
@@ -373,6 +373,6 @@
   button:hover {
     background-color: #660b26;
   }
-  
+    
   
   

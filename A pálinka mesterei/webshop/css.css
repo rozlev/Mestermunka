@@ -300,6 +300,7 @@ nav ul li a:hover {
     }
 }
   
+
   /* A felugró ablak (modal) stílusai */
   .modal {
     display: none; /* Kezdetben rejtve */
@@ -319,20 +320,29 @@ nav ul li a:hover {
     padding: 20px;
     border-radius: 8px;
     text-align: center;
-    width: 300px; /* Korlátozott szélesség */
+    width: 20%; /* Korlátozott szélesség */
     margin: auto; /* Középre igazítja a tartalmat */
   }
-  
+  #logoutConfirm{
+    width: 100%;
+  }
+  #logoutCancel{
+    width: 100%;
+  }
   button {
-    margin: 10px;
+    background-color: #811331;
+    color: white;
+    border: none;
     padding: 10px;
     font-size: 1rem;
     cursor: pointer;
+    transition: background-color 0.3s;
   }
   
   button:hover {
-    background-color: #ddd;
+    background-color: #660b26;
   }
+    
 /* Új értesítési modal a kosárhoz */
 .cart-modal {
     display: none;

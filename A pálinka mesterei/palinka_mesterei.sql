@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2025. Feb 12. 10:31
--- Kiszolgáló verziója: 10.4.28-MariaDB
--- PHP verzió: 8.2.4
+-- Létrehozás ideje: 2025. Feb 20. 11:29
+-- Kiszolgáló verziója: 10.4.32-MariaDB
+-- PHP verzió: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -52,6 +52,38 @@ INSERT INTO `kepek` (`KepID`, `PalinkaID`, `KepNev`, `KepURL`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Tábla szerkezet ehhez a táblához `kosar`
+--
+
+CREATE TABLE `kosar` (
+  `KosarID` int(11) NOT NULL,
+  `UserID` int(11) NOT NULL,
+  `PalinkaID` int(11) NOT NULL,
+  `Darab` int(11) NOT NULL,
+  `Datum` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+
+-- --------------------------------------------------------
+
+--
+-- A nézet helyettes szerkezete `kosar_view`
+-- (Lásd alább az aktuális nézetet)
+--
+CREATE TABLE `kosar_view` (
+`KosarID` int(11)
+,`UserID` int(11)
+,`Felhasznalo` varchar(255)
+,`PalinkaID` int(11)
+,`Palinka` varchar(255)
+,`Egysegar` decimal(10,2)
+,`Darab` int(11)
+,`Osszeg` decimal(20,2)
+,`Datum` timestamp
+);
+
+-- --------------------------------------------------------
+
+--
 -- Tábla szerkezet ehhez a táblához `palinka`
 --
 
@@ -69,15 +101,15 @@ CREATE TABLE `palinka` (
 --
 
 INSERT INTO `palinka` (`PalinkaID`, `Nev`, `AlkoholTartalom`, `Ar`, `Kategoria`, `DB_szam`) VALUES
-(1, 'Málna Pálinka', 44.00, 5000.00, 'Gyümölcs', 10),
+(1, 'Málna Pálinka', 44.00, 5000.00, 'Gyümölcs', 7),
 (2, 'Eper Pálinka', 40.00, 7300.00, 'Gyümölcs', 0),
-(3, 'Füge Pálinka', 46.00, 9400.00, 'Gyümölcs', 93),
-(4, 'Cseresznye Pálinka', 38.00, 5000.00, 'Gyümölcs', 99),
-(6, 'Kajszi Pálinka', 49.00, 6600.00, 'Gyümölcs', 99),
-(7, 'Tök Pálinka', 43.00, 8400.00, 'Zöldség', 100),
-(8, 'Dió Pálinka', 47.00, 5500.00, 'Magvas', 100),
-(9, 'Fekete Ribizli Pálinka', 45.00, 6300.00, 'Gyümölcs', 100),
-(10, 'Muskotály Pálinka', 45.00, 4500.00, 'Virág', 98);
+(3, 'Füge Pálinka', 46.00, 9400.00, 'Gyümölcs', 89),
+(4, 'Cseresznye Pálinka', 38.00, 5000.00, 'Gyümölcs', 98),
+(6, 'Kajszi Pálinka', 49.00, 6600.00, 'Gyümölcs', 98),
+(7, 'Tök Pálinka', 43.00, 8400.00, 'Zöldség', 99),
+(8, 'Dió Pálinka', 47.00, 5500.00, 'Magvas', 99),
+(9, 'Fekete Ribizli Pálinka', 45.00, 6300.00, 'Gyümölcs', 99),
+(10, 'Muskotály Pálinka', 45.00, 4500.00, 'Virág', 97);
 
 -- --------------------------------------------------------
 
@@ -125,7 +157,8 @@ CREATE TABLE `scores` (
 --
 
 INSERT INTO `scores` (`score_id`, `player_id`, `points`, `date`) VALUES
-(1, 9, 16, '2025-02-12 10:07:58');
+(1, 9, 16, '2025-02-12 10:07:58'),
+(2, 10, 17, '2025-02-20 10:51:48');
 
 -- --------------------------------------------------------
 
@@ -155,6 +188,15 @@ INSERT INTO `user` (`UserID`, `Nev`, `Email`, `Jelszo`, `RegisztracioDatum`, `El
 -- --------------------------------------------------------
 
 --
+-- Nézet szerkezete `kosar_view`
+--
+DROP TABLE IF EXISTS `kosar_view`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `kosar_view`  AS SELECT `k`.`KosarID` AS `KosarID`, `k`.`UserID` AS `UserID`, `u`.`Nev` AS `Felhasznalo`, `k`.`PalinkaID` AS `PalinkaID`, `p`.`Nev` AS `Palinka`, `p`.`Ar` AS `Egysegar`, `k`.`Darab` AS `Darab`, `p`.`Ar`* `k`.`Darab` AS `Osszeg`, `k`.`Datum` AS `Datum` FROM ((`kosar` `k` join `user` `u` on(`k`.`UserID` = `u`.`UserID`)) join `palinka` `p` on(`k`.`PalinkaID` = `p`.`PalinkaID`)) ;
+
+-- --------------------------------------------------------
+
+--
 -- Nézet szerkezete `ranking`
 --
 DROP TABLE IF EXISTS `ranking`;
@@ -171,6 +213,14 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 ALTER TABLE `kepek`
   ADD PRIMARY KEY (`KepID`),
   ADD KEY `kepek_palinka_fk` (`PalinkaID`);
+
+--
+-- A tábla indexei `kosar`
+--
+ALTER TABLE `kosar`
+  ADD PRIMARY KEY (`KosarID`),
+  ADD KEY `UserID` (`UserID`),
+  ADD KEY `PalinkaID` (`PalinkaID`);
 
 --
 -- A tábla indexei `palinka`
@@ -211,6 +261,12 @@ ALTER TABLE `kepek`
   MODIFY `KepID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
+-- AUTO_INCREMENT a táblához `kosar`
+--
+ALTER TABLE `kosar`
+  MODIFY `KosarID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT a táblához `palinka`
 --
 ALTER TABLE `palinka`
@@ -226,7 +282,7 @@ ALTER TABLE `rendeles`
 -- AUTO_INCREMENT a táblához `scores`
 --
 ALTER TABLE `scores`
-  MODIFY `score_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `score_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT a táblához `user`
@@ -243,6 +299,13 @@ ALTER TABLE `user`
 --
 ALTER TABLE `kepek`
   ADD CONSTRAINT `kepek_palinka_fk` FOREIGN KEY (`PalinkaID`) REFERENCES `palinka` (`PalinkaID`);
+
+--
+-- Megkötések a táblához `kosar`
+--
+ALTER TABLE `kosar`
+  ADD CONSTRAINT `kosar_ibfk_1` FOREIGN KEY (`UserID`) REFERENCES `user` (`UserID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `kosar_ibfk_2` FOREIGN KEY (`PalinkaID`) REFERENCES `palinka` (`PalinkaID`) ON DELETE CASCADE;
 
 --
 -- Megkötések a táblához `rendeles`
