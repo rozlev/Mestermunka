@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2025. Feb 20. 11:29
+-- Létrehozás ideje: 2025. Feb 20. 12:02
 -- Kiszolgáló verziója: 10.4.32-MariaDB
 -- PHP verzió: 8.2.12
 
@@ -101,12 +101,12 @@ CREATE TABLE `palinka` (
 --
 
 INSERT INTO `palinka` (`PalinkaID`, `Nev`, `AlkoholTartalom`, `Ar`, `Kategoria`, `DB_szam`) VALUES
-(1, 'Málna Pálinka', 44.00, 5000.00, 'Gyümölcs', 7),
+(1, 'Málna Pálinka', 44.00, 5000.00, 'Gyümölcs', 2),
 (2, 'Eper Pálinka', 40.00, 7300.00, 'Gyümölcs', 0),
-(3, 'Füge Pálinka', 46.00, 9400.00, 'Gyümölcs', 89),
+(3, 'Füge Pálinka', 46.00, 9400.00, 'Gyümölcs', 85),
 (4, 'Cseresznye Pálinka', 38.00, 5000.00, 'Gyümölcs', 98),
-(6, 'Kajszi Pálinka', 49.00, 6600.00, 'Gyümölcs', 98),
-(7, 'Tök Pálinka', 43.00, 8400.00, 'Zöldség', 99),
+(6, 'Kajszi Pálinka', 49.00, 6600.00, 'Gyümölcs', 92),
+(7, 'Tök Pálinka', 43.00, 8400.00, 'Zöldség', 95),
 (8, 'Dió Pálinka', 47.00, 5500.00, 'Magvas', 99),
 (9, 'Fekete Ribizli Pálinka', 45.00, 6300.00, 'Gyümölcs', 99),
 (10, 'Muskotály Pálinka', 45.00, 4500.00, 'Virág', 97);
@@ -136,8 +136,22 @@ CREATE TABLE `rendeles` (
   `PalinkaID` int(11) NOT NULL,
   `Darab` int(11) NOT NULL,
   `ArTotal` decimal(10,2) NOT NULL,
-  `RendelesDatum` date NOT NULL
+  `RendelesDatum` date NOT NULL,
+  `RendelesCsoportID` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+
+--
+-- A tábla adatainak kiíratása `rendeles`
+--
+
+INSERT INTO `rendeles` (`RendelesID`, `UserID`, `PalinkaID`, `Darab`, `ArTotal`, `RendelesDatum`, `RendelesCsoportID`) VALUES
+(4, 10, 3, 1, 9400.00, '2025-02-20', 'ORDER_67b7086e68f9a'),
+(5, 10, 1, 2, 10000.00, '2025-02-20', 'ORDER_67b7086e68f9a'),
+(6, 10, 7, 3, 25200.00, '2025-02-20', 'ORDER_67b7086e68f9a'),
+(7, 10, 3, 1, 9400.00, '2025-02-20', 'ORDER_67b708a93c5b5'),
+(8, 10, 1, 1, 5000.00, '2025-02-20', 'ORDER_67b708a93c5b5'),
+(9, 10, 1, 2, 10000.00, '2025-02-20', 'ORDER_67b709719df30'),
+(10, 10, 3, 1, 9400.00, '2025-02-20', 'ORDER_67b709719df30');
 
 -- --------------------------------------------------------
 
@@ -183,7 +197,8 @@ CREATE TABLE `user` (
 INSERT INTO `user` (`UserID`, `Nev`, `Email`, `Jelszo`, `RegisztracioDatum`, `Eletkor`, `Szerepkor`) VALUES
 (9, 'Dozsa', 'levirozsa11@gmail.com', '$2y$10$TeIQWCliKsfI2JKfuEBg4uNG9wA1.rwPmw21ln46EBOOZbUvXqPFC', '2025-02-06', NULL, 'felhasználó'),
 (10, 'Dozsa1', 'rozlev404@hengersor.hu', '$2y$10$cwUVQdxTR9Ka.kRwugqTAuOiLH5WHjBaddd2lIO3wtE7YZntKSuBe', '2025-02-06', NULL, 'felhasználó'),
-(11, 'Dozsa3213', 'levirozsa11@gmail.com2', '$2y$10$/wwy71rL.PRPPyKNHkTiKO7gYrdCT3ImrqcwH6Gi8iDGhoFjTmi2.', '2025-02-06', NULL, 'felhasználó');
+(11, 'Dozsa3213', 'levirozsa11@gmail.com2', '$2y$10$/wwy71rL.PRPPyKNHkTiKO7gYrdCT3ImrqcwH6Gi8iDGhoFjTmi2.', '2025-02-06', NULL, 'felhasználó'),
+(12, 'dozsaa', 'tari.tamas.mark@gmail.com', '$2y$10$WPYQZjnVeh228vIRro0GgupVx143JPCaelXAlIWRPM.pPRavZH4Bq', '2025-02-20', NULL, 'felhasználó');
 
 -- --------------------------------------------------------
 
@@ -276,7 +291,7 @@ ALTER TABLE `palinka`
 -- AUTO_INCREMENT a táblához `rendeles`
 --
 ALTER TABLE `rendeles`
-  MODIFY `RendelesID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `RendelesID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT a táblához `scores`
@@ -288,7 +303,7 @@ ALTER TABLE `scores`
 -- AUTO_INCREMENT a táblához `user`
 --
 ALTER TABLE `user`
-  MODIFY `UserID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `UserID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- Megkötések a kiírt táblákhoz
