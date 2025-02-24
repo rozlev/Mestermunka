@@ -20,6 +20,10 @@ SET time_zone = "+00:00";
 --
 -- Adatbázis: `palinka_mesterei`
 --
+CREATE DATABASE palinka_mesterei;
+USE palinka_mesterei;
+SET NAMES 'utf8mb4' COLLATE 'utf8mb4_hungarian_ci';
+
 
 -- --------------------------------------------------------
 
