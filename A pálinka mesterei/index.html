@@ -4,37 +4,66 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>A pálinka mesterei</title>
-  <!-- Bootstrap Link -->
+  <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="bootstrap-5.3.3-dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Növeljük a navbar méretét */
+    .navbar {
+      padding: 1.5rem 1rem !important;
+    }
+    .navbar-brand {
+      font-size: 2rem !important;
+    }
+    .nav-link {
+      font-size: 1.2rem !important;
+      padding: 1rem 2rem !important; /* több hely a szövegek között */
+    }
+    /* Finom hover effekt: áttetsző fehér háttér, a szöveg megmarad látható */
+    .nav-link:hover {
+      background-color: rgba(255, 255, 255, 0.2) !important;
+      color: #fff !important;
+    }
+  </style>
 </head>
 <body>
-  <!-- Header -->
-  <header>
-    <h1>A pálinka mesterei</h1>
-    <nav>
-      <ul>
-        <li><a href="webshop/index.html">Weboldal</a></li>
-        <li><a href="palinka_blog/index.html">Pálinka készítés</a></li>
-        <li id="felhasznaloNev">
-          <a href="bejelentkezes/bejelentkezes.html" id="loginLink">Bejelentkezés</a>
-        </li>
-        <li><a href="jatek/index.html">Játék</a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <!-- Modal for logout -->
+  <nav class="navbar navbar-expand-lg" style="background: linear-gradient(90deg, #811331, #9c1c3a);">
+    <div class="container-fluid">
+      <a class="navbar-brand text-white" href="#">A pálinka mesterei</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" 
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Menü megnyitása">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link text-white" href="webshop/index.html">Weboldal</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" href="palinka_blog/index.html">Pálinka készítés</a>
+          </li>
+          <!-- Eredeti bejelentkezés funkció visszaállítva -->
+          <li class="nav-item" id="felhasznaloNev">
+            <a class="nav-link text-white" href="bejelentkezes/bejelentkezes.html" id="loginLink">Bejelentkezés</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" href="jatek/index.html">Játék</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  
+  <!-- Modal for logout (változatlanul) -->
   <div id="logoutModal" class="modal">
     <div class="modal-content">
       <h2>Kijelentkezés</h2>
       <p>Biztosan ki szeretnél jelentkezni?</p>
       <button id="logoutConfirm">Igen</button>
-      <br>
       <button id="logoutCancel">Mégse</button>
     </div>
   </div>
-
+  
   <!-- Welcome Section -->
   <section id="udvozlo">
     <h2>Üdvözöljük a weboldalon!</h2>
@@ -43,7 +72,7 @@
       Ismerkedjen meg a falusi élet különleges szokásaival, és tudjon meg többet erről az ősi mesterségről.
     </p>
   </section>
-
+  
   <!-- Main Content Section -->
   <main>
     <section id="bemutatkozas">
@@ -65,7 +94,7 @@
       </p>
     </section>
   </main>
-
+  
   <!-- Image and Text Section -->
   <section id="images-with-text">
     <div class="content-item-left">
@@ -130,7 +159,8 @@
     </div>
   </footer>
   
+  <!-- Bootstrap JS -->
+  <script src="bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
   <script src="java.js"></script>
-</body>
+</body> 
 </html>
-
