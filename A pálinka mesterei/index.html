@@ -16,7 +16,7 @@
       font-size: 2rem !important;
     }
     .nav-link {
-      font-size: 1.2rem !important;
+      font-size: 1.0rem !important;
       padding: 1rem 2rem !important; /* több hely a szövegek között */
     }
     /* Finom hover effekt: áttetsző fehér háttér, a szöveg megmarad látható */
@@ -42,15 +42,18 @@
           <li class="nav-item">
             <a class="nav-link text-white" href="palinka_blog/index.html">Pálinka készítés</a>
           </li>
-          <!-- Eredeti bejelentkezés funkció visszaállítva -->
-          <li class="nav-item" id="felhasznaloNev">
-            <a class="nav-link text-white" href="bejelentkezes/bejelentkezes.html" id="loginLink">Bejelentkezés</a>
-          </li>
+
           <li class="nav-item">
             <a class="nav-link text-white" href="jatek/index.html">Játék</a>
           </li>
+                    <!-- Eredeti bejelentkezés funkció visszaállítva -->
+          <li class="nav-item" id="felhasznaloNev">
+            <a class="nav-link text-white" href="bejelentkezes/bejelentkezes.html" id="loginLink">Bejelentkezés</a>
+          </li>  
           <li class="nav-item">
-            <a class="nav-link text-white" href="kosar/index.html">Kosár</a>
+            <a class="nav-link text-white" href="kosar/index.html">
+              Kosár (<span id="cart-count">0</span>)
+            </a>
           </li>
         </ul>
       </div>

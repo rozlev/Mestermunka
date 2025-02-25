@@ -26,6 +26,8 @@ document.addEventListener("DOMContentLoaded", function () {
             userNameElement.href = "../bejelentkezes/bejelentkezes.html";
             localStorage.setItem("returnUrl", window.location.href); // Elmentjük az aktuális oldalt
         }
+
+        
     }
 
     // Kijelentkezési modal események
@@ -99,25 +101,33 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch(error => console.error("Hiba történt:", error));
     }
 
+    // Kosárba helyezés
     function addToCart(name, price, image) {
         if (!isLoggedIn) {
             alert("Bejelentkezés szükséges a vásárláshoz!");
             return;
         }
-
+    
         let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-        // Ellenőrzés, hogy már benne van-e a kosárban
+    
+        // Ellenőrizzük, hogy már van-e a kosárban
         const existingItem = cart.find(item => item.name === name);
         if (existingItem) {
-            existingItem.quantity += 1; // Növeljük a darabszámot
+            existingItem.quantity += 1; // Növeljük a mennyiséget
         } else {
             cart.push({ name, price, image, quantity: 1 });
         }
-
+    
         localStorage.setItem("cart", JSON.stringify(cart));
-        showCartNotification(`"${name}" hozzáadva a kosárhoz!`);
+        updateCartCount(); // Azonnali frissítés
+    
+        // "storage" esemény manuális kiváltása más tabok frissítéséhez
+        window.dispatchEvent(new Event("storage"));
+    
+        showCartNotification(`${name} hozzáadva a kosárhoz!`);
     }
+    
+
 
     loadProducts();
 
@@ -145,5 +155,29 @@ document.addEventListener("DOMContentLoaded", function () {
                 modal.style.display = "none";
             }
         });
+    }
+});
+
+
+
+// Kosár számának frissítése
+function updateCartCount() {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    let cartCountElement = document.getElementById("cart-count");
+
+    if (cartCountElement) {
+        cartCountElement.textContent = totalItems; // Beállítja az értéket
+    } else {
+        console.error("Nem található az #cart-count elem!");
+    }
+}
+updateCartCount(); // Kosár számának frissítése az oldal betöltésekor
+updateUserName();  // Felhasználónév frissítése
+
+// Storage esemény figyelése más tabok esetére
+window.addEventListener("storage", function (event) {
+    if (event.key === "cart") {
+        updateCartCount();
     }
 });

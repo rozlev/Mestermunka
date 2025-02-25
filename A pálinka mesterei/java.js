@@ -1,37 +1,55 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Ellenőrizzük, hogy van-e mentett felhasználói név
+  // Bejelentkezett felhasználó kezelése
   var nev = localStorage.getItem("felhasznaloNev");
+  var loginLink = document.getElementById("loginLink");
 
-  if (nev) {
-    // Ha van felhasználó, megjelenítjük a nevét
-    var felhasznaloElem = document.getElementById("felhasznaloNev");
-    var loginLink = document.getElementById("loginLink");
-    loginLink.innerText = nev; // Felhasználó nevét megjelenítjük
-    loginLink.setAttribute("href", "#"); // Az URL-t eltávolítjuk
-    
-    // Kijelentkezés kezelése - modális ablak megnyitása
-    loginLink.addEventListener("click", function(event) {
-      event.preventDefault(); // Ne navigáljon el
-      document.getElementById("logoutModal").style.display = 'flex'; // Megjelenítjük a modális ablakot
-    });
+  if (nev && loginLink) {
+      loginLink.innerText = nev; // Megjelenítjük a nevet
+      loginLink.setAttribute("href", "#"); // Megakadályozzuk az átirányítást
+
+      // Kijelentkezési modal megnyitása
+      loginLink.addEventListener("click", function (event) {
+          event.preventDefault();
+          document.getElementById("logoutModal").style.display = 'flex';
+      });
   }
 
-  // Kijelentkezés megerősítése
-  document.getElementById("logoutConfirm").addEventListener("click", function() {
-    localStorage.removeItem("felhasznaloNev"); // Töröljük a felhasználói adatokat
-    localStorage.removeItem("cart"); // Töröljük a kosár tartalmát is!
+  // Kijelentkezési eseménykezelés
+  var logoutConfirmBtn = document.getElementById("logoutConfirm");
+  if (logoutConfirmBtn) {
+      logoutConfirmBtn.addEventListener("click", function () {
+          localStorage.removeItem("felhasznaloNev");
+          localStorage.removeItem("cart"); // Kosár törlése kijelentkezéskor
+          document.getElementById("logoutModal").style.display = 'none';
+          window.location.reload();
+      });
+  }
 
-    // Visszaállítjuk a bejelentkezés gombot
-    var felhasznaloElem = document.getElementById("felhasznaloNev");
-    felhasznaloElem.innerHTML = '<a href="bejelentkezes/bejelentkezes.html" id="loginLink">Bejelentkezés</a>';
+  var logoutCancelBtn = document.getElementById("logoutCancel");
+  if (logoutCancelBtn) {
+      logoutCancelBtn.addEventListener("click", function () {
+          document.getElementById("logoutModal").style.display = 'none';
+      });
+  }
 
-    // Bezárjuk a modális ablakot és frissítjük az oldalt
-    document.getElementById("logoutModal").style.display = 'none';
-    window.location.reload();
-  });
+  // Kosár frissítése az oldal betöltésekor
+  updateCartCount();
 
-  // Kijelentkezés megszakítása (modal bezárása)
-  document.getElementById("logoutCancel").addEventListener("click", function() {
-    document.getElementById("logoutModal").style.display = 'none'; // Bezárjuk a modális ablakot
+  // Storage esemény figyelése, hogy a kosár frissüljön másik fülön is
+  window.addEventListener("storage", function (event) {
+      if (event.key === "cart") {
+          updateCartCount();
+      }
   });
 });
+
+// Kosár számának frissítése
+function updateCartCount() {
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  let totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+  
+  let cartCountElement = document.getElementById("cart-count");
+  if (cartCountElement) {
+      cartCountElement.textContent = totalItems;
+  }
+}
