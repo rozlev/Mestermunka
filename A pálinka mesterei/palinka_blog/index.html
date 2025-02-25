@@ -37,31 +37,50 @@
     display: block;
     margin: 0 auto; /* Középre igazítás */
 }
- 
+     /* Növeljük a navbar méretét */
+     .navbar {
+      padding: 1.5rem 1rem !important;
+    }
+    .navbar-brand {
+      font-size: 2rem !important;
+    }
+    .nav-link {
+      font-size: 1.2rem !important;
+      padding: 1rem 3rem !important; /* több hely a szövegek között */
+    }
+    /* Finom hover effekt: áttetsző fehér háttér, a szöveg megmarad látható */
+    .nav-link:hover {
+      background-color: rgba(255, 255, 255, 0.2) !important;
+      color: #fff !important;
+    }
  
     </style>
 </head>
 <body>
-  <!-- Header -->
-  <header>
-    <h1>A pálinka mesterei</h1>
-    <nav>
-      <ul>
-        <li><a href="../index.html">Főoldal</a></li>
-        <li><a href="../webshop/index.html">Weboldal</a></li>
-        <li><a href="../jatek/index.html">Játék</a></li>
-      </ul>
-    </nav>
-  </header>
- 
-    <div id="logoutModal" class="modal">
-        <div class="modal-content">
-            <h2>Kijelentkezés</h2>
-            <p>Biztosan ki szeretnél jelentkezni?</p>
-            <button id="logoutConfirm">Igen</button>
-            <button id="logoutCancel">Mégse</button>
+    <nav class="navbar navbar-expand-lg" style="background: linear-gradient(90deg, #811331, #9c1c3a);">
+        <div class="container-fluid">
+          <a class="navbar-brand text-white" href="#">Pálinka készítés</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" 
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Menü megnyitása">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link text-white" href="../index.html">Főoldal</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" href="../webshop/index.html">Webshop</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" href="../jatek/index.html">Játék</a>
+              </li>
+              
+            </ul>
+          </div>
         </div>
-    </div>
+      </nav>
+
     <div class="container text-center mt-4 mb-4">
         <div class="video-container">
             <iframe
