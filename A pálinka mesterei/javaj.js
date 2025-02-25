@@ -24,7 +24,10 @@ document.addEventListener("DOMContentLoaded", function () {
           window.location.reload();
       });
   }
-
+  let yearElement = document.getElementById("year");
+  if (yearElement) {
+      yearElement.textContent = new Date().getFullYear();
+  }
   var logoutCancelBtn = document.getElementById("logoutCancel");
   if (logoutCancelBtn) {
       logoutCancelBtn.addEventListener("click", function () {
@@ -41,6 +44,9 @@ document.addEventListener("DOMContentLoaded", function () {
           updateCartCount();
       }
   });
+
+  
+  
 });
 
 // Kosár számának frissítése

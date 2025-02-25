@@ -27,5 +27,9 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("logoutCancel").addEventListener("click", function() {
       document.getElementById("logoutModal").style.display = 'none'; // Bezárjuk a modális ablakot
     });
+
+
+    
+    
   });
   

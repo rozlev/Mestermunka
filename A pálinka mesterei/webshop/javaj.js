@@ -1,3 +1,5 @@
+
+
 document.addEventListener("DOMContentLoaded", function () {
     var userName = localStorage.getItem("felhasznaloNev");
     var isLoggedIn = !!userName; // Check if user is logged in
@@ -156,6 +158,12 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
+
+    let yearElement = document.getElementById("year");
+    if (yearElement) {
+        yearElement.textContent = new Date().getFullYear();
+    }
+
 });
 
 
