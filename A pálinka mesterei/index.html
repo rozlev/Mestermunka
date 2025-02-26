@@ -27,6 +27,18 @@
   </style>
 </head>
 <body>
+  
+<div id="ageVerificationOverlay" class="age-overlay">
+  <div class="age-popup">
+      <h2>Elmúltál már 18 éves?</h2>
+      <p id="ageWarningText" style="color: red; display: none;">Sajnáljuk, de az oldal használatához 18 évesnek kell lenned!</p>
+      <button id="ageConfirm">Igen</button>
+      <button id="ageDeny">Nem</button>
+  </div>
+</div>
+
+
+
   <nav class="navbar navbar-expand-lg" style="background: linear-gradient(90deg, #811331, #9c1c3a);">
     <div class="container-fluid">
       <a class="navbar-brand text-white" href="#">A pálinka mesterei</a>
@@ -106,6 +118,7 @@
               <img src="https://getwalls.io/wallpapers/341058/2022--01--funny-spongebob-whatsapp-dps-4k-8k-50k-70k-1181616589-mobile.jpg" alt="Rózsa Levente">
               <div class="carousel-text">
                   <h2>Rózsa Levente</h2>
+                  <br><br>
                   <p>Gyerekkorom óta figyelem, hogyan készül a pálinka, és számomra ez nem csupán egy ital, hanem egy örökség. Minden cseppje a családi hagyományainkat hordozza. A legjobban azt szeretem benne, hogy a természet ízét adhatom vissza – a legjobb gyümölcsökből, a legnagyobb odafigyeléssel. A régi főzési technikák megőrzése mellett a modern eljárásokkal is kísérletezem, hogy mindig a legjobb minőséget hozzam ki belőle.</p>
               </div>
           </div>
@@ -114,6 +127,7 @@
               <img src="https://th.bing.com/th/id/OIP.hRdZvaNuBq-f67BPG1-amAHaRS?rs=1&pid=ImgDetMain" alt="Kovács Bence">
               <div class="carousel-text">
                   <h2>Kovács Bence</h2>
+                  <br><br>
                   <p>Engem a pálinkafőzés tudományos oldala ragadott meg. Imádom kísérletezni az erjesztési folyamatokkal és a lepárlási technikákkal, hogy minél tisztább, aromásabb italt kapjak. Az új technológiák, például a réz- és rozsdamentes főzőüstök kombinációja segít abban, hogy még lágyabb és harmonikusabb ízeket érjek el. A legjobban azt szeretem a pálinkában, hogy soha nem lesz két főzet teljesen egyforma – mindig van benne egy kis meglepetés.</p>
               </div>
           </div>
@@ -122,6 +136,7 @@
               <img src="https://wallpaperaccess.com/full/189095.jpg" alt="Németh Bence">
               <div class="carousel-text">
                   <h2>Németh Bence</h2>
+                  <br><br>
                   <p>Számomra a pálinkafőzés nemcsak a technikáról szól, hanem az érzékek játékáról is. A legfontosabb számomra az ízvilág és az illat harmóniája. Hiszek abban, hogy egy igazán jó pálinkát nemcsak inni kell, hanem megélni az aromáit, a gyümölcsök karakterét. Szeretem a különleges, ritka gyümölcsökből készült pálinkákat, és mindig új ízkombinációkat keresek, hogy a fogyasztók valódi élményt kapjanak minden kortyban.</p>
               </div>
           </div>
@@ -142,6 +157,7 @@
   
   <!-- Image and Text Section -->
   <section id="images-with-text">
+    
     <div class="content-item">
       <img src="img/szollo.jfif" alt="Szőlő kép">
       <p>
@@ -214,5 +230,6 @@
   <script src="bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
   <script src="javaj.js"></script>
   <script src="spony.js"></script>
+  <script src="agetest.js"></script>
 </body> 
 </html>

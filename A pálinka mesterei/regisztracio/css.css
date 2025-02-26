@@ -1,0 +1,128 @@
+/* Alap beállítások */
+* {
+    font-family: "Poppins", sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(135deg, #ac2347, #b02a4d);
+}
+
+/* Regisztrációs kártya */
+.register-box {
+
+    width: 350px;
+    background: white;
+    max-width: 500px;
+    padding: 2.5rem;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+}
+
+.register-box:hover {
+    transform: scale(1.02);
+}
+
+/* Logo */
+.logo {
+    width: 100px;
+    height: auto;
+    border-radius: 50%;
+}
+
+/* Cím */
+.title {
+    font-size: 1.8rem;
+    color: #811331;
+    margin-bottom: 20px;
+}
+
+/* Input mezők */
+.form-control {
+    border: 2px solid #811331;
+    border-radius: 5px;
+    font-size: 1rem;
+    padding: 10px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #b02a4d;
+    box-shadow: 0px 0px 8px rgba(176, 42, 77, 0.5);
+    outline: none;
+}
+
+/* Regisztrációs gomb */
+.register-btn {
+    background: #811331;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 25px;
+    text-transform: uppercase;
+    transition: background 0.3s ease, transform 0.2s;
+}
+
+.register-btn:hover {
+    background: #b02a4d;
+    transform: scale(1.05);
+}
+
+/* Hiba- és sikerüzenetek */
+.message {
+    display: none;
+    padding: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+.error-message {
+    background-color: #d9534f;
+    color: white;
+}
+
+.success-message {
+    background-color: #5cb85c;
+    color: white;
+}
+
+
+/* Footer linkek */
+.text-muted {
+    color: #811331 !important;
+    font-weight: bold;
+    transition: color 0.3s;
+    position: absolute;
+}
+.back-home{
+    display: inline-block;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #811331;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.back-home:hover {
+    color: #b02a4d;
+}
+.text-muted:hover {
+    color: #b02a4d !important;
+}
+
+/* Reszponzív optimalizáció */
+@media (max-width: 576px) {
+    .register-box {
+        padding: 2rem;
+    }
+
+    .logo {
+        width: 70px;
+    }
+}
