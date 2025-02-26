@@ -45,9 +45,45 @@ document.addEventListener("DOMContentLoaded", function () {
       }
   });
 
-  
-  
+    const carouselItems = document.querySelectorAll(".carousel-item");
+    const prevButton = document.getElementById("prev");
+    const nextButton = document.getElementById("next");
+
+    let currentIndex = 0;
+
+    function updateCarousel() {
+        // Minden elem alapból rejtve
+        carouselItems.forEach(item => {
+            item.classList.remove("active");
+            item.style.display = "none"; // Eltüntetjük a nem aktív elemeket
+        });
+
+        // Az aktuális elemet láthatóvá tesszük
+        carouselItems[currentIndex].classList.add("active");
+        carouselItems[currentIndex].style.display = "flex"; // Csak az aktív elem legyen flex
+    }
+
+    prevButton.addEventListener("click", () => {
+        currentIndex = (currentIndex > 0) ? currentIndex - 1 : carouselItems.length - 1;
+        updateCarousel();
+    });
+
+    nextButton.addEventListener("click", () => {
+        currentIndex = (currentIndex < carouselItems.length - 1) ? currentIndex + 1 : 0;
+        updateCarousel();
+    });
+
+    // Automatikus váltás 10 másodpercenként
+    setInterval(() => {
+        currentIndex = (currentIndex < carouselItems.length - 1) ? currentIndex + 1 : 0;
+        updateCarousel();
+    }, 10000);
+
+    // **Az első elem aktiválása oldalbetöltéskor**
+    carouselItems[0].classList.add("active");
+    carouselItems[0].style.display = "flex"; // Az első elem jelenjen meg
 });
+  
 
 // Kosár számának frissítése
 function updateCartCount() {

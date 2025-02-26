@@ -6,7 +6,7 @@
   <title>A pálinka mesterei</title>
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="bootstrap-5.3.3-dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="css.css">
+  <link rel="stylesheet" href="style.css">
   <style>
     /* Növeljük a navbar méretét */
     .navbar {
@@ -78,33 +78,68 @@
       Ismerkedjen meg a falusi élet különleges szokásaival, és tudjon meg többet erről az ősi mesterségről.
     </p>
   </section>
-  
-  <!-- Main Content Section -->
-  <main>
-    <section id="bemutatkozas">
-      <h2>Bemutatkozás</h2>
-      <p>
-        A csapatunkba mindenki faluról származik, így közösen tapasztaltuk meg a hagyományos falusi életet és a helyi szokásokat. 
-        Egyik ilyen szokás, amit már sokszor átélhettünk, a pálinkafőzés. A falvakban egyre inkább háttérbe szorul ez a tevékenység, 
-        és mi úgy gondoltuk, hogy fontos megőrizni és továbbadni ezt a hagyományt.
-      </p>
-      <p>
-        A pálinkafőzés iránti érdeklődés egyre inkább csökken, különösen a fiatalok körében, pedig sok faluban még mindig a közösségi 
-        események része. Mi úgy véltük, hogy egy ilyen helyszín felkeresése és bemutatása nemcsak a hagyományok ápolása miatt fontos, 
-        hanem azért is, hogy felkeltsük az érdeklődést a pálinkafőzés iránt. Lehet, hogy ez a látogatás másokat is inspirálni fog arra, 
-        hogy felfedezzék a pálinkakészítés világát, és esetleg ők maguk is kipróbálják.
-      </p>
-      <p>
-        Ezért úgy éreztük, hogy ez egy aktuális téma, amely hozzájárulhat a kulturális örökség megőrzéséhez, és egyúttal újra 
-        felélesztheti a régi tradíciókat a fiatalok körében.
-      </p>
+  <div class="main-container"> 
+    <!-- Bemutatkozás -->
+    <section id="bemutatkozas" class="intro-section">
+        <h2>Bemutatkozás</h2>
+        <p>
+          A csapatunkba mindenki faluról származik, így közösen tapasztaltuk meg a hagyományos falusi életet és a helyi szokásokat. 
+          Egyik ilyen szokás, amit már sokszor átélhettünk, a pálinkafőzés. A falvakban egyre inkább háttérbe szorul ez a tevékenység, 
+          és mi úgy gondoltuk, hogy fontos megőrizni és továbbadni ezt a hagyományt.
+        </p>
+        <p>
+          A pálinkafőzés iránti érdeklődés egyre inkább csökken, különösen a fiatalok körében, pedig sok faluban még mindig a közösségi 
+          események része. Mi úgy véltük, hogy egy ilyen helyszín felkeresése és bemutatása nemcsak a hagyományok ápolása miatt fontos, 
+          hanem azért is, hogy felkeltsük az érdeklődést a pálinkafőzés iránt. Lehet, hogy ez a látogatás másokat is inspirálni fog arra, 
+          hogy felfedezzék a pálinkakészítés világát, és esetleg ők maguk is kipróbálják.
+        </p>
+        <p>
+          Ezért úgy éreztük, hogy ez egy aktuális téma, amely hozzájárulhat a kulturális örökség megőrzéséhez, és egyúttal újra 
+          felélesztheti a régi tradíciókat a fiatalok körében.
+        </p>
+
     </section>
-  </main>
+
+    <!-- Carousel + Nyilak -->
+    <div class="carousel-wrapper">
+        <button id="prev" class="arrow">&#10094;</button>
+        <div class="carousel-container">
+            <div class="carousel-item">
+                <img src="https://getwalls.io/wallpapers/341058/2022--01--funny-spongebob-whatsapp-dps-4k-8k-50k-70k-1181616589-mobile.jpg" alt="Rózsa Levente">
+                <div class="carousel-text">
+                    <h3>Rózsa Levente</h3>
+                    <p>Gyerekkorom óta figyelem, hogyan készül a pálinka...</p>
+                </div>
+            </div>
+
+            <div class="carousel-item">
+                <img src="https://th.bing.com/th/id/OIP.hRdZvaNuBq-f67BPG1-amAHaRS?rs=1&pid=ImgDetMain" alt="Kovács Bence">
+                <div class="carousel-text">
+                    <h3>Kovács Bence</h3>
+                    <p>Engem a pálinkafőzés tudományos oldala ragadott meg...</p>
+                </div>
+            </div>
+
+            <div class="carousel-item">
+                <img src="https://wallpaperaccess.com/full/189095.jpg" alt="Németh Bence">
+                <div class="carousel-text">
+                    <h3>Németh Bence</h3>
+                    <p>Számomra a pálinkafőzés nemcsak a technikáról szól...</p>
+                </div>
+            </div>
+        </div>
+        <button id="next" class="arrow">&#10095;</button>
+    </div>
+</div>
+
+
+  
+
   
   <!-- Image and Text Section -->
   <section id="images-with-text">
-    <div class="content-item-left">
-      <img src="img/szollo.jfif" alt="Szőlő kép" class="rounded-image">
+    <div class="content-item">
+      <img src="img/szollo.jfif" alt="Szőlő kép">
       <p>
         Bevezetjük Önt a pálinkafőzés művészetébe, ahol a szőlő az alapanyagok királya. 
         A gondosan válogatott gyümölcs az alapja a kiváló minőségű pálinkának. 
@@ -113,8 +148,8 @@
       </p>
     </div>
   
-    <div class="content-item-right">
-      <img src="img/palinkaprogram.jpg" alt="Pálinkaprogram" class="rounded-image">
+    <div class="content-item">
+      <img src="img/palinkaprogram.jpg" alt="Pálinkaprogram">
       <p>
         Ismerje meg a pálinkaprogramokat, amelyek segítségével autentikus élményben lehet része. 
         Programjaink során megismerheti a hagyományos pálinkafőzési eljárásokat, a modern technológia előnyeit és a helyi kultúrát. 
@@ -123,17 +158,19 @@
       </p>
     </div>
   
-    <div class="content-item-right">
+    <div class="content-item">
+      <img src="img/palinka.jpg" alt="Pálinkás üveg">
       <p>
         Fedezze fel a hagyományos pálinkás üvegek mögött rejlő történeteket és titkokat. 
         Az üvegek formája és díszítése évszázadokon át tükrözte a helyi kultúrát és mesterségbeli tudást. 
         A kézműves üvegek ma már igazi műalkotások, amelyek nemcsak tárolóeszközök, hanem a tradíciók hordozói is. 
         Ismerje meg, hogyan készülnek ezek az egyedi darabok, és hogyan őrzik meg a pálinka aromáját és minőségét.
       </p>
-      <img src="img/palinka.jpg" alt="Pálinkás üveg" class="rounded-image">
     </div>
   </section>
   
+  
+  <br><br>
   <!-- Footer Section -->
   <footer>
     <div class="footer-container">

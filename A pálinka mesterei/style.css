@@ -1,0 +1,474 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Az oldal teljes szélességre nyújtása */
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100vh;
+  background: #f8e1e7;
+  font-family: "Arial", sans-serif;
+  color: #222;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* LOGO */
+#logo { 
+  width: 320px;
+  height: auto;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 20px 10px 0;
+  float: left;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+}
+
+/* Extra térköz a menüpontok között */
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 30px; /* Növelt távolság a menüpontok között */
+}
+
+nav ul li {
+  margin: 0 10px; /* Extra térköz a listaelemek között */
+}
+
+nav ul li a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 0.8rem 1.5rem; /* Nagyobb gombméret */
+  border: 2px solid transparent;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+  display: inline-block; /* Térköz érvényesítése */
+}
+
+nav ul li a:hover {
+  border: 2px solid #fff;
+  background: #838383;
+  color: #811331;
+}
+/* Extra térköz mobil nézetben */
+@media (max-width: 768px) {
+nav ul {
+    flex-direction: column;
+    gap: 15px; /* Nagyobb térköz mobil nézetben */
+}
+}
+
+
+
+/* FOOTER */
+footer {
+  background-color: #811331;
+  padding: 3rem 1.5rem;
+  text-align: center;
+}
+
+.footer-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between; /* A szekciók egyenlő távolságra kerülnek */
+  gap: 30px;
+  align-items: center;
+}
+
+.footer-logo,
+.footer-contact,
+.image-gallery {
+  flex: 1; /* Mindegyik szekció egyenlő szélességet kap */
+  text-align: center;
+}
+
+.footer-logo img {
+  width: 100px;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.footer-contact {
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-contact h3 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+
+.footer-contact p {
+  font-size: 1.1rem;
+  margin: 0.5rem 0;
+  color: #f5c3cf;
+}
+
+.image-gallery {
+  display: flex;
+  flex-direction: row; /* Képek egymás alá rendezése */
+  justify-content: center;
+  gap: 20px;
+}
+
+.image-item {
+  text-align: center;
+}
+
+.image-item img {
+  width: 80px;
+  height: auto;
+  border-radius: 5px;
+  border: 2px solid #fff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.image-item img:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+}
+
+.image-item p {
+  color: #fff;
+  margin-top: 0.5rem;
+  font-size: 1rem;
+}
+
+/* Reszponzív módosítások */
+@media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .footer-contact {
+    margin-top: 1rem;
+  }
+
+  .image-gallery {
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .image-item img {
+    width: 100px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-contact h3 {
+    font-size: 1.4rem;
+  }
+
+  .footer-contact p {
+    font-size: 1rem;
+  }
+}
+
+
+/* WELCOME SECTION */
+#udvozlo {
+  background: linear-gradient(135deg, #811331, #b02a4d);
+  color: #fff;
+  padding: 2.5rem;
+  margin: 30px;  
+  text-align: center;
+  border-radius: 10px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+#udvozlo h2 {
+  font-size: 2.4rem;
+  margin-bottom: 1.5rem;
+}
+
+#udvozlo p {
+  font-size: 1.2rem;
+  max-width: 800px;
+  margin: auto;
+  line-height: 1.8;
+}
+
+
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  nav ul {
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 1rem;
+  }
+
+  main {
+    padding: 2rem;
+  }
+
+  main h2 {
+    font-size: 2rem;
+  }
+
+  footer h3 {
+    font-size: 1.4rem;
+  }
+
+  .image-gallery {
+    align-items: center;
+  }
+
+  .image-gallery img {
+    width: 80px;
+  }
+
+  #udvozlo h2 {
+    font-size: 1.8rem;
+  }
+
+  #udvozlo p {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  header h1 {
+    font-size: 2.2rem;
+  }
+
+  main h2 {
+    font-size: 1.8rem;
+  }
+
+  footer h3 {
+    font-size: 1.2rem;
+  }
+
+  #udvozlo h2 {
+    font-size: 1.5rem;
+  }
+
+  #udvozlo p {
+    font-size: 1rem;
+  }
+}
+
+
+#images-with-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100vw; /* Teljes képernyőszélesség */
+  margin: 0;
+  padding: 0;
+}
+
+.content-item {
+  display: flex;
+  align-items: stretch; /* Kép és szöveg azonos magasságú legyen */
+  justify-content: space-between;
+  width: 100%;
+  padding: 4rem 8%;
+  box-sizing: border-box;
+}
+
+.content-item:nth-child(even) {
+  flex-direction: row-reverse; /* Minden második elem fordított legyen */
+}
+
+.content-item img {
+  width: 35%; /* Kisebb kép, hogy ne legyen túl nagy */
+  max-width: 400px; /* Ne nőjön túl nagyra */
+  height: auto;
+  border-radius: 15px;
+  object-fit: cover;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.content-item p {
+  background-color: #811330;
+  font-size: 1.4rem;
+  color: #ffffff;
+  text-align: justify;
+  border-radius: 12px;
+  padding: 2rem;
+  margin: 0;
+  flex: 1; /* A szöveg rugalmasan kitölti a helyet */
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+  line-height: 1.6;
+  display: flex;
+  align-items: center; /* Szöveg középre igazítása a képhez */
+}
+
+
+
+/* A felugró ablak (modal) stílusai */
+.modal {
+  display: none; /* Kezdetben rejtve */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Fekete háttér áttetsző */
+  justify-content: center; /* Középre igazítja vízszintesen */
+  align-items: center; /* Középre igazítja függőlegesen */
+  z-index: 1000; /* A felugró ablak legyen a legfelső réteg */
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  width: 20%; /* Korlátozott szélesség */
+  margin: auto; /* Középre igazítja a tartalmat */
+}
+
+button {
+  background-color: #811330;
+  color: white;
+  border: none;
+  padding: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #660b26;
+}
+
+
+
+.main-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 90%;
+  margin: auto;
+  padding: 2rem;
+  gap: 2rem; /* Extra térköz a két rész között */
+}
+
+#bemutatkozas {
+  flex: 1;
+  max-width: 40%;
+  background: #f5f5f5;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  text-align: justify;
+}
+
+.carousel-wrapper {
+  flex: 1;
+  max-width: 55%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  min-height: 300px; /* Megakadályozza, hogy összecsússzon */
+}
+
+.carousel-container {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.carousel-item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.8s ease-in-out, visibility 0.8s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.carousel-item.active {
+  opacity: 1;
+  visibility: visible;
+  position: relative;
+}
+
+.carousel-item img {
+  width: 120px; /* Kisebb méretű avatarok */
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1rem;
+}
+
+.carousel-text {
+  max-width: 80%;
+}
+
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #811331;
+  color: white;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 50%;
+  transition: 0.3s;
+  z-index: 10;
+}
+
+.arrow:hover {
+  background: #b02a4d;
+}
+
+#prev {
+  left: -50px;
+}
+
+#next {
+  right: -50px;
+}
+
+/* Mobilnézet javítása */
+@media (max-width: 768px) {
+  .main-container {
+      flex-direction: column;
+      text-align: center;
+  }
+
+  #bemutatkozas, .carousel-wrapper {
+      max-width: 100%;
+  }
+
+  .arrow {
+      font-size: 1.5rem;
+  }
+
+  #prev {
+      left: 10px;
+  }
+
+  #next {
+      right: 10px;
+  }
+}
