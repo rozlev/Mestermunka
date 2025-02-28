@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (data.status === "success") {
                 // Mentse a felhasználói nevet és irányítsa át a főoldalra
                 localStorage.setItem("felhasznaloNev", data.name);
-                window.location.href = "index.html";
+                window.location.href = "../index.html";
             } else {
                 // Hibaüzenet megjelenítése az oldalon
                 errorMessageDiv.textContent = data.message;

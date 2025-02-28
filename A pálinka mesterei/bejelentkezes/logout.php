@@ -1,8 +1,12 @@
 <?php
-session_start(); // A munkamenet indítása
-session_unset(); // Az összes munkameneti változó törlése
-session_destroy(); // A munkamenet lezárása
+session_start();
+session_unset();
+session_destroy();
 
-header("Location: bejelentkezes/bejelentkezes.html"); // Átirányítás a bejelentkezési oldalra
-exit();
+// 🚀 Session cookie törlése teljesen!
+setcookie(session_name(), '', time() - 42000, '/');
+setcookie("PHPSESSID", "", time() - 3600, "/");
+
+header("Location: bejelentkezes.php");
+exit;
 ?>

@@ -1,39 +1,78 @@
 <?php
-session_start(); // Session indítása minden oldalon
+session_start();
 
 // Ellenőrizzük, hogy be van-e jelentkezve és admin-e
 if (!isset($_SESSION["user_id"]) || $_SESSION["role"] !== "admin") {
     die("🚫 Nincs jogosultságod az oldal megtekintésére!");
 }
 
-$json_file = 'palinkak.json';
+// Kapcsolódás az adatbázishoz
+$conn = new mysqli("localhost", "root", "", "palinka_mesterei");
 
-// Betöltjük az adatokat a JSON fájlból
-$palinkak = file_exists($json_file) ? json_decode(file_get_contents($json_file), true) : [];
-
-// Új pálinka hozzáadása
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add'])) {
-    $uj_palinka = [
-        'id' => uniqid(),
-        'nev' => $_POST['nev'],
-        'leiras' => $_POST['leiras'],
-        'ar' => $_POST['ar'],
-        'kep' => $_POST['kep'],
-        'keszlet' => $_POST['keszlet']
-    ];
-    $palinkak[] = $uj_palinka;
-    file_put_contents($json_file, json_encode($palinkak, JSON_PRETTY_PRINT));
-    header("Location: admin.php");
-    exit;
+if ($conn->connect_error) {
+    die("❌ Adatbázis kapcsolat hiba: " . $conn->connect_error);
 }
 
-// Pálinka törlése
 if (isset($_GET['delete'])) {
-    $palinkak = array_filter($palinkak, fn($p) => $p['id'] !== $_GET['delete']);
-    file_put_contents($json_file, json_encode(array_values($palinkak), JSON_PRETTY_PRINT));
-    header("Location: admin.php");
+    $delete_id = intval($_GET['delete']);
+
+    // 🔥 Először töröljük az adott pálinkához tartozó rendeléseket
+    $stmt_rendeles = $conn->prepare("DELETE FROM rendeles WHERE PalinkaID = ?");
+    $stmt_rendeles->bind_param("i", $delete_id);
+    if (!$stmt_rendeles->execute()) {
+        die("❌ Rendelési rekordok törlési hiba: " . $stmt_rendeles->error);
+    }
+
+    // 🔥 Ezután töröljük a képet a `kepek` táblából
+    $stmt_kep = $conn->prepare("DELETE FROM kepek WHERE PalinkaID = ?");
+    $stmt_kep->bind_param("i", $delete_id);
+    if (!$stmt_kep->execute()) {
+        die("❌ Kép törlési hiba: " . $stmt_kep->error);
+    }
+
+    // 🔥 Most töröljük a pálinkát a `palinka` táblából
+    $stmt = $conn->prepare("DELETE FROM palinka WHERE PalinkaID = ?");
+    $stmt->bind_param("i", $delete_id);
+    if (!$stmt->execute()) {
+        die("❌ Pálinka törlési hiba: " . $stmt->error);
+    }
+
+    header("Location: admin.php?deleted=success");
     exit;
 }
+
+// 🔥 Új pálinka hozzáadása
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add'])) {
+    $nev = $_POST['nev'];
+    $alkohol = $_POST['alkohol'];
+    $ar = $_POST['ar'];
+    $keszlet = $_POST['keszlet'];
+    $kep = $_POST['kep'];
+
+    $stmt = $conn->prepare("INSERT INTO palinka (Nev, AlkoholTartalom, Ar, DB_szam) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("sdii", $nev, $alkohol, $ar, $keszlet);
+
+    if ($stmt->execute()) {
+        $palinkaID = $stmt->insert_id;
+
+        $stmt_kep = $conn->prepare("INSERT INTO kepek (PalinkaID, KepURL) VALUES (?, ?)");
+        $stmt_kep->bind_param("is", $palinkaID, $kep);
+        $stmt_kep->execute();
+
+        header("Location: admin.php?added=success");
+        exit;
+    } else {
+        die("❌ Hiba történt: " . $stmt->error);
+    }
+}
+
+// 🔥 Betöltjük a pálinkákat az adatbázisból
+$result = $conn->query("SELECT p.PalinkaID, p.Nev, p.AlkoholTartalom, p.Ar, p.DB_szam, k.KepURL 
+                        FROM palinka p
+                        LEFT JOIN kepek k ON p.PalinkaID = k.PalinkaID");
+$palinkak = $result->fetch_all(MYSQLI_ASSOC);
+
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -51,7 +90,7 @@ if (isset($_GET['delete'])) {
         <h2>Új pálinka hozzáadása</h2>
         <form method="POST">
             <input type="text" name="nev" placeholder="Pálinka neve" required>
-            <textarea name="leiras" placeholder="Leírás" required></textarea>
+            <input type="text" name="alkohol" placeholder="Alkohol %" required>
             <input type="number" name="ar" placeholder="Ár (HUF)" required>
             <input type="text" name="kep" placeholder="Kép URL" required>
             <input type="number" name="keszlet" placeholder="Készlet (db)" required>
@@ -66,7 +105,7 @@ if (isset($_GET['delete'])) {
         <tr>
             <th>ID</th>
             <th>Név</th>
-            <th>Leírás</th>
+            <th>Alkohol %</th>
             <th>Ár</th>
             <th>Készlet</th>
             <th>Kép</th>
@@ -74,15 +113,23 @@ if (isset($_GET['delete'])) {
         </tr>
         <?php foreach ($palinkak as $p): ?>
             <tr>
-                <td><?= $p['id'] ?></td>
-                <td><?= $p['nev'] ?></td>
-                <td><?= $p['leiras'] ?></td>
-                <td><?= $p['ar'] ?> HUF</td>
-                <td><?= $p['keszlet'] > 0 ? $p['keszlet'] . ' db' : '🚫 Készlethiány!' ?></td>
-                <td><img src="<?= $p['kep'] ?>" width="50"></td>
-                <td><a href="admin.php?delete=<?= $p['id'] ?>">🗑️ Törlés</a></td>
+                <td><?= $p['PalinkaID'] ?></td>
+                <td><?= $p['Nev'] ?></td>
+                <td><?= $p['AlkoholTartalom'] ?></td>
+                <td><?= $p['Ar'] ?> HUF</td>
+                <td><?= $p['DB_szam'] > 0 ? $p['DB_szam'] . ' db' : '🚫 Készlethiány!' ?></td>
+                <td><img src="<?= $p['KepURL'] ?>" width="50"></td>
+                <td><a href="admin.php?delete=<?= $p['PalinkaID'] ?>" onclick="return confirm('Biztosan törlöd ezt a pálinkát?')">🗑️ Törlés</a></td>
             </tr>
         <?php endforeach; ?>
     </table>
+
+    <?php if (isset($_GET['deleted'])): ?>
+        <p style="color: green;">✅ Pálinka sikeresen törölve!</p>
+    <?php endif; ?>
+
+    <?php if (isset($_GET['added'])): ?>
+        <p style="color: green;">✅ Pálinka sikeresen hozzáadva!</p>
+    <?php endif; ?>
 </body>
 </html>
