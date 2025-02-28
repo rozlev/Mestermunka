@@ -11,12 +11,17 @@ document.addEventListener("DOMContentLoaded", function () {
             method: "POST",
             body: formData
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Hálózati válasz hibás!");
+            }
+            return response.json();
+        })
         .then(data => {
             if (data.status === "success") {
                 // Mentse a felhasználói nevet és irányítsa át a főoldalra
                 localStorage.setItem("felhasznaloNev", data.name);
-                window.location.href = "../index.html";
+                window.location.href = "index.html";
             } else {
                 // Hibaüzenet megjelenítése az oldalon
                 errorMessageDiv.textContent = data.message;

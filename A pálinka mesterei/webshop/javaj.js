@@ -189,3 +189,4 @@ window.addEventListener("storage", function (event) {
         updateCartCount();
     }
 });
+
