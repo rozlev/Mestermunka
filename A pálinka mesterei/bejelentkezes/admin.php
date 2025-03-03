@@ -49,6 +49,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['remove_admin'])) {
     }
 }
 
+// 🔥 Új pálinka hozzáadása
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add'])) {
+    $nev = $_POST['nev'];
+    $alkohol = $_POST['alkohol'];
+    $ar = intval($_POST['ar']);
+    $keszlet = intval($_POST['keszlet']);
+    $kep = $_POST['kep'];
+
+    // Előkészített SQL beszúrás
+    $stmt = $conn->prepare("INSERT INTO palinka (Nev, AlkoholTartalom, Ar, DB_szam) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("ssii", $nev, $alkohol, $ar, $keszlet);
+
+    if ($stmt->execute()) {
+        $last_id = $stmt->insert_id; // Az új pálinka ID-ja
+
+        // Kép URL mentése a `kepek` táblába
+        $stmt_kep = $conn->prepare("INSERT INTO kepek (PalinkaID, KepURL) VALUES (?, ?)");
+        $stmt_kep->bind_param("is", $last_id, $kep);
+        $stmt_kep->execute();
+
+        
+        header("Location: admin.php?add_success=1");
+        exit;
+    } else {
+        die("❌ Hiba történt a hozzáadás során: " . $stmt->error);
+    }
+    
+}
+
+
+
+
 
 // 🔥 Meglévő felhasználók lekérése (csak azok, akik még NEM adminok)
 $result_users = $conn->query("SELECT UserID, Nev, Email FROM user WHERE Szerepkor != 'admin'");
@@ -64,8 +96,13 @@ $result = $conn->query("SELECT p.PalinkaID, p.Nev, p.AlkoholTartalom, p.Ar, p.DB
                         LEFT JOIN kepek k ON p.PalinkaID = k.PalinkaID");
 $palinkak = $result->fetch_all(MYSQLI_ASSOC);
 
+
+
+
 $conn->close();
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="hu">
@@ -242,6 +279,9 @@ $conn->close();
         <?php if (isset($_GET['user_updated']) && $_GET['user_updated'] == "success"): ?>
             <p style="color: green; font-weight: bold;">✅ A felhasználó adminná lett állítva!</p>
         <?php endif; ?>
+
+
+
 
         <div class="container">
         <h2>Új Pálinka Hozzáadása</h2>
