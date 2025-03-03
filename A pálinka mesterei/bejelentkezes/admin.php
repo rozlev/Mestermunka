@@ -13,22 +13,46 @@ if ($conn->connect_error) {
     die("❌ Adatbázis kapcsolat hiba: " . $conn->connect_error);
 }
 
-// 🔥 Új admin hozzáadása
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_admin'])) {
-    $nev = $_POST['nev'];
-    $email = $_POST['email'];
-    $jelszo = password_hash($_POST['jelszo'], PASSWORD_BCRYPT);
+// 🔥 Felhasználó adminná állítása
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['make_admin'])) {
+    $user_id = intval($_POST['user_id']);
 
-    $stmt = $conn->prepare("INSERT INTO user (Nev, Email, Jelszo, Szerepkor) VALUES (?, ?, ?, 'admin')");
-    $stmt->bind_param("sss", $nev, $email, $jelszo);
+    // Frissítjük az adott felhasználó szerepkörét adminná
+    $stmt = $conn->prepare("UPDATE user SET Szerepkor = 'admin' WHERE UserID = ?");
+    $stmt->bind_param("i", $user_id);
 
-    if ($stmt->execute()) {
-        header("Location: admin.php?admin_added=success");
+    if ($stmt->execute() && $stmt->affected_rows > 0) {
+        header("Location: admin.php?user_updated=success");
         exit;
     } else {
-        die("❌ Hiba történt: " . $stmt->error);
+        die("❌ Hiba történt az adminná állítás során: " . $stmt->error);
     }
 }
+
+// 🔥 Admin jogának visszavonása (admin -> felhasználó)
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['remove_admin'])) {
+    $user_id = intval($_POST['user_id']);
+
+    // Ne engedjük az aktuálisan bejelentkezett adminnak a saját jogának elvételét
+    if ($user_id == $_SESSION["user_id"]) {
+        die("❌ Nem veheted el a saját admin jogodat!");
+    }
+
+    $stmt = $conn->prepare("UPDATE user SET Szerepkor = 'felhasználó' WHERE UserID = ?");
+    $stmt->bind_param("i", $user_id);
+
+    if ($stmt->execute() && $stmt->affected_rows > 0) {
+        header("Location: admin.php?admin_removed=success");
+        exit;
+    } else {
+        die("❌ Hiba történt az admin jog elvétele során: " . $stmt->error);
+    }
+}
+
+
+// 🔥 Meglévő felhasználók lekérése (csak azok, akik még NEM adminok)
+$result_users = $conn->query("SELECT UserID, Nev, Email FROM user WHERE Szerepkor != 'admin'");
+$felhasznalok = $result_users->fetch_all(MYSQLI_ASSOC);
 
 // 🔥 Betöltjük az adminokat az adatbázisból
 $result_admins = $conn->query("SELECT UserID, Nev, Email, Szerepkor FROM user WHERE Szerepkor = 'admin'");
@@ -52,14 +76,14 @@ $conn->close();
     <link rel="stylesheet" href="style.css"> <!-- A főoldal CSS fájlja -->
     <style>
         body {
-            background-color: #9b1c31; /* Bordó háttér */
+            background-color: #9b1c31;
             font-family: Arial, sans-serif;
             color: white;
         }
         .container {
             width: 80%;
             margin: auto;
-            background: #f8e7eb; /* Világos rózsaszín doboz */
+            background: #f8e7eb;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
@@ -67,16 +91,17 @@ $conn->close();
         }
         h1, h2 {
             color: #9b1c31;
+            text-align: center;
         }
         .btn {
-            padding: 10px 15px;
+            padding: 12px 18px;
             border: none;
             cursor: pointer;
             text-decoration: none;
             display: inline-block;
-            font-size: 14px;
-            margin: 5px;
-            border-radius: 5px;
+            font-size: 16px;
+            margin: 10px;
+            border-radius: 8px;
         }
         .btn-delete {
             background-color: #e74c3c;
@@ -103,42 +128,66 @@ $conn->close();
             border: 1px solid #ddd;
         }
         th, td {
-            padding: 10px;
+            padding: 15px;
             text-align: center;
         }
         th {
             background-color: #9b1c31;
             color: white;
         }
-        input, button {
-            padding: 10px;
-            margin: 10px 0;
+
+        .btn {
+            padding: 12px 18px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px;
+            border-radius: 8px;
+        }
+
+        .form-container {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            margin-top: 20px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .form-container input {
             width: 100%;
+            margin-bottom: 15px;
+            padding: 12px;
             border: 1px solid #ccc;
             border-radius: 5px;
+            font-size: 16px;
         }
-        button {
+        .form-container button {
+            width: 100%;
+            padding: 14px;
             background-color: #9b1c31;
             color: white;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
         }
-        button:hover {
+        .form-container button:hover {
             background-color: #7e1627;
         }
     </style>
 </head>
 <body>
-    <div class="container">
+<div class="container">
         <h1>Admin Kezelőfelület</h1>
         <a class="btn btn-delete" href="logout.php">Kijelentkezés</a>
 
-        <h2>Új Admin Hozzáadása</h2>
-        <form method="POST">
-            <input type="text" name="nev" placeholder="Admin neve" required>
-            <input type="email" name="email" placeholder="Email cím" required>
-            <input type="password" name="jelszo" placeholder="Jelszó" required>
-            <button type="submit" name="add_admin" class="btn btn-add">Admin hozzáadása</button>
-        </form>
+
 
         <h2>Meglévő Adminok</h2>
         <table>
@@ -146,27 +195,66 @@ $conn->close();
                 <th>ID</th>
                 <th>Név</th>
                 <th>Email</th>
-                <th>Szerepkör</th>
+                <th>Művelet</th>
             </tr>
             <?php foreach ($adminok as $admin): ?>
                 <tr>
-                    <td><?= $admin['UserID'] ?></td>
-                    <td><?= $admin['Nev'] ?></td>
-                    <td><?= $admin['Email'] ?></td>
-                    <td><?= $admin['Szerepkor'] ?></td>
+                    <td><?= htmlspecialchars($admin['UserID']) ?></td>
+                    <td><?= htmlspecialchars($admin['Nev']) ?></td>
+                    <td><?= htmlspecialchars($admin['Email']) ?></td>
+                    <td>
+                        <form method="POST">
+                            <input type="hidden" name="user_id" value="<?= htmlspecialchars($admin['UserID']) ?>">
+                            <button type="submit" name="remove_admin" class="btn btn-delete">Admin jog elvétele</button>
+                        </form>
+                    </td>
                 </tr>
             <?php endforeach; ?>
         </table>
 
-        <h2>Új pálinka hozzáadása</h2>
-        <form method="POST">
-            <input type="text" name="nev" placeholder="Pálinka neve" required>
-            <input type="text" name="alkohol" placeholder="Alkohol %" required>
-            <input type="number" name="ar" placeholder="Ár (HUF)" required>
-            <input type="text" name="kep" placeholder="Kép URL" required>
-            <input type="number" name="keszlet" placeholder="Készlet (db)" required>
-            <button type="submit" name="add" class="btn btn-add">Hozzáadás</button>
-        </form>
+
+        <h2>Felhasználók adminná állítása</h2>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Név</th>
+                <th>Email</th>
+                <th>Művelet</th>
+            </tr>
+            <?php foreach ($felhasznalok as $user): ?>
+                <tr>
+                    <td><?= htmlspecialchars($user['UserID']) ?></td>
+                    <td><?= htmlspecialchars($user['Nev']) ?></td>
+                    <td><?= htmlspecialchars($user['Email']) ?></td>
+                    <td>
+                        <form method="POST">
+                            <input type="hidden" name="user_id" value="<?= htmlspecialchars($user['UserID']) ?>">
+                            <button type="submit" name="make_admin" class="btn btn-add">Adminná állítás</button>
+                        </form>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+</div>
+
+                <br>
+
+        <?php if (isset($_GET['user_updated']) && $_GET['user_updated'] == "success"): ?>
+            <p style="color: green; font-weight: bold;">✅ A felhasználó adminná lett állítva!</p>
+        <?php endif; ?>
+
+        <div class="container">
+        <h2>Új Pálinka Hozzáadása</h2>
+        <div class="form-container">
+            <form method="POST">
+                <input type="text" name="nev" placeholder="Pálinka neve" required>
+                <input type="text" name="alkohol" placeholder="Alkohol %" required>
+                <input type="number" name="ar" placeholder="Ár (HUF)" required>
+                <input type="text" name="kep" placeholder="Kép URL" required>
+                <input type="number" name="keszlet" placeholder="Készlet (db)" required>
+                <button type="submit" name="add">➕ Hozzáadás</button>
+            </form>
+            </div>
 
         <h2>Meglévő pálinkák</h2>
         <table>
@@ -194,3 +282,4 @@ $conn->close();
     </div>
 </body>
 </html>
+
