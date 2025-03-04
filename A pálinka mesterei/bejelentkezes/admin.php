@@ -334,9 +334,7 @@ $conn->close();
 
                 <br>
 
-        <?php if (isset($_GET['user_updated']) && $_GET['user_updated'] == "success"): ?>
-            <p style="color: green; font-weight: bold;">✅ A felhasználó adminná lett állítva!</p>
-        <?php endif; ?>
+
 
 
 
