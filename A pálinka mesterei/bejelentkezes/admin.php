@@ -120,6 +120,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add'])) {
     
 }
 
+// 🔥 Pálinka törlése
+if (isset($_GET['delete'])) {
+    $palinka_id = intval($_GET['delete']);
+
+    // Először töröljük a hozzá tartozó képet az adatbázisból
+    $stmt_kep = $conn->prepare("DELETE FROM kepek WHERE PalinkaID = ?");
+    $stmt_kep->bind_param("i", $palinka_id);
+    $stmt_kep->execute();
+
+    // Majd töröljük magát a pálinkát
+    $stmt = $conn->prepare("DELETE FROM palinka WHERE PalinkaID = ?");
+    $stmt->bind_param("i", $palinka_id);
+
+    if ($stmt->execute() && $stmt->affected_rows > 0) {
+        header("Location: admin.php?delete_success=1");
+        exit;
+    } else {
+        die("❌ Hiba történt a törlés során: " . $stmt->error);
+    }
+}
+
+
 
 
 
@@ -275,6 +297,49 @@ $conn->close();
             width: 50px;
             text-align: center;
         }
+
+                /* Modális ablak stílusok */
+                .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0, 0, 0);
+            background-color: rgba(0, 0, 0, 0.4);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .modal-btn {
+            background-color: #e74c3c;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 5px;
+        }
+
+        .modal-btn:hover {
+            background-color: #c0392b;
+        }
+
+        #uzenet{
+            color: black;
+        }
     </style>
 </head>
 <body>
@@ -307,16 +372,9 @@ $conn->close();
             <?php endforeach; ?>
         </table>
 
-<?php if (isset($_GET['user_updated']) && $_GET['user_updated'] == "success"): ?>
-    <p style="color: green; font-weight: bold;">✅ A felhasználó adminná lett állítva!</p>
-    <script>
-        // Töröljük az URL-ből a ?user_updated=success paramétert
-        if (window.history.replaceState) {
-            let newUrl = window.location.href.split("?")[0];
-            window.history.replaceState(null, null, newUrl);
-        }
-    </script>
-<?php endif; ?>
+        <?php if (isset($_GET['user_updated']) && $_GET['user_updated'] == "success"): ?>
+            <p style="color: green; font-weight: bold;">✅ A felhasználó adminná lett állítva!</p>
+        <?php endif; ?>
         <h2>Felhasználók adminná állítása</h2>
         <table>
             <tr>
@@ -361,10 +419,9 @@ $conn->close();
             </form>
             </div>
 
-                <?php if (isset($_GET['stock_updated']) && $_GET['stock_updated'] == "success"): ?>
-        <p style="color: green; font-weight: bold;">✅ A készlet frissítve!</p>
-    <?php endif; ?>
-        <h2>Meglévő pálinkák</h2>
+                
+
+            <h2>Meglévő Pálinkák</h2>
     <table>
         <tr>
             <th>ID</th>
@@ -381,21 +438,51 @@ $conn->close();
                 <td><?= htmlspecialchars($p['Nev']) ?></td>
                 <td><?= htmlspecialchars($p['AlkoholTartalom']) ?></td>
                 <td><?= $p['Ar'] ?> HUF</td>
-                <td>
-                    <form method="POST" style="display: flex; align-items: center;">
-                        <input type="hidden" name="palinka_id" value="<?= $p['PalinkaID'] ?>">
-                        <button type="submit" name="modify_stock" value="-1" class="stock-btn">➖</button>
-                        <input type="number" name="change" class="stock-input" value="1" min="1">
-                        <button type="submit" name="modify_stock" value="1" class="stock-btn">➕</button>
-                    </form>
-                    <p style="margin-top: 5px;"><?= $p['DB_szam'] ?> db</p>
-                </td>
+                <td><?= $p['DB_szam'] ?> db</td>
                 <td><img src="<?= htmlspecialchars($p['KepURL']) ?>" width="50"></td>
-                <td><a class="btn btn-delete" href="admin.php?delete=<?= $p['PalinkaID'] ?>" onclick="return confirm('Biztosan törlöd ezt a pálinkát?')">🗑️ Törlés</a></td>
+                <td><button class="btn btn-delete" onclick="confirmDelete(<?= $p['PalinkaID'] ?>)">🗑️ Törlés</button></td>
             </tr>
         <?php endforeach; ?>
     </table>
     </div>
+    <!-- Modális ablak -->
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <p id="uzenet" >Biztosan törölni szeretnéd ezt a pálinkát?</p>
+        <button id="confirmDelete" class="modal-btn">Igen</button>
+        <button id="cancelDelete" class="modal-btn">Mégsem</button>
+    </div>
+</div>
 </body>
+<script>
+    var modal = document.getElementById("myModal");
+    var confirmBtn = document.getElementById("confirmDelete");
+    var cancelBtn = document.getElementById("cancelDelete");
+    var deleteId = null;
+
+    // A törlés gomb eseménykezelője
+    function confirmDelete(id) {
+        deleteId = id;
+        modal.style.display = "block";  // Modális ablak megjelenítése
+    }
+
+    // Törlés megerősítése
+    confirmBtn.onclick = function () {
+        window.location.href = "admin.php?delete=" + deleteId; // Átirányítás a törléshez
+    }
+
+    // Törlés megszakítása
+    cancelBtn.onclick = function () {
+        modal.style.display = "none";  // Modális ablak elrejtése
+    }
+
+    // Ha a felhasználó kívül kattint a modális ablakra, zárjuk be
+    window.onclick = function (event) {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
+
 </html>
 
