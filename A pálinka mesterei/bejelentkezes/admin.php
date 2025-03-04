@@ -307,7 +307,16 @@ $conn->close();
             <?php endforeach; ?>
         </table>
 
-
+<?php if (isset($_GET['user_updated']) && $_GET['user_updated'] == "success"): ?>
+    <p style="color: green; font-weight: bold;">✅ A felhasználó adminná lett állítva!</p>
+    <script>
+        // Töröljük az URL-ből a ?user_updated=success paramétert
+        if (window.history.replaceState) {
+            let newUrl = window.location.href.split("?")[0];
+            window.history.replaceState(null, null, newUrl);
+        }
+    </script>
+<?php endif; ?>
         <h2>Felhasználók adminná állítása</h2>
         <table>
             <tr>
