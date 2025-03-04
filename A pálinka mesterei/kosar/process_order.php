@@ -95,16 +95,44 @@ $conn->close();
 
 // Email küldés a rendelésről
 $api_key = "621ded9e-627c-45c1-8367-3477df11ce78"; // Web3Forms API kulcs
-
 $post_fields = http_build_query([
-    "access_key" => $api_key,
-    "subject" => "Rendelés visszaigazolás - Pálinka Mesterei",
-    "from_name" => "Palinka Mesterei",
-    "from email" => "palinkamesterei@gmail.com",
-    "replyto" => $user_email,
-    "to" => $user_email,
-    "message" => "Kedves Vásárló,\n\nKöszönjük a rendelésed!\n\nRendelési azonosító: #$orderGroupID\n\nRendelt tételek:\n$orderDetails\n\nÖsszesen: " . number_format($finalTotal, 0, ',', ' ') . " Ft\n\nHamarosan jelentkezünk a kiszállítás részleteivel.\n\nÜdvözlettel,\nPálinka Mesterei"
+    "access_key"    => $api_key,
+    "subject"       => "Rendelés visszaigazolás - Pálinka Mesterei",
+    "from name"     => "Pálinka Mesterei",
+    "from email"    => "palinkamesterei@gmail.com", // 'from email' át lett nevezve
+    "replyto"       => $user_email,
+    "to"            => $user_email,
+    "message"       => 
+        "Kedves Vásárló!\n\n" .
+        "Örömmel értesítünk, hogy a rendelésedet sikeresen rögzítettük. Kérjük, olvasd át az alábbi részleteket:\n\n" .
+        
+        "-------------------- Rendelési információk --------------------\n\n" .
+        
+        "RENDELÉSI AZONOSÍTÓ: #$orderGroupID\n\n" .
+        
+        "RENDELT TÉTELEK:\n" .
+        "$orderDetails\n\n" .
+        
+        "-----------------------------------------------------------------\n\n" .
+        
+        "🛒 VÉGÖSSZEG: " . number_format($finalTotal, 0, ',', ' ') . " Ft\n\n" .
+        
+        "-----------------------------------------------------------------\n\n" .
+
+        "A rendelésedet hamarosan feldolgozzuk, és értesíteni fogunk a kiszállítás pontos idejéről és részleteiről.\n\n" .
+
+        "Amennyiben bárminemű kérdésed lenne, kérjük, ne habozz kapcsolatba lépni velünk. Segítünk mindenben!\n\n" .
+
+        "------------------------------------------------------------\n\n" .
+        
+        "KÖSZÖNJÜK, HOGY MINKET VÁLASZTOTTÁL!\n\n" .
+        
+        "PÁLINKA MESTEREI csapata"
 ]);
+
+
+
+
 
 $ch = curl_init("https://api.web3forms.com/submit");
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
