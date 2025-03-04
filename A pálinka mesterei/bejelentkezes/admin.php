@@ -13,6 +13,49 @@ if ($conn->connect_error) {
     die("❌ Adatbázis kapcsolat hiba: " . $conn->connect_error);
 }
 
+
+// 🔥 Készlet növelése/csökkentése
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['modify_stock'])) {
+    $palinka_id = intval($_POST['palinka_id']);
+    $change = intval($_POST['change']);
+
+    // Jelenlegi készlet lekérdezése
+    $result = $conn->query("SELECT DB_szam FROM palinka WHERE PalinkaID = $palinka_id");
+    $row = $result->fetch_assoc();
+    $current_stock = intval($row['DB_szam']);
+
+    $new_stock = $current_stock + $change;
+
+// Ha a mínusz gombra nyomták, akkor fordítva kell venni
+    if ($_POST['modify_stock'] === 'minus') {
+        $change *= -1;
+    }
+
+    // Ha az új készlet negatív lenne, akkor nem módosítjuk
+    if ($new_stock < 0) {
+        die("❌ A készlet nem lehet negatív!");
+    }
+
+    $stmt = $conn->prepare("UPDATE palinka SET DB_szam = ? WHERE PalinkaID = ?");
+    $stmt->bind_param("ii", $new_stock, $palinka_id);
+
+    if ($stmt->execute() && $stmt->affected_rows > 0) {
+        header("Location: admin.php?stock_updated=success");
+        exit;
+    } else {
+        die("❌ Hiba történt a készlet módosítása során: " . $stmt->error);
+    }
+}
+
+// 🔥 Pálinkák lekérése az adatbázisból
+$result = $conn->query("SELECT p.PalinkaID, p.Nev, p.AlkoholTartalom, p.Ar, p.DB_szam, k.KepURL 
+                        FROM palinka p
+                        LEFT JOIN kepek k ON p.PalinkaID = k.PalinkaID");
+$palinkak = $result->fetch_all(MYSQLI_ASSOC);
+
+
+
+
 // 🔥 Felhasználó adminná állítása
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['make_admin'])) {
     $user_id = intval($_POST['user_id']);
@@ -217,6 +260,22 @@ $conn->close();
         .form-container button:hover {
             background-color: #7e1627;
         }
+                .stock-btn {
+            background-color: #9b1c31;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .stock-btn:hover {
+            background-color: #7e1627;
+        }
+        .stock-input {
+            width: 50px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -296,29 +355,40 @@ $conn->close();
             </form>
             </div>
 
+                <?php if (isset($_GET['stock_updated']) && $_GET['stock_updated'] == "success"): ?>
+        <p style="color: green; font-weight: bold;">✅ A készlet frissítve!</p>
+    <?php endif; ?>
         <h2>Meglévő pálinkák</h2>
-        <table>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Név</th>
+            <th>Alkohol %</th>
+            <th>Ár</th>
+            <th>Készlet</th>
+            <th>Kép</th>
+            <th>Művelet</th>
+        </tr>
+        <?php foreach ($palinkak as $p): ?>
             <tr>
-                <th>ID</th>
-                <th>Név</th>
-                <th>Alkohol %</th>
-                <th>Ár</th>
-                <th>Készlet</th>
-                <th>Kép</th>
-                <th>Művelet</th>
+                <td><?= $p['PalinkaID'] ?></td>
+                <td><?= htmlspecialchars($p['Nev']) ?></td>
+                <td><?= htmlspecialchars($p['AlkoholTartalom']) ?></td>
+                <td><?= $p['Ar'] ?> HUF</td>
+                <td>
+                    <form method="POST" style="display: flex; align-items: center;">
+                        <input type="hidden" name="palinka_id" value="<?= $p['PalinkaID'] ?>">
+                        <button type="submit" name="modify_stock" value="-1" class="stock-btn">➖</button>
+                        <input type="number" name="change" class="stock-input" value="1" min="1">
+                        <button type="submit" name="modify_stock" value="1" class="stock-btn">➕</button>
+                    </form>
+                    <p style="margin-top: 5px;"><?= $p['DB_szam'] ?> db</p>
+                </td>
+                <td><img src="<?= htmlspecialchars($p['KepURL']) ?>" width="50"></td>
+                <td><a class="btn btn-delete" href="admin.php?delete=<?= $p['PalinkaID'] ?>" onclick="return confirm('Biztosan törlöd ezt a pálinkát?')">🗑️ Törlés</a></td>
             </tr>
-            <?php foreach ($palinkak as $p): ?>
-                <tr>
-                    <td><?= $p['PalinkaID'] ?></td>
-                    <td><?= $p['Nev'] ?></td>
-                    <td><?= $p['AlkoholTartalom'] ?></td>
-                    <td><?= $p['Ar'] ?> HUF</td>
-                    <td><?= $p['DB_szam'] > 0 ? $p['DB_szam'] . ' db' : '🚫 Készlethiány!' ?></td>
-                    <td><img src="<?= $p['KepURL'] ?>" width="50"></td>
-                    <td><a class="btn btn-delete" href="admin.php?delete=<?= $p['PalinkaID'] ?>" onclick="return confirm('Biztosan törlöd ezt a pálinkát?')">🗑️ Törlés</a></td>
-                </tr>
-            <?php endforeach; ?>
-        </table>
+        <?php endforeach; ?>
+    </table>
     </div>
 </body>
 </html>
