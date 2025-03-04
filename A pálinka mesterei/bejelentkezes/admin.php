@@ -14,10 +14,13 @@ if ($conn->connect_error) {
 }
 
 
-// 🔥 Készlet növelése/csökkentése
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['modify_stock'])) {
     $palinka_id = intval($_POST['palinka_id']);
     $change = intval($_POST['change']);
+    $operation = intval($_POST['modify_stock']); // Most már számként kezeljük
+    
+    // A change-t szorozzuk az operáció értékével (-1 vagy 1)
+    $change *= $operation;
 
     // Jelenlegi készlet lekérdezése
     $result = $conn->query("SELECT DB_szam FROM palinka WHERE PalinkaID = $palinka_id");
@@ -26,20 +29,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['modify_stock'])) {
 
     $new_stock = $current_stock + $change;
 
-// Ha a mínusz gombra nyomták, akkor fordítva kell venni
-    if ($_POST['modify_stock'] === 'minus') {
-        $change *= -1;
-    }
+// Ha az új készlet 0-ra csökken, akkor nem hiba, csak figyelmeztetés
+if ($new_stock < 0) {
+    $new_stock = 0;
+}
 
-    // Ha az új készlet negatív lenne, akkor nem módosítjuk
-    if ($new_stock < 0) {
-        die("❌ A készlet nem lehet negatív!");
-    }
 
     $stmt = $conn->prepare("UPDATE palinka SET DB_szam = ? WHERE PalinkaID = ?");
     $stmt->bind_param("ii", $new_stock, $palinka_id);
 
-    if ($stmt->execute() && $stmt->affected_rows > 0) {
+    if ($stmt->execute()) {
         header("Location: admin.php?stock_updated=success");
         exit;
     } else {
