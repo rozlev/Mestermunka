@@ -101,7 +101,6 @@ $post_fields = http_build_query([
     "from name"     => "Pálinka Mesterei",
     "from email"    => "palinkamesterei@gmail.com", // 'from email' át lett nevezve
     "replyto"       => $user_email,
-    "to"            => $user_email,
     "message"       => 
         "Kedves Vásárló!\n\n" .
         "Örömmel értesítünk, hogy a rendelésedet sikeresen rögzítettük. Kérjük, olvasd át az alábbi részleteket:\n\n" .
