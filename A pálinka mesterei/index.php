@@ -238,6 +238,6 @@
   <script src="bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
   <script src="javaj.js"></script>
   <script src="spony.js"></script>
-  <script src="agetest.js"></script>
+  <script src="korteszt.js"></script>
 </body> 
 </html>
