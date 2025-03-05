@@ -39,38 +39,46 @@
 
 
 
-  <nav class="navbar navbar-expand-lg" style="background: linear-gradient(90deg, #811331, #9c1c3a);">
-    <div class="container-fluid">
-      <a class="navbar-brand text-white" href="#">A pálinka mesterei</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" 
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Menü megnyitása">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link text-white" href="webshop/index.html">Webshop</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link text-white" href="palinka_blog/index.html">Pálinka készítés</a>
-          </li>
+<?php session_start(); ?>
 
-          <li class="nav-item">
-            <a class="nav-link text-white" href="jatek/index.html">Játék</a>
-          </li>
-                    <!-- Eredeti bejelentkezés funkció visszaállítva -->
-          <li class="nav-item" id="felhasznaloNev">
-            <a class="nav-link text-white" href="bejelentkezes/bejelentkezes.html" id="loginLink">Bejelentkezés</a>
-          </li>  
-          <li class="nav-item">
-            <a class="nav-link text-white" href="kosar/index.html">
-              Kosár (<span id="cart-count">0</span>)
-            </a>
-          </li>
-        </ul>
-      </div>
+<nav class="navbar navbar-expand-lg" style="background: linear-gradient(90deg, #811331, #9c1c3a);">
+    <div class="container-fluid">
+        <a class="navbar-brand text-white" href="#">A pálinka mesterei</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" 
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Menü megnyitása">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="webshop/index.html">Webshop</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="palinka_blog/index.html">Pálinka készítés</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="jatek/index.html">Játék</a>
+                </li>
+                <li class="nav-item" id="felhasznaloNev">
+                    <a class="nav-link text-white" href="bejelentkezes/bejelentkezes.html" id="loginLink">Bejelentkezés</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="kosar/index.html">
+                        Kosár (<span id="cart-count">0</span>)
+                    </a>
+                </li>
+
+                <!-- Admin gomb csak adminoknak -->
+                <?php if (isset($_SESSION["role"]) && $_SESSION["role"] === "admin"): ?>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="bejelentkezes/admin.php">Admin</a>
+                    </li>
+                <?php endif; ?>
+            </ul>
+        </div>
     </div>
-  </nav>
+</nav>
+
   
   <!-- Modal for logout (változatlanul) -->
   <div id="logoutModal" class="modal">

@@ -2,8 +2,9 @@
 session_start();
 
 // Ellenőrizzük, hogy be van-e jelentkezve és admin-e
-if (!isset($_SESSION["user_id"]) || $_SESSION["role"] !== "admin") {
-    die("🚫 Nincs jogosultságod az oldal megtekintésére!");
+if (!isset($_SESSION["role"]) || $_SESSION["role"] !== "admin") {
+    header("Location: ../index.php"); // Átirányítás a főoldalra
+    exit();
 }
 
 // Kapcsolódás az adatbázishoz
