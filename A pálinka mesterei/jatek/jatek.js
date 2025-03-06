@@ -277,9 +277,55 @@ function gameOver() {
 }
 
 
+let alreadyPlayed = false; // Globális változó a játékállapot tárolására
+
+async function checkIfCanPlay(username) {
+    try {
+        const response = await fetch('updateScore.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username }) // Nem küldünk pontot, csak ellenőrzésre
+        });
+        
+        const data = await response.json();
+        
+        if (data.canPlay === false) {
+            alreadyPlayed = true; // Beállítjuk, hogy már játszott
+            
+            // Ha a felhasználó már játszott, írjuk ki a pontos dátumot
+            const nextPlayDate = new Date();
+            nextPlayDate.setDate(nextPlayDate.getDate() + 7);
+            alert(`${data.message}\nÚjra játszhatsz ekkor: ${nextPlayDate.toLocaleDateString()} ${nextPlayDate.toLocaleTimeString()}`);
+            
+            // Letiltjuk a játék indítását a frontend oldalon is
+            document.getElementById("startGameButton").disabled = true;
+            return false;
+        }
+        
+        alreadyPlayed = false; // Ha játszhat, visszaállítjuk
+        return true;
+    } catch (error) {
+        console.error("Hiba a szerverrel való kommunikáció során:", error);
+        return false;
+    }
+}
+
 async function startGame() {
+    if (alreadyPlayed) {
+        alert("Ma már játszottál! Több játék nem engedélyezett ezen a héten.");
+        return;
+    }
+    
     await fetchPlayerName();
-    await fetchLeaderboard(); // Betöltjük a leaderboardot az elején
+    const canPlay = await checkIfCanPlay(playerName);
+    
+    if (!canPlay) {
+        return; // Ha a szerver szerint nem játszhat, akkor nem indítjuk el a játékot
+    }
+    
+    await fetchLeaderboard(); // Betöltjük a ranglistát az elején
 
     // Játékos halhatatlan az első 3 másodpercben
     player.invulnerable = true;
@@ -290,4 +336,16 @@ async function startGame() {
     gameLoop();
 }
 
+document.addEventListener("DOMContentLoaded", function() {
+    const startButton = document.getElementById("startGameButton");
+    if (startButton) {
+        startButton.addEventListener("click", startGame);
+    }
+
+    checkIfCanPlay(playerName); // Betöltéskor ellenőrizzük, hogy játszhat-e
+});
+
 startGame();
+
+
+
