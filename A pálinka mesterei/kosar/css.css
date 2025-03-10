@@ -163,3 +163,20 @@ td {
         font-size: 16px;
         color: #555;
     }
+
+    .navbar {
+        padding: 1.5rem 1rem !important;
+      }
+      
+      .navbar-brand {
+        font-size: 2rem !important;
+      }
+      .nav-link {
+        font-size: 1.0rem !important;
+        padding: 1rem 1rem !important; /* több hely a szövegek között */
+      }
+      /* Finom hover effekt: áttetsző fehér háttér, a szöveg megmarad látható */
+      .nav-link:hover {
+        background-color: rgba(255, 255, 255, 0.2) !important;
+        color: #fff !important;
+      }

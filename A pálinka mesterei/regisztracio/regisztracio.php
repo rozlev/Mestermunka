@@ -7,13 +7,23 @@ if ($conn->connect_error) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $nev = trim($_POST["username"]); // Módosítás: Nev
-    $email = trim($_POST["email"]); // Email helyesen
-    $jelszo = password_hash($_POST["password"], PASSWORD_BCRYPT); // Jelszó hashelése
-    $regisztracio_datum = date("Y-m-d"); // Automatikusan a mai dátum
-    $eletkor = NULL; // Nem számolunk életkort most
+    $nev = trim($_POST["username"]);
+    $email = trim($_POST["email"]);
+    $jelszo = password_hash($_POST["password"], PASSWORD_BCRYPT);
+    $birthdate = $_POST["birthdate"];
+    $regisztracio_datum = date("Y-m-d");
 
-    // Felhasználónév és e-mail ellenőrzése
+    // Életkor számítás
+    $birthDateTime = new DateTime($birthdate);
+    $today = new DateTime();
+    $age = $today->diff($birthDateTime)->y;
+
+    if ($age < 18) {
+        echo json_encode(["error" => "Csak 18 éven felüliek regisztrálhatnak!"]);
+        exit;
+    }
+
+    // Ellenőrzés, hogy a felhasználónév vagy e-mail már létezik-e
     $check_query = "SELECT * FROM user WHERE Nev = ? OR Email = ?";
     $stmt = $conn->prepare($check_query);
     $stmt->bind_param("ss", $nev, $email);
@@ -32,10 +42,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    // Ha nincs ilyen felhasználó, beszúrás az adatbázisba
+    // Sikeres regisztráció beszúrás az adatbázisba
     $insert_query = "INSERT INTO user (Nev, Email, Jelszo, RegisztracioDatum, Eletkor, Szerepkor) VALUES (?, ?, ?, ?, ?, 'felhasználó')";
     $stmt = $conn->prepare($insert_query);
-    $stmt->bind_param("ssssi", $nev, $email, $jelszo, $regisztracio_datum, $eletkor);
+    $stmt->bind_param("ssssi", $nev, $email, $jelszo, $regisztracio_datum, $age);
 
     if ($stmt->execute()) {
         echo json_encode(["success" => "Sikeres regisztráció!"]);
@@ -45,4 +55,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 $conn->close();
+
 ?>
