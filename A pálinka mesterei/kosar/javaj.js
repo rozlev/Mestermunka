@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let cart = [];
     const cartItemsContainer = document.getElementById("cart-items");
     const totalPriceContainer = document.getElementById("total-price");
     const orderButton = document.createElement("button");
@@ -58,8 +58,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 showNotification("Hiba", data.error);
             } else {
                 showNotification("Rendelés sikeres", "Köszönjük a vásárlást!");
-                localStorage.removeItem("cart");
                 cart = [];
+                saveCartToDatabase(); // Üres kosár mentése
                 totalPriceContainer.textContent = "0 HUF";
                 renderCart();
             }
@@ -113,7 +113,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     newQuantity = 1;
                 }
                 cart[index].quantity = newQuantity;
-                updateCart();
+                saveCartToDatabase();
+                renderCart();
             });
         });
 
@@ -121,7 +122,8 @@ document.addEventListener("DOMContentLoaded", function () {
             button.addEventListener("click", function () {
                 const index = this.getAttribute("data-index");
                 cart[index].quantity += 1;
-                updateCart();
+                saveCartToDatabase();
+                renderCart();
             });
         });
 
@@ -130,7 +132,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 const index = this.getAttribute("data-index");
                 if (cart[index].quantity > 1) {
                     cart[index].quantity -= 1;
-                    updateCart();
+                    saveCartToDatabase();
+                    renderCart();
                 }
             });
         });
@@ -139,23 +142,55 @@ document.addEventListener("DOMContentLoaded", function () {
             button.addEventListener("click", function () {
                 const index = this.getAttribute("data-index");
                 cart.splice(index, 1);
-                updateCart();
+                saveCartToDatabase();
+                renderCart();
             });
         });
     }
 
-    function updateCart() {
-        localStorage.setItem("cart", JSON.stringify(cart));
-        renderCart();
+    function saveCartToDatabase() {
+        fetch("save_cart.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ cart })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                showNotification("Hiba", data.error);
+            }
+        })
+        .catch(error => {
+            showNotification("Hiba", "Hiba történt a kosár mentésekor!");
+        });
+    }
+
+    function loadCartFromDatabase() {
+        fetch("load_cart.php")
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                showNotification("Hiba", data.error);
+            } else {
+                cart = data;
+                renderCart();
+            }
+        })
+        .catch(error => {
+            showNotification("Hiba", "Hiba történt a kosár betöltésekor!");
+        });
     }
 
     document.getElementById("clear-cart").addEventListener("click", function () {
-        localStorage.removeItem("cart");
         cart = [];
+        saveCartToDatabase();
         totalPriceContainer.textContent = "0 HUF";
         showNotification("Kosár törölve", "A kosár kiürítve!");
         renderCart();
     });
 
-    renderCart();
+    // Kosár betöltése az adatbázisból az oldal betöltésekor
+    loadCartFromDatabase();
 });
