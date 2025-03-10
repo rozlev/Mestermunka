@@ -7,6 +7,6 @@ session_destroy();
 setcookie(session_name(), '', time() - 42000, '/');
 setcookie("PHPSESSID", "", time() - 3600, "/");
 
-header("Location: bejelentkezes.php");
+header("Location: ../kijel/mama.php");
 exit;
 ?>
