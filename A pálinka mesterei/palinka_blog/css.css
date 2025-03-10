@@ -308,3 +308,46 @@ button:hover {
     height: 100%;
     border-radius: 10px;
 }
+.content {
+    padding: 50px 0;
+}
+.image-container img {
+    width: 100%;
+    border-radius: 10px;
+}
+.text-box {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.container {
+max-width: 1100px; /* Kicsivel nagyobb szélesség */
+margin: 0 auto;
+overflow: hidden;
+padding: 10px;
+}
+
+.image-container img {
+width: 100%; /* Kép teljes szélességben a rendelkezésre álló helyen */
+max-width: 220px; /* Kicsit nagyobb maximális méret */
+border-radius: 20px; /* Még kerekebb képek */
+display: block;
+margin: 0 auto; /* Középre igazítás */
+}
+/* Növeljük a navbar méretét */
+.navbar {
+padding: 1.5rem 1rem !important;
+}
+.navbar-brand {
+font-size: 2rem !important;
+}
+.nav-link {
+font-size: 1.0rem !important;
+padding: 1rem 5rem !important; /* több hely a szövegek között */
+}
+/* Finom hover effekt: áttetsző fehér háttér, a szöveg megmarad látható */
+.nav-link:hover {
+background-color: rgba(255, 255, 255, 0.2) !important;
+color: #fff !important;
+}
