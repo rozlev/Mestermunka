@@ -4,9 +4,9 @@ body {
   background-color: #ffffffaf;
   background-size: cover;
   font-family: 'Comic Sans MS', Arial, sans-serif;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  /* display: flex; */ /* Kikommenteljük teszteléshez */
+  /* flex-direction: column; */
+  /* align-items: center; */
 }
 
 /* Játék vászon (canvas) középre és lejjebb */
@@ -231,4 +231,48 @@ nav ul li a:hover {
     width: 100%;
     font-size: 16px;
   }
+}
+
+#countdownPopup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  width: 300px;
+  min-height: 200px; /* Minimum magasság a tartalomhoz */
+  margin: 0; /* Biztosítjuk, hogy ne legyen extra margó */
+  box-sizing: border-box; /* A padding ne növelje a méretet */
+}
+
+#countdownPopup .popup-content h2 {
+  margin: 0;
+  font-size: 24px;
+}
+
+#countdownPopup .popup-content p {
+  font-size: 18px;
+  margin: 10px 0;
+}
+
+#countdownPopup .popup-content button {
+  background: #FFD700;
+  color: black;
+  font-size: 16px;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 10px;
+  transition: 0.3s;
+}
+
+#countdownPopup .popup-content button:hover {
+  background: #FFA500;
 }

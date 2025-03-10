@@ -226,22 +226,20 @@ function showGameOverPopup() {
 
 
 
+// Játék újraindítása
 async function restartGame() {
     const { canPlay } = await checkIfCanPlay(playerName);
 
-    // Mindig eltávolítjuk a popupot
     document.getElementById("gameOverPopup").remove();
 
     if (!canPlay) {
-        return; // Ha nem játszhat, nem indítjuk újra a játékot
+        return; // Ha nem játszhat, kilépünk, a popup már megjelenik a checkIfCanPlay-ben
     }
 
-    // Ha játszhat, akkor újraindítjuk a játékot
     score = 0;
     player.lives = 3;
     running = true;
     
-    // Játékos halhatatlan az első 3 másodpercben
     player.invulnerable = true;
     setTimeout(() => {
         player.invulnerable = false;
@@ -282,9 +280,58 @@ function gameOver() {
     showGameOverPopup();
 }
 
+function showCountdownPopup(nextPlayTime) {
+    const existingPopup = document.getElementById("countdownPopup");
+    if (existingPopup) existingPopup.remove();
+
+    const popup = document.createElement("div");
+    popup.id = "countdownPopup";
+    popup.innerHTML = `
+        <div class="popup-content">
+            <h2>Már játszottál ezen a héten!</h2>
+            <p>Következő játékig hátralévő idő:</p>
+            <p id="countdownTimer"></p>
+            <button id="closeCountdown">Bezárás</button>
+        </div>
+    `;
+    document.body.appendChild(popup);
+
+    // Középre igazítás JavaScripttel
+    const popupWidth = 300; // A CSS-ben megadott szélesség
+    const popupHeight = popup.offsetHeight; // A popup magassága dinamikusan
+    popup.style.position = "fixed";
+    popup.style.left = `${(window.innerWidth - popupWidth) / 2}px`;
+    popup.style.top = `${(window.innerHeight - popupHeight) / 2}px`;
+
+    function updateCountdown() {
+        const now = new Date().getTime();
+        const nextTime = new Date(nextPlayTime).getTime();
+        const timeLeft = nextTime - now;
+
+        if (timeLeft <= 0) {
+            document.getElementById("countdownTimer").textContent = "Most már játszhatsz!";
+            return;
+        }
+
+        const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+        document.getElementById("countdownTimer").textContent = `${days} nap, ${hours} óra, ${minutes} perc, ${seconds} mp`;
+    }
+
+    updateCountdown();
+    const countdownInterval = setInterval(updateCountdown, 1000);
+
+    document.getElementById("closeCountdown").addEventListener("click", () => {
+        clearInterval(countdownInterval);
+        popup.remove();
+    });
+}
 
 
-
+// Játékengedély ellenőrzése
 async function checkIfCanPlay(username) {
     try {
         const response = await fetch('checkCanPlay.php', {
@@ -298,9 +345,11 @@ async function checkIfCanPlay(username) {
         const data = await response.json();
         
         if (data.canPlay === false) {
-            const nextPlayDate = new Date();
-            nextPlayDate.setDate(nextPlayDate.getDate() + 7);
-            alert(`${data.message}\nÚjra játszhatsz ekkor: ${nextPlayDate.toLocaleDateString()} ${nextPlayDate.toLocaleTimeString()}`);
+            if (data.nextPlayTime) {
+                showCountdownPopup(data.nextPlayTime);
+            } else {
+                alert(`${data.message}\nÚjra játszhatsz egy hét múlva!`);
+            }
             return { canPlay: false, isAdmin: data.isAdmin };
         }
         
@@ -333,17 +382,17 @@ async function updateScore(username, score) {
     }
 }
 
+// Játék indítása
 async function startGame() {
     await fetchPlayerName();
     const { canPlay } = await checkIfCanPlay(playerName);
     
     if (!canPlay) {
-        return; // Ha nem játszhat, kilépünk
+        return; // Ha nem játszhat, kilépünk, a popup már megjelenik a checkIfCanPlay-ben
     }
     
-    await fetchLeaderboard(); // Betöltjük a ranglistát az elején
+    await fetchLeaderboard();
 
-    // Játékos halhatatlan az első 3 másodpercben
     player.invulnerable = true;
     setTimeout(() => {
         player.invulnerable = false;
