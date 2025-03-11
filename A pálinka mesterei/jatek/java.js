@@ -1,7 +1,30 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
-canvas.width = 800;
-canvas.height = 600;
+
+// Kezdeti méretek beállítása
+function resizeCanvas() {
+    const maxWidth = 800;
+    const maxHeight = 600;
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+
+    // Arányos méretezés
+    const scale = Math.min(windowWidth / maxWidth, windowHeight / maxHeight);
+    canvas.width = Math.min(maxWidth, windowWidth * 0.9); // 90%-os szélesség a margók miatt
+    canvas.height = Math.min(maxHeight, windowHeight * 0.6); // 60%-os magasság a UI elemek miatt
+
+    // Skála faktor tárolása az objektumok arányosításához
+    window.canvasScale = {
+        x: canvas.width / maxWidth,
+        y: canvas.height / maxHeight
+    };
+}
+
+// Kezdeti méretezés
+resizeCanvas();
+
+// Ablak átméretezés kezelése
+window.addEventListener("resize", resizeCanvas);
 
 const scoreElement = document.getElementById('score');
 const livesElement = document.getElementById('lives');
@@ -18,35 +41,37 @@ palinkaImage.src = "palinka.png";
 
 // Játékos adatok
 let player = {
-    x: canvas.width / 2 - 25,
-    y: canvas.height - 100,
-    width: 50,
-    height: 50,
-    speed: 10,
+    x: (canvas.width / 2 - 25) * window.canvasScale.x,
+    y: (canvas.height - 100) * window.canvasScale.y,
+    width: 50 * window.canvasScale.x,
+    height: 50 * window.canvasScale.y,
+    speed: 10 * window.canvasScale.x,
     direction: "right",
     lives: 3,
     isVisible: true,
     invulnerable: false
 };
 
+// Palack adatok
 let bottle = {
-    x: Math.random() * (canvas.width - 40),
-    y: Math.random() * (canvas.height / 2 - 40),
-    width: 40,
-    height: 40,
-    speedX: Math.random() > 0.5 ? 3 : -3,
-    speedY: Math.random() > 0.5 ? 3 : -3
+    x: Math.random() * (canvas.width - 40 * window.canvasScale.x),
+    y: Math.random() * (canvas.height / 2 - 40 * window.canvasScale.y),
+    width: 40 * window.canvasScale.x,
+    height: 40 * window.canvasScale.y,
+    speedX: (Math.random() > 0.5 ? 3 : -3) * window.canvasScale.x,
+    speedY: (Math.random() > 0.5 ? 3 : -3) * window.canvasScale.y
 };
 
+// Akadályok
 let obstacles = [];
 for (let i = 0; i < 5; i++) {
     obstacles.push({
-        x: Math.random() * (canvas.width - 60),  // Akadály bárhol megjelenhet vízszintesen
-        y: Math.random() * (canvas.height - 60), // Akadály bárhol megjelenhet függőlegesen (NEM CSAK A FELÉIG)
-        width: 60,
-        height: 60,
-        speedX: Math.random() > 0.5 ? 3 : 7,
-        speedY: Math.random() > 0.5 ? 3: 7,
+        x: Math.random() * (canvas.width - 60 * window.canvasScale.x),
+        y: Math.random() * (canvas.height - 60 * window.canvasScale.y),
+        width: 60 * window.canvasScale.x,
+        height: 60 * window.canvasScale.y,
+        speedX: (Math.random() > 0.5 ? 3 : 7) * window.canvasScale.x,
+        speedY: (Math.random() > 0.5 ? 3 : 7) * window.canvasScale.y
     });
 }
 
@@ -136,26 +161,26 @@ function gameLoop() {
     bottle.y += bottle.speedY;
     if (bottle.x <= 0 || bottle.x >= canvas.width - bottle.width) bottle.speedX *= -1;
     if (bottle.y <= 0 || bottle.y >= canvas.height - bottle.height) bottle.speedY *= -1;
-// Akadályok mozgása (TELJES pályán)
-for (let obstacle of obstacles) {
-    obstacle.x += obstacle.speedX;
-    obstacle.y += obstacle.speedY;
 
-    // Ha akadály eléri a pálya szélét, pattogjon vissza
-    if (obstacle.x <= 0 || obstacle.x >= canvas.width - obstacle.width) {
-        obstacle.speedX *= -1;
+    // Akadályok mozgása
+    for (let obstacle of obstacles) {
+        obstacle.x += obstacle.speedX;
+        obstacle.y += obstacle.speedY;
+
+        if (obstacle.x <= 0 || obstacle.x >= canvas.width - obstacle.width) {
+            obstacle.speedX *= -1;
+        }
+        if (obstacle.y <= 0 || obstacle.y >= canvas.height - obstacle.height) {
+            obstacle.speedY *= -1;
+        }
     }
-    if (obstacle.y <= 0 || obstacle.y >= canvas.height - obstacle.height) {
-        obstacle.speedY *= -1;
-    }
-}
+
     // Ütközések kezelése
     if (isColliding(player, bottle)) {
         score++;
         scoreElement.textContent = `Pontszám: ${score}`;
         bottle.x = Math.random() * (canvas.width - bottle.width);
         bottle.y = Math.random() * (canvas.height / 2 - bottle.height);
-
     }
 
     for (let obstacle of obstacles) {
@@ -163,7 +188,7 @@ for (let obstacle of obstacles) {
             player.lives--;
             livesElement.textContent = `Életek: ${player.lives}`;
             player.x = canvas.width / 2 - player.width / 2;
-            player.y = canvas.height - 100;
+            player.y = canvas.height - 100 * window.canvasScale.y;
             player.invulnerable = true;
             let flashInterval = setInterval(() => {
                 player.isVisible = !player.isVisible;

@@ -9,39 +9,40 @@ body {
   /* align-items: center; */
 }
 
-/* Játék vászon (canvas) középre és lejjebb */
+/* Játék vászon középre igazítása */
 #gameCanvas {
   display: block;
-  margin-top: 20px; /* Az eredeti 0px helyett lejjebb helyezzük */
+  margin: 20px auto; /* Középre igazítás margóval */
   border: 3px solid #FFD700;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  max-width: 100%; /* Biztosítjuk, hogy ne lépje túl a képernyőt */
 }
 
 
+/* UI panel reszponzív pozicionálása */
 .ui-panel {
   position: absolute;
-  top: 140px; /* Az eredeti 10px helyett lejjebb rakjuk */
+  top: 140px;
   left: 10px;
   background-color: #8e233fb0;
   color: white;
   padding: 10px;
   border-radius: 10px;
-  font-size: 18px;
+  font-size: clamp(14px, 2vw, 18px); /* Dinamikus betűméret */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
-#bemutato{
-
-    position: absolute;
-    top: 78%; /* Az eredeti 10px helyett lejjebb rakjuk */
-    left: 35%;
-    background-color: #8e233fb0;
-    color: white;
-    padding: 5px;
-    border-radius: 5px;
-    font-size: 15px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  
+/* Játékszabályzat reszponzív pozicionálása */
+#bemutato {
+  position: relative;
+  margin: 20px auto;
+  width: clamp(200px, 80%, 600px); /* Dinamikus szélesség */
+  background-color: #8e233fb0;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: clamp(12px, 1.5vw, 15px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 .ui-panel span {
     display: block;
@@ -146,18 +147,18 @@ nav ul li a:hover {
   background: #FFA500;
 }
 
-/* Leaderboard stílus */
+/* Leaderboard reszponzív pozicionálása */
 .leaderboard {
-    position: absolute;
-    top: 140px;
-    right: 10px;
-    background-color: #8e233fb0;
-    color: white;
-    padding: 10px;
-    border-radius: 10px;
-    font-size: 18px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    width: 200px;
+  position: absolute;
+  top: 140px;
+  right: 10px;
+  background-color: #8e233fb0;
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: clamp(14px, 2vw, 18px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  width: clamp(150px, 30%, 200px);
 }
 
 .leaderboard h2 {
@@ -188,11 +189,12 @@ nav ul li a:hover {
     height: auto;
   }
 
-  /* UI Panel */
   .ui-panel {
-    font-size: 14px;
-    padding: 8px;
-  }
+    top: 100px;
+    left: 5px;
+    font-size: 12px;
+    padding: 5px;
+}
 
   /* Bemutató */
   #bemutato {
@@ -224,53 +226,44 @@ nav ul li a:hover {
     padding: 0.5rem 2rem;
   }
 
-  /* Leaderboard */
   .leaderboard {
-    top: 90px;
-    right: 10px;
-    width: 100%;
-    font-size: 16px;
-  }
+    top: 100px;
+    right: 5px;
+    font-size: 12px;
+    width: 150px;
 }
 
-#countdownPopup {
+#bemutato {
+  width: 90%;
+  font-size: 12px;
+}
+}
+
+#gameOverPopup, #countdownPopup {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   background: rgba(0, 0, 0, 0.8);
   color: white;
-  padding: 20px;
+  padding: clamp(10px, 3vw, 20px);
   border-radius: 10px;
   text-align: center;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
   z-index: 1000;
-  width: 300px;
-  min-height: 200px; /* Minimum magasság a tartalomhoz */
-  margin: 0; /* Biztosítjuk, hogy ne legyen extra margó */
-  box-sizing: border-box; /* A padding ne növelje a méretet */
+  width: clamp(200px, 80%, 300px);
+}
+.popup-content h2 {
+  font-size: clamp(18px, 5vw, 24px);
 }
 
-#countdownPopup .popup-content h2 {
-  margin: 0;
-  font-size: 24px;
+.popup-content p {
+  font-size: clamp(14px, 4vw, 18px);
 }
 
-#countdownPopup .popup-content p {
-  font-size: 18px;
-  margin: 10px 0;
-}
-
-#countdownPopup .popup-content button {
-  background: #FFD700;
-  color: black;
-  font-size: 16px;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin: 10px;
-  transition: 0.3s;
+.popup-content button {
+  font-size: clamp(12px, 3vw, 16px);
+  padding: clamp(5px, 2vw, 10px) clamp(10px, 3vw, 15px);
 }
 
 #countdownPopup .popup-content button:hover {
