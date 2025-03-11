@@ -1,12 +1,9 @@
-document.addEventListener("DOMContentLoaded", function () { 
+document.addEventListener("DOMContentLoaded", function () {
     // === LOGIN KEZELÉS ===
-    var nev = localStorage.getItem("felhasznaloNev");
     var loginLink = document.getElementById("loginLink");
 
-    if (nev && loginLink) {
-        loginLink.innerText = nev; 
-        loginLink.setAttribute("href", "#");
-
+    // Ha a loginLink létezik és nem "Bejelentkezés" a tartalma, akkor kijelentkezés modális ablakot mutatunk
+    if (loginLink && loginLink.innerText !== "Bejelentkezés") {
         loginLink.addEventListener("click", function (event) {
             event.preventDefault();
             document.getElementById("logoutModal").style.display = 'flex';
@@ -16,16 +13,20 @@ document.addEventListener("DOMContentLoaded", function () {
     var logoutConfirmBtn = document.getElementById("logoutConfirm");
     if (logoutConfirmBtn) {
         logoutConfirmBtn.addEventListener("click", function () {
-            localStorage.removeItem("felhasznaloNev");
-            localStorage.removeItem("cart");
-            document.getElementById("logoutModal").style.display = 'none';
-            window.location.reload();
+            fetch('logout.php', {
+                method: 'GET'
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Töröljük a localStorage-ban tárolt kosár adatokat
+                    localStorage.removeItem("cart");
+                    document.getElementById("logoutModal").style.display = 'none';
+                    // Átirányítunk a mama.php-ra
+                    window.location.href = 'kijel/mama.php';
+                }
+            })
+            .catch(error => console.error('Hiba a kijelentkezéskor:', error));
         });
-    }
-
-    let yearElement = document.getElementById("year");
-    if (yearElement) {
-        yearElement.textContent = new Date().getFullYear();
     }
 
     var logoutCancelBtn = document.getElementById("logoutCancel");
@@ -35,14 +36,17 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    let yearElement = document.getElementById("year");
+    if (yearElement) {
+        yearElement.textContent = new Date().getFullYear();
+    }
+
     updateCartCount();
     window.addEventListener("storage", function (event) {
         if (event.key === "cart") {
             updateCartCount();
         }
     });
-
-
 });
 
 // === KOSÁR FRISSÍTÉS ===

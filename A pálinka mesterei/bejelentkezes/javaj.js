@@ -9,7 +9,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         fetch("bejelentkezes.php", {
             method: "POST",
-            body: formData
+            body: formData,
+            credentials: 'same-origin' // Biztosítjuk, hogy a session cookie elküldésre kerüljön
         })
         .then(response => {
             if (!response.ok) {
@@ -19,8 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .then(data => {
             if (data.status === "success") {
-                // Mentse a felhasználói nevet és irányítsa át a főoldalra
-                localStorage.setItem("felhasznaloNev", data.name);
+                // Átirányítás a főoldalra
                 window.location.href = "../index.php";
             } else {
                 // Hibaüzenet megjelenítése az oldalon
