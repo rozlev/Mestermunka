@@ -68,12 +68,11 @@
                     </a>
                 </li>
 
-                <!-- Admin gomb csak adminoknak -->
                 <?php if (isset($_SESSION["role"]) && $_SESSION["role"] === "admin"): ?>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="bejelentkezes/admin.php">Admin</a>
-                    </li>
-                <?php endif; ?>
+                <li class="nav-item">
+                     <a class="nav-link text-white" href="bejelentkezes/admin.php">Admin</a>
+                  </li>
+              <?php endif; ?>             
             </ul>
         </div>
     </div>
@@ -236,7 +235,7 @@
   
   <!-- Bootstrap JS -->
   <script src="bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
-  <script src="javaj.js"></script>
+  <script src="java.js"></script>
   <script src="spony.js"></script>
   <script src="korteszt.js"></script>
 </body> 
