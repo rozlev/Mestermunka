@@ -207,6 +207,20 @@ $conn->close();
         .btn-delete {
             background-color: #e74c3c;
             color: white;
+            
+        }
+        .btn-back {
+            background-color: #3498db;
+            color: white;
+        }
+        .btn-back:hover {
+            background-color: #2980b9;
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
         }
         .btn-delete:hover {
             background-color: #c0392b;
@@ -345,7 +359,11 @@ $conn->close();
 <body>
 <div class="container">
         <h1>Admin Kezelőfelület</h1>
+        <div class="button-container">
+        <a class="btn btn-back" href="../index.php">🏠 Vissza a főoldalra</a>
         <a class="btn btn-delete" href="logout.php">Kijelentkezés</a>
+    </div>
+
 
 
 
