@@ -13,27 +13,20 @@ if ($conn->connect_error) {
     die("❌ Adatbázis kapcsolat hiba: " . $conn->connect_error);
 }
 
-
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['modify_stock'])) {
     $palinka_id = intval($_POST['palinka_id']);
     $change = intval($_POST['change']);
-    $operation = intval($_POST['modify_stock']); // Most már számként kezeljük
+    $operation = intval($_POST['modify_stock']);
     
-    // A change-t szorozzuk az operáció értékével (-1 vagy 1)
     $change *= $operation;
-
-    // Jelenlegi készlet lekérdezése
     $result = $conn->query("SELECT DB_szam FROM palinka WHERE PalinkaID = $palinka_id");
     $row = $result->fetch_assoc();
     $current_stock = intval($row['DB_szam']);
-
     $new_stock = $current_stock + $change;
 
-// Ha az új készlet 0-ra csökken, akkor nem hiba, csak figyelmeztetés
-if ($new_stock < 0) {
-    $new_stock = 0;
-}
-
+    if ($new_stock < 0) {
+        $new_stock = 0;
+    }
 
     $stmt = $conn->prepare("UPDATE palinka SET DB_szam = ? WHERE PalinkaID = ?");
     $stmt->bind_param("ii", $new_stock, $palinka_id);
@@ -46,20 +39,13 @@ if ($new_stock < 0) {
     }
 }
 
-// 🔥 Pálinkák lekérése az adatbázisból
 $result = $conn->query("SELECT p.PalinkaID, p.Nev, p.AlkoholTartalom, p.Ar, p.DB_szam, k.KepURL 
                         FROM palinka p
                         LEFT JOIN kepek k ON p.PalinkaID = k.PalinkaID");
 $palinkak = $result->fetch_all(MYSQLI_ASSOC);
 
-
-
-
-// 🔥 Felhasználó adminná állítása
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['make_admin'])) {
     $user_id = intval($_POST['user_id']);
-
-    // Frissítjük az adott felhasználó szerepkörét adminná
     $stmt = $conn->prepare("UPDATE user SET Szerepkor = 'admin' WHERE UserID = ?");
     $stmt->bind_param("i", $user_id);
 
@@ -71,11 +57,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['make_admin'])) {
     }
 }
 
-// 🔥 Admin jogának visszavonása (admin -> felhasználó)
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['remove_admin'])) {
     $user_id = intval($_POST['user_id']);
-
-    // Ne engedjük az aktuálisan bejelentkezett adminnak a saját jogának elvételét
     if ($user_id == $_SESSION["user_id"]) {
         die("❌ Nem veheted el a saját admin jogodat!");
     }
@@ -91,7 +74,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['remove_admin'])) {
     }
 }
 
-// 🔥 Új pálinka hozzáadása
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add'])) {
     $nev = $_POST['nev'];
     $alkohol = $_POST['alkohol'];
@@ -99,37 +81,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add'])) {
     $keszlet = intval($_POST['keszlet']);
     $kep = $_POST['kep'];
 
-    // Előkészített SQL beszúrás
     $stmt = $conn->prepare("INSERT INTO palinka (Nev, AlkoholTartalom, Ar, DB_szam) VALUES (?, ?, ?, ?)");
     $stmt->bind_param("ssii", $nev, $alkohol, $ar, $keszlet);
 
     if ($stmt->execute()) {
-        $last_id = $stmt->insert_id; // Az új pálinka ID-ja
-
-        // Kép URL mentése a `kepek` táblába
+        $last_id = $stmt->insert_id;
         $stmt_kep = $conn->prepare("INSERT INTO kepek (PalinkaID, KepURL) VALUES (?, ?)");
         $stmt_kep->bind_param("is", $last_id, $kep);
         $stmt_kep->execute();
-
         
         header("Location: admin.php?add_success=1");
         exit;
     } else {
         die("❌ Hiba történt a hozzáadás során: " . $stmt->error);
     }
-    
 }
 
-// 🔥 Pálinka törlése
 if (isset($_GET['delete'])) {
     $palinka_id = intval($_GET['delete']);
-
-    // Először töröljük a hozzá tartozó képet az adatbázisból
     $stmt_kep = $conn->prepare("DELETE FROM kepek WHERE PalinkaID = ?");
     $stmt_kep->bind_param("i", $palinka_id);
     $stmt_kep->execute();
 
-    // Majd töröljük magát a pálinkát
     $stmt = $conn->prepare("DELETE FROM palinka WHERE PalinkaID = ?");
     $stmt->bind_param("i", $palinka_id);
 
@@ -141,32 +114,14 @@ if (isset($_GET['delete'])) {
     }
 }
 
-
-
-
-
-
-// 🔥 Meglévő felhasználók lekérése (csak azok, akik még NEM adminok)
 $result_users = $conn->query("SELECT UserID, Nev, Email FROM user WHERE Szerepkor != 'admin'");
 $felhasznalok = $result_users->fetch_all(MYSQLI_ASSOC);
 
-// 🔥 Betöltjük az adminokat az adatbázisból
 $result_admins = $conn->query("SELECT UserID, Nev, Email, Szerepkor FROM user WHERE Szerepkor = 'admin'");
 $adminok = $result_admins->fetch_all(MYSQLI_ASSOC);
 
-// 🔥 Betöltjük a pálinkákat az adatbázisból
-$result = $conn->query("SELECT p.PalinkaID, p.Nev, p.AlkoholTartalom, p.Ar, p.DB_szam, k.KepURL 
-                        FROM palinka p
-                        LEFT JOIN kepek k ON p.PalinkaID = k.PalinkaID");
-$palinkak = $result->fetch_all(MYSQLI_ASSOC);
-
-
-
-
 $conn->close();
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="hu">
@@ -174,16 +129,19 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Kezelőfelület</title>
-    <link rel="stylesheet" href="style.css"> <!-- A főoldal CSS fájlja -->
+    <link rel="stylesheet" href="style.css">
     <style>
         body {
             background-color: #9b1c31;
             font-family: Arial, sans-serif;
             color: white;
+            margin: 0;
+            padding: 0;
         }
         .container {
-            width: 80%;
-            margin: auto;
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px auto;
             background: #f8e7eb;
             padding: 20px;
             border-radius: 10px;
@@ -195,19 +153,19 @@ $conn->close();
             text-align: center;
         }
         .btn {
-            padding: 12px 18px;
+            padding: 10px 15px;
             border: none;
             cursor: pointer;
             text-decoration: none;
             display: inline-block;
-            font-size: 16px;
-            margin: 10px;
+            font-size: 14px;
+            margin: 5px;
             border-radius: 8px;
+            transition: all 0.3s ease;
         }
         .btn-delete {
             background-color: #e74c3c;
             color: white;
-            
         }
         .btn-back {
             background-color: #3498db;
@@ -220,7 +178,9 @@ $conn->close();
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
             margin-bottom: 20px;
+            gap: 10px;
         }
         .btn-delete:hover {
             background-color: #c0392b;
@@ -243,64 +203,58 @@ $conn->close();
             border: 1px solid #ddd;
         }
         th, td {
-            padding: 15px;
+            padding: 10px;
             text-align: center;
+            font-size: 14px;
         }
         th {
             background-color: #9b1c31;
             color: white;
         }
-
-        .btn {
-            padding: 12px 18px;
-            border: none;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 10px;
-            border-radius: 8px;
+        .table-wrapper {
+            overflow-x: auto;
         }
-
         .form-container {
             background: white;
-            padding: 25px;
+            padding: 20px;
             border-radius: 10px;
             box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
             text-align: center;
             margin-top: 20px;
+            width: 100%;
             max-width: 500px;
             margin-left: auto;
             margin-right: auto;
         }
         .form-container input {
             width: 100%;
-            margin-bottom: 15px;
-            padding: 12px;
+            margin-bottom: 10px;
+            padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
-            font-size: 16px;
+            font-size: 14px;
+            box-sizing: border-box;
         }
         .form-container button {
             width: 100%;
-            padding: 14px;
+            padding: 12px;
             background-color: #9b1c31;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold;
         }
         .form-container button:hover {
             background-color: #7e1627;
         }
-                .stock-btn {
+        .stock-btn {
             background-color: #9b1c31;
             color: white;
             border: none;
             padding: 5px 10px;
-            font-size: 18px;
+            font-size: 14px;
             cursor: pointer;
             border-radius: 5px;
         }
@@ -310,10 +264,9 @@ $conn->close();
         .stock-input {
             width: 50px;
             text-align: center;
+            padding: 5px;
         }
-
-                /* Modális ablak stílusok */
-                .modal {
+        .modal {
             display: none;
             position: fixed;
             z-index: 1;
@@ -322,21 +275,18 @@ $conn->close();
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgb(0, 0, 0);
             background-color: rgba(0, 0, 0, 0.4);
             padding-top: 60px;
         }
-
         .modal-content {
             background-color: #fefefe;
             margin: 5% auto;
             padding: 20px;
             border: 1px solid #888;
-            width: 80%;
+            width: 90%;
             max-width: 400px;
             text-align: center;
         }
-
         .modal-btn {
             background-color: #e74c3c;
             color: white;
@@ -346,28 +296,83 @@ $conn->close();
             border-radius: 5px;
             margin: 5px;
         }
-
         .modal-btn:hover {
             background-color: #c0392b;
         }
-
-        #uzenet{
+        #uzenet {
             color: black;
+        }
+
+        /* Reszponzív média lekérdezések */
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 10px;
+            }
+            h1, h2 {
+                font-size: 1.5em;
+            }
+            .btn {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+            th, td {
+                padding: 8px;
+                font-size: 12px;
+            }
+            .form-container input {
+                font-size: 12px;
+                padding: 8px;
+            }
+            .form-container button {
+                font-size: 12px;
+                padding: 10px;
+            }
+            .stock-input {
+                width: 40px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1, h2 {
+                font-size: 1.2em;
+            }
+            .btn {
+                padding: 6px 10px;
+                font-size: 10px;
+            }
+            th, td {
+                padding: 6px;
+                font-size: 10px;
+            }
+            .form-container {
+                padding: 15px;
+            }
+            .form-container input {
+                font-size: 10px;
+                padding: 6px;
+            }
+            .form-container button {
+                font-size: 10px;
+                padding: 8px;
+            }
+            .stock-btn {
+                padding: 4px 8px;
+                font-size: 12px;
+            }
         }
     </style>
 </head>
 <body>
 <div class="container">
-        <h1>Admin Kezelőfelület</h1>
-        <div class="button-container">
+    <h1>Admin Kezelőfelület</h1>
+    <div class="button-container">
         <a class="btn btn-back" href="../index.php">🏠 Vissza a főoldalra</a>
         <a class="btn btn-delete" href="logout.php">Kijelentkezés</a>
     </div>
 
-
-
-
-        <h2>Meglévő Adminok</h2>
+    <h2>Meglévő Adminok</h2>
+    <div class="table-wrapper">
         <table>
             <tr>
                 <th>ID</th>
@@ -389,11 +394,13 @@ $conn->close();
                 </tr>
             <?php endforeach; ?>
         </table>
+    </div>
 
-        <?php if (isset($_GET['user_updated']) && $_GET['user_updated'] == "success"): ?>
-            <p style="color: green; font-weight: bold;">✅ A felhasználó adminná lett állítva!</p>
-        <?php endif; ?>
-        <h2>Felhasználók adminná állítása</h2>
+    <?php if (isset($_GET['user_updated']) && $_GET['user_updated'] == "success"): ?>
+        <p style="color: green; font-weight: bold;">✅ A felhasználó adminná lett állítva!</p>
+    <?php endif; ?>
+    <h2>Felhasználók adminná állítása</h2>
+    <div class="table-wrapper">
         <table>
             <tr>
                 <th>ID</th>
@@ -415,92 +422,81 @@ $conn->close();
                 </tr>
             <?php endforeach; ?>
         </table>
+    </div>
 </div>
 
-                <br>
-
-
-
-
-
-
-        <div class="container">
-        <h2>Új Pálinka Hozzáadása</h2>
-        <div class="form-container">
-            <form method="POST">
-                <input type="text" name="nev" placeholder="Pálinka neve" required>
-                <input type="text" name="alkohol" placeholder="Alkohol %" required>
-                <input type="number" name="ar" placeholder="Ár (HUF)" required>
-                <input type="text" name="kep" placeholder="Kép URL" required>
-                <input type="number" name="keszlet" placeholder="Készlet (db)" required>
-                <button type="submit" name="add">➕ Hozzáadás</button>
-            </form>
-            </div>
-
-                
-
-            <h2>Meglévő Pálinkák</h2>
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Név</th>
-            <th>Alkohol %</th>
-            <th>Ár</th>
-            <th>Készlet</th>
-            <th>Kép</th>
-            <th>Művelet</th>
-        </tr>
-        <?php foreach ($palinkak as $p): ?>
-            <tr>
-                <td><?= $p['PalinkaID'] ?></td>
-                <td><?= htmlspecialchars($p['Nev']) ?></td>
-                <td><?= htmlspecialchars($p['AlkoholTartalom']) ?></td>
-                <td><?= $p['Ar'] ?> HUF</td>
-                <td><?= $p['DB_szam'] ?> db</td>
-                <td><img src="<?= htmlspecialchars($p['KepURL']) ?>" width="50"></td>
-                <td><button class="btn btn-delete" onclick="confirmDelete(<?= $p['PalinkaID'] ?>)">🗑️ Törlés</button></td>
-            </tr>
-        <?php endforeach; ?>
-    </table>
+<div class="container">
+    <h2>Új Pálinka Hozzáadása</h2>
+    <div class="form-container">
+        <form method="POST">
+            <input type="text" name="nev" placeholder="Pálinka neve" required>
+            <input type="text" name="alkohol" placeholder="Alkohol %" required>
+            <input type="number" name="ar" placeholder="Ár (HUF)" required>
+            <input type="text" name="kep" placeholder="Kép URL" required>
+            <input type="number" name="keszlet" placeholder="Készlet (db)" required>
+            <button type="submit" name="add">➕ Hozzáadás</button>
+        </form>
     </div>
-    <!-- Modális ablak -->
+
+    <h2>Meglévő Pálinkák</h2>
+    <div class="table-wrapper">
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Név</th>
+                <th>Alkohol %</th>
+                <th>Ár</th>
+                <th>Készlet</th>
+                <th>Kép</th>
+                <th>Művelet</th>
+            </tr>
+            <?php foreach ($palinkak as $p): ?>
+                <tr>
+                    <td><?= $p['PalinkaID'] ?></td>
+                    <td><?= htmlspecialchars($p['Nev']) ?></td>
+                    <td><?= htmlspecialchars($p['AlkoholTartalom']) ?></td>
+                    <td><?= $p['Ar'] ?> HUF</td>
+                    <td><?= $p['DB_szam'] ?> db</td>
+                    <td><img src="<?= htmlspecialchars($p['KepURL']) ?>" width="50"></td>
+                    <td><button class="btn btn-delete" onclick="confirmDelete(<?= $p['PalinkaID'] ?>)">🗑️ Törlés</button></td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+    </div>
+</div>
+
 <div id="myModal" class="modal">
     <div class="modal-content">
-        <p id="uzenet" >Biztosan törölni szeretnéd ezt a pálinkát?</p>
+        <p id="uzenet">Biztosan törölni szeretnéd ezt a pálinkát?</p>
         <button id="confirmDelete" class="modal-btn">Igen</button>
         <button id="cancelDelete" class="modal-btn">Mégsem</button>
     </div>
 </div>
-</body>
+
 <script>
     var modal = document.getElementById("myModal");
     var confirmBtn = document.getElementById("confirmDelete");
     var cancelBtn = document.getElementById("cancelDelete");
     var deleteId = null;
 
-    // A törlés gomb eseménykezelője
     function confirmDelete(id) {
         deleteId = id;
-        modal.style.display = "block";  // Modális ablak megjelenítése
+        modal.style.display = "block";
     }
 
-    // Törlés megerősítése
     confirmBtn.onclick = function () {
-        window.location.href = "admin.php?delete=" + deleteId; // Átirányítás a törléshez
+        window.location.href = "admin.php?delete=" + deleteId;
     }
 
-    // Törlés megszakítása
     cancelBtn.onclick = function () {
-        modal.style.display = "none";  // Modális ablak elrejtése
+        modal.style.display = "none";
     }
 
-    // Ha a felhasználó kívül kattint a modális ablakra, zárjuk be
     window.onclick = function (event) {
         if (event.target === modal) {
             modal.style.display = "none";
         }
     }
 </script>
-
+</body>
 </html>
-
