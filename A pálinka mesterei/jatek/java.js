@@ -5,19 +5,39 @@ const ctx = canvas.getContext("2d");
 function resizeCanvas() {
     const maxWidth = 800;
     const maxHeight = 600;
-    const windowWidth = window.innerWidth;
-    const windowHeight = window.innerHeight;
+    const container = document.querySelector('.container');
+    const containerWidth = container.offsetWidth;
 
-    // Arányos méretezés
-    const scale = Math.min(windowWidth / maxWidth, windowHeight / maxHeight);
-    canvas.width = Math.min(maxWidth, windowWidth * 0.9); // 90%-os szélesség a margók miatt
-    canvas.height = Math.min(maxHeight, windowHeight * 0.6); // 60%-os magasság a UI elemek miatt
+    // A vászon szélessége a konténer szélességéhez igazodik
+    canvas.width = Math.min(maxWidth, containerWidth * 0.9);
+    canvas.height = canvas.width * (maxHeight / maxWidth); // Arányos magasság
 
-    // Skála faktor tárolása az objektumok arányosításához
+    // Skála faktor tárolása
     window.canvasScale = {
         x: canvas.width / maxWidth,
         y: canvas.height / maxHeight
     };
+
+    // Játékos pozíciójának újraszámolása
+    player.x = (canvas.width / 2 - 25) * window.canvasScale.x;
+    player.y = (canvas.height - 100) * window.canvasScale.y;
+    player.width = 50 * window.canvasScale.x;
+    player.height = 50 * window.canvasScale.y;
+    player.speed = 10 * window.canvasScale.x;
+
+    // Palack méretezése
+    bottle.width = 40 * window.canvasScale.x;
+    bottle.height = 40 * window.canvasScale.y;
+    bottle.speedX = (Math.random() > 0.5 ? 3 : -3) * window.canvasScale.x;
+    bottle.speedY = (Math.random() > 0.5 ? 3 : -3) * window.canvasScale.y;
+
+    // Akadályok méretezése
+    obstacles.forEach(obstacle => {
+        obstacle.width = 60 * window.canvasScale.x;
+        obstacle.height = 60 * window.canvasScale.y;
+        obstacle.speedX = (Math.random() > 0.5 ? 3 : 7) * window.canvasScale.x;
+        obstacle.speedY = (Math.random() > 0.5 ? 3 : 7) * window.canvasScale.y;
+    });
 }
 
 // Kezdeti méretezés
