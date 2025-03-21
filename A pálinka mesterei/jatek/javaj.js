@@ -1,6 +1,61 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
+// Score, lives, and player name elements
+const scoreElement = document.getElementById('score');
+const livesElement = document.getElementById('lives');
+const playerNameElement = document.getElementById('player-name');
+
+let playerName = "Névtelen Játékos"; // Default player name
+
+// Képek betöltése
+const stickmanImage = new Image();
+stickmanImage.src = "stickman.png";
+stickmanImage.onerror = () => console.error("Failed to load stickman.png"); // Error handling for image
+
+const palinkaImage = new Image();
+palinkaImage.src = "palinka.png";
+palinkaImage.onerror = () => console.error("Failed to load palinka.png"); // Error handling for image
+
+// Játékos adatok
+let player = {
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+    speed: 0,
+    direction: "right",
+    lives: 3,
+    isVisible: true,
+    invulnerable: false
+};
+
+// Palack adatok
+let bottle = {
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+    speedX: 0,
+    speedY: 0
+};
+
+// Akadályok
+let obstacles = [];
+for (let i = 0; i < 5; i++) {
+    obstacles.push({
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0,
+        speedX: 0,
+        speedY: 0
+    });
+}
+
+let score = 0;
+let running = true;
+
 // Kezdeti méretek beállítása
 function resizeCanvas() {
     const maxWidth = 800;
@@ -18,7 +73,6 @@ function resizeCanvas() {
         y: canvas.height / maxHeight
     };
 
-
     // Játékos pozíciójának újraszámolása
     player.x = (canvas.width / 2 - 25) * window.canvasScale.x;
     player.y = (canvas.height - 100) * window.canvasScale.y;
@@ -26,10 +80,11 @@ function resizeCanvas() {
     player.height = 50 * window.canvasScale.y;
     player.speed = 10 * window.canvasScale.x;
 
-
     // Palack méretezése
     bottle.width = 40 * window.canvasScale.x;
     bottle.height = 40 * window.canvasScale.y;
+    bottle.x = Math.random() * (canvas.width - bottle.width);
+    bottle.y = Math.random() * (canvas.height / 2 - bottle.height);
     bottle.speedX = (Math.random() > 0.5 ? 3 : -3) * window.canvasScale.x;
     bottle.speedY = (Math.random() > 0.5 ? 3 : -3) * window.canvasScale.y;
 
@@ -37,6 +92,8 @@ function resizeCanvas() {
     obstacles.forEach(obstacle => {
         obstacle.width = 60 * window.canvasScale.x;
         obstacle.height = 60 * window.canvasScale.y;
+        obstacle.x = Math.random() * (canvas.width - obstacle.width);
+        obstacle.y = Math.random() * (canvas.height - obstacle.height);
         obstacle.speedX = (Math.random() > 0.5 ? 3 : 7) * window.canvasScale.x;
         obstacle.speedY = (Math.random() > 0.5 ? 3 : 7) * window.canvasScale.y;
     });
@@ -47,59 +104,6 @@ resizeCanvas();
 
 // Ablak átméretezés kezelése
 window.addEventListener("resize", resizeCanvas);
-
-const scoreElement = document.getElementById('score');
-const livesElement = document.getElementById('lives');
-const playerNameElement = document.getElementById('player-name');
-
-let playerName = "Névtelen Játékos"; // Alapértelmezett név, ha a backend nem ad vissza adatot
-
-// Képek betöltése
-const stickmanImage = new Image();
-stickmanImage.src = "stickman.png";
-
-const palinkaImage = new Image();
-palinkaImage.src = "palinka.png";
-
-// Játékos adatok
-let player = {
-    x: (canvas.width / 2 - 25) * window.canvasScale.x,
-    y: (canvas.height - 100) * window.canvasScale.y,
-    width: 50 * window.canvasScale.x,
-    height: 50 * window.canvasScale.y,
-    speed: 10 * window.canvasScale.x,
-    direction: "right",
-    lives: 3,
-    isVisible: true,
-    invulnerable: false
-};
-
-// Palack adatok
-let bottle = {
-    x: Math.random() * (canvas.width - 40 * window.canvasScale.x),
-    y: Math.random() * (canvas.height / 2 - 40 * window.canvasScale.y),
-    width: 40 * window.canvasScale.x,
-    height: 40 * window.canvasScale.y,
-    speedX: (Math.random() > 0.5 ? 3 : -3) * window.canvasScale.x,
-    speedY: (Math.random() > 0.5 ? 3 : -3) * window.canvasScale.y
-};
-
-// Akadályok
-let obstacles = [];
-for (let i = 0; i < 5; i++) {
-    obstacles.push({
-        x: Math.random() * (canvas.width - 60 * window.canvasScale.x),
-        y: Math.random() * (canvas.height - 60 * window.canvasScale.y),
-        width: 60 * window.canvasScale.x,
-        height: 60 * window.canvasScale.y,
-        speedX: (Math.random() > 0.5 ? 3 : 7) * window.canvasScale.x,
-        speedY: (Math.random() > 0.5 ? 3 : 7) * window.canvasScale.y
-    });
-}
-
-
-let score = 0;
-let running = true;
 
 // Billentyűk
 let keys = {};
@@ -133,7 +137,6 @@ async function logout() {
 document.addEventListener("DOMContentLoaded", function () {
     fetchPlayerName();
 });
-
 
 // Pontszám frissítése szerveren
 async function updateScore(username, score) {
@@ -252,7 +255,6 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);
 }
 
-
 // Felugró ablak az újrajátszáshoz
 function showGameOverPopup() {
     const popup = document.createElement("div");
@@ -270,8 +272,6 @@ function showGameOverPopup() {
     document.getElementById("restartGame").addEventListener("click", restartGame);
     document.getElementById("exitGame").addEventListener("click", () => popup.remove());
 }
-
-
 
 // Játék újraindítása
 async function restartGame() {
@@ -293,11 +293,16 @@ async function restartGame() {
     }, 3000);
     gameLoop();
 }
+
 // Leaderboard betöltése és megjelenítése
 async function fetchLeaderboard() {
     try {
         const response = await fetch('getLeaderboard.php');
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
         const leaderboard = await response.json();
+        console.log("Leaderboard data:", leaderboard); // Debug log
 
         let leaderboardHTML = "<h2>Leaderboard</h2><ol>";
         leaderboard.forEach((player, index) => {
@@ -310,7 +315,6 @@ async function fetchLeaderboard() {
         console.error("Hiba a ranglista betöltésekor:", error);
     }
 }
-
 
 function gameOver() {
     ctx.fillStyle = "black";
@@ -377,7 +381,6 @@ function showCountdownPopup(nextPlayTime) {
     });
 }
 
-
 // Játékengedély ellenőrzése
 async function checkIfCanPlay(username) {
     try {
@@ -390,6 +393,7 @@ async function checkIfCanPlay(username) {
         });
         
         const data = await response.json();
+        console.log("checkIfCanPlay response:", data); // Debug log
         
         if (data.canPlay === false) {
             if (data.nextPlayTime) {
@@ -404,28 +408,6 @@ async function checkIfCanPlay(username) {
     } catch (error) {
         console.error("Hiba a szerverrel való kommunikáció során:", error);
         return { canPlay: false, isAdmin: false };
-    }
-}
-
-// Pontszám frissítése szerveren
-async function updateScore(username, score) {
-    try {
-        const response = await fetch('updateScore.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ username, score })
-        });
-
-        const data = await response.json();
-        if (data.status !== "success") {
-            console.error("Hiba a pontszám mentésekor:", data.message);
-        } else {
-            console.log("Pontszám sikeresen mentve:", score);
-        }
-    } catch (error) {
-        console.error("Nem sikerült elküldeni a pontszámot:", error);
     }
 }
 
@@ -458,6 +440,3 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 startGame();
-
-
-
