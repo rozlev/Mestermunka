@@ -1,0 +1,175 @@
+body {
+    margin: 0;
+    background-color: #ffffffaf;
+    font-family: 'Comic Sans MS', Arial, sans-serif;
+}
+
+/* Navbar testreszabása */
+.navbar {
+    background: linear-gradient(90deg, #811331, #9c1c3a) !important; /* Gradiens háttér */
+    padding: 1rem 2rem !important; /* Nagyobb padding a magasabb fejléc érdekében */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Árnyék a fejléc alatt */
+}
+
+/* Navbar-brand (A pálinka mesterei) testreszabása */
+.navbar-brand {
+    font-size: 2.8rem !important; /* Nagyobb betűméret, mint a képen */
+    font-weight: bold;
+    color: #fff !important; /* Fehér szín */
+    margin-right: 2rem; /* Térköz a menüpontoktól */
+}
+
+/* Menüpontok (nav-link) testreszabása */
+.navbar-nav .nav-link {
+    color: #fff !important; /* Fehér szöveg */
+    font-weight: bold;
+    font-size: 1.2rem; /* Nagyobb betűméret a menüpontokhoz */
+    padding: 0.8rem 2.5rem !important; /* Nagyobb padding a gombok körül */
+    border: 2px solid transparent; /* Átlátszó keret alapértelmezetten */
+    border-radius: 5px; /* Lekerekített sarkok */
+    transition: all 0.3s ease; /* Átmenet a hover effekthez */
+}
+
+/* Hover effekt a menüpontokra */
+.navbar-nav .nav-link:hover {
+    border: 2px solid #fff; /* Fehér keret */
+    background: #ffffff; /* Szürke háttér, mint a megadott CSS-ben */
+    color: #811331 !important; /* Sötét szöveg */
+}
+
+/* Menüpontok közötti távolság */
+.navbar-nav {
+    gap: 30px; /* Nagyobb távolság a menüpontok között, mint a képen */
+}
+
+/* Navbar-toggler (mobil menü gomb) testreszabása */
+.navbar-toggler {
+    border: 2px solid #fff; /* Fehér keret a toggler körül */
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important; /* Fehér ikon */
+}
+
+/* Mobil nézetben a menüpontok elrendezése */
+@media (max-width: 991px) {
+    .navbar-nav {
+        gap: 15px; /* Nagyobb térköz mobil nézetben */
+        padding: 1rem; /* Térköz a lenyíló menü körül */
+        background: linear-gradient(90deg, #811331, #9c1c3a); /* Gradiens háttér a lenyíló menüben */
+    }
+
+    .navbar-nav .nav-link {
+        padding: 0.5rem 1.5rem !important; /* Kisebb padding mobil nézetben */
+        text-align: center; /* Középre igazítás */
+    }
+}
+
+/* A container-fluid paddingjának csökkentése */
+.container-fluid {
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+/* A meglévő CSS többi része változatlan marad */
+.ui-panel {
+    background-color: #8e233fb0;
+}
+
+.ui-panel span {
+    display: block;
+    margin-bottom: 5px;
+}
+
+#bemutato {
+    background-color: #8e233fb0;
+}
+
+.leaderboard {
+    background-color: #8e233fb0;
+}
+
+.leaderboard h2 {
+    margin: 0;
+    font-size: 20px;
+    text-align: center;
+}
+
+.leaderboard ol {
+    padding: 0;
+    list-style: none;
+}
+
+.leaderboard li {
+    margin: 5px 0;
+    padding: 5px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    text-align: center;
+}
+
+#gameCanvas {
+    border: 3px solid #FFD700;
+    max-width: 100%;
+    height: auto;
+}
+
+#gameOverPopup, #countdownPopup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: clamp(10px, 3vw, 20px);
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    width: clamp(200px, 80%, 300px);
+}
+
+.popup-content h2 {
+    font-size: clamp(18px, 5vw, 24px);
+}
+
+.popup-content p {
+    font-size: clamp(14px, 4vw, 18px);
+}
+
+.popup-content button {
+    font-size: clamp(12px, 3vw, 16px);
+    padding: clamp(5px, 2vw, 10px) clamp(10px, 3vw, 15px);
+    background: #FFD700;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 10px;
+    transition: 0.3s;
+}
+
+.popup-content button:hover {
+    background: #FFA500;
+}
+
+@media (max-width: 768px) {
+    #gameCanvas {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .ui-panel {
+        font-size: 12px;
+        padding: 5px;
+    }
+
+    #bemutato {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .leaderboard {
+        font-size: 12px;
+    }
+}

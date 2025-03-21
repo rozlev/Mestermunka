@@ -439,30 +439,37 @@ $conn->close();
     </div>
 
     <h2>Meglévő Pálinkák</h2>
-    <div class="table-wrapper">
-        <table>
+   <div class="table-wrapper">
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Név</th>
+            <th>Alkohol %</th>
+            <th>Ár</th>
+            <th>Készlet</th>
+            <th>Kép</th>
+            <th>Művelet</th>
+        </tr>
+        <?php foreach ($palinkak as $p): ?>
             <tr>
-                <th>ID</th>
-                <th>Név</th>
-                <th>Alkohol %</th>
-                <th>Ár</th>
-                <th>Készlet</th>
-                <th>Kép</th>
-                <th>Művelet</th>
+                <td><?= $p['PalinkaID'] ?></td>
+                <td><?= htmlspecialchars($p['Nev']) ?></td>
+                <td><?= htmlspecialchars($p['AlkoholTartalom']) ?></td>
+                <td><?= $p['Ar'] ?> HUF</td>
+                <td>
+                    <?= $p['DB_szam'] ?> db
+                    <form method="POST" style="display: inline;">
+                        <input type="hidden" name="palinka_id" value="<?= $p['PalinkaID'] ?>">
+                        <input type="number" name="change" class="stock-input" min="1" value="1" required>
+                        <button type="submit" name="modify_stock" value="1" class="stock-btn">+</button>
+                        <button type="submit" name="modify_stock" value="-1" class="stock-btn">-</button>
+                    </form>
+                </td>
+                <td><img src="<?= htmlspecialchars($p['KepURL']) ?>" width="50"></td>
+                <td><button class="btn btn-delete" onclick="confirmDelete(<?= $p['PalinkaID'] ?>)">🗑️ Törlés</button></td>
             </tr>
-            <?php foreach ($palinkak as $p): ?>
-                <tr>
-                    <td><?= $p['PalinkaID'] ?></td>
-                    <td><?= htmlspecialchars($p['Nev']) ?></td>
-                    <td><?= htmlspecialchars($p['AlkoholTartalom']) ?></td>
-                    <td><?= $p['Ar'] ?> HUF</td>
-                    <td><?= $p['DB_szam'] ?> db</td>
-                    <td><img src="<?= htmlspecialchars($p['KepURL']) ?>" width="50"></td>
-                    <td><button class="btn btn-delete" onclick="confirmDelete(<?= $p['PalinkaID'] ?>)">🗑️ Törlés</button></td>
-                </tr>
-            <?php endforeach; ?>
-        </table>
-    </div>
+        <?php endforeach; ?>
+    </table>
 </div>
 
 <div id="myModal" class="modal">
