@@ -7,7 +7,7 @@ body {
 /* Navbar testreszabása */
 .navbar {
     background: linear-gradient(90deg, #811331, #9c1c3a) !important; /* Gradiens háttér */
-    padding: 1rem 2rem !important; /* Nagyobb padding a magasabb fejléc érdekében */
+    padding: rem 2rem !important; /* Nagyobb padding a magasabb fejléc érdekében */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Árnyék a fejléc alatt */
 }
 
