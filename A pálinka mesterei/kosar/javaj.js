@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let cart = [];
     let discountApplied = false; // Nyomon követjük, hogy van-e már alkalmazott kedvezmény
     let discountPercentage = 0; // Kedvezmény százalékban
+    let couponCode = ""; // Tároljuk a kuponkódot
 
     const cartItemsContainer = document.getElementById("cart-items");
     const totalPriceContainer = document.getElementById("total-price");
@@ -57,7 +58,12 @@ document.addEventListener("DOMContentLoaded", function () {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ cart })
+            body: JSON.stringify({ 
+                cart: cart,
+                discountApplied: discountApplied,
+                discountPercentage: discountPercentage,
+                couponCode: couponCode // Kuponkód elküldése
+            })
         })
         .then(response => response.json())
         .then(data => {
@@ -70,7 +76,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 totalPriceContainer.textContent = "0 HUF";
                 discountApplied = false; // Kedvezmény visszaállítása
                 discountPercentage = 0;
+                couponCode = ""; // Kuponkód visszaállítása
                 couponMessage.textContent = "";
+                couponCodeInput.value = ""; // Beviteli mező ürítése
                 renderCart();
             }
         })
@@ -81,7 +89,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Kupon beváltás kezelése
     applyCouponButton.addEventListener("click", function () {
-        const couponCode = couponCodeInput.value.trim();
+        couponCode = couponCodeInput.value.trim();
         if (!couponCode) {
             couponMessage.textContent = "Kérlek, add meg a kupon kódot!";
             return;
@@ -92,27 +100,11 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        fetch("validate_coupon.php", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ couponCode })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
-                couponMessage.textContent = data.error;
-            } else {
-                discountApplied = true;
-                discountPercentage = 10; // Példa: 10% kedvezmény
-                couponMessage.textContent = `Kupon beváltva! ${discountPercentage}% kedvezmény alkalmazva.`;
-                renderCart();
-            }
-        })
-        .catch(error => {
-            couponMessage.textContent = "Hiba történt a kupon ellenőrzése során!";
-        });
+        // Itt nem hívjuk meg a validate_coupon.php-t, mert a kupon ellenőrzése a process_order.php-ban történik
+        discountApplied = true;
+        discountPercentage = 10; // Példa: 10% kedvezmény
+        couponMessage.textContent = `Kupon beváltva! ${discountPercentage}% kedvezmény alkalmazva.`;
+        renderCart();
     });
 
     function renderCart() {
@@ -217,7 +209,9 @@ document.addEventListener("DOMContentLoaded", function () {
         totalPriceContainer.textContent = "0 HUF";
         discountApplied = false; // Kedvezmény visszaállítása
         discountPercentage = 0;
+        couponCode = ""; // Kuponkód visszaállítása
         couponMessage.textContent = "";
+        couponCodeInput.value = ""; // Beviteli mező ürítése
         showNotification("Kosár törölve", "A kosár kiürítve!");
         renderCart();
     });

@@ -24,6 +24,10 @@ if (!isset($data["cart"]) || empty($data["cart"])) {
     die(json_encode(["error" => "Üres rendelési lista!"]));
 }
 
+// Kedvezmény adatok fogadása
+$discountApplied = isset($data["discountApplied"]) ? $data["discountApplied"] : false;
+$discountPercentage = isset($data["discountPercentage"]) ? floatval($data["discountPercentage"]) : 0;
+
 // Lekérjük a felhasználó email címét
 $get_user_email_query = "SELECT Email FROM user WHERE UserID = ?";
 $get_user_email_stmt = $conn->prepare($get_user_email_query);
@@ -91,6 +95,13 @@ foreach ($data["cart"] as $item) {
     $finalTotal += $totalPrice;
 }
 
+// Kedvezmény alkalmazása a végösszegre
+$originalTotal = $finalTotal;
+if ($discountApplied && $discountPercentage > 0) {
+    $discountAmount = $finalTotal * ($discountPercentage / 100);
+    $finalTotal -= $discountAmount;
+}
+
 $conn->close();
 
 // Email küldés a rendelésről
@@ -99,7 +110,7 @@ $post_fields = http_build_query([
     "access_key"    => $api_key,
     "subject"       => "Rendelés visszaigazolás - Pálinka Mesterei",
     "from name"     => "Pálinka Mesterei",
-    "from email"    => "palinkamesterei@gmail.com", // 'from email' át lett nevezve
+    "from email"    => "palinkamesterei@gmail.com",
     "replyto"       => $user_email,
     "message"       => 
         "Kedves Vásárló!\n\n" .
@@ -114,7 +125,13 @@ $post_fields = http_build_query([
         
         "-----------------------------------------------------------------\n\n" .
         
-        "🛒 VÉGÖSSZEG: " . number_format($finalTotal, 0, ',', ' ') . " Ft\n\n" .
+        ($discountApplied && $discountPercentage > 0 ?
+            "🛒 EREDETI ÖSSZEG: " . number_format($originalTotal, 0, ',', ' ') . " Ft\n" .
+            "🛒 KEDVEZMÉNY ($discountPercentage%): -" . number_format($originalTotal * ($discountPercentage / 100), 0, ',', ' ') . " Ft\n" .
+            "🛒 VÉGÖSSZEG KEDVEZMÉNNYEL: " . number_format($finalTotal, 0, ',', ' ') . " Ft\n\n"
+            :
+            "🛒 VÉGÖSSZEG: " . number_format($finalTotal, 0, ',', ' ') . " Ft\n\n"
+        ) .
         
         "-----------------------------------------------------------------\n\n" .
 
@@ -128,10 +145,6 @@ $post_fields = http_build_query([
         
         "PÁLINKA MESTEREI csapata"
 ]);
-
-
-
-
 
 $ch = curl_init("https://api.web3forms.com/submit");
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
