@@ -1,32 +1,48 @@
 body {
     background-color: #f8f9fa;
+    font-family: Arial, sans-serif;
 }
 
 .container {
     max-width: 1000px;
     background: white;
-    padding: 20px;
+    padding: 15px;
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
 }
 
 h1 {
     color: #811331;
+    font-size: 2rem;
 }
 
+/* Táblázat stílusa */
 .table {
     margin-top: 20px;
+    width: 100%;
+    table-layout: auto;
 }
 
 th {
     background-color: #811331;
     color: white;
     text-align: center;
+    font-size: 1rem;
+    padding: 10px;
+    white-space: nowrap;
 }
 
 td {
     vertical-align: middle;
     text-align: center;
+    font-size: 0.9rem;
+    padding: 8px;
+}
+
+.table img {
+    max-width: 40px;
+    height: auto;
 }
 
 #total-price {
@@ -35,14 +51,20 @@ td {
     font-size: 1.5rem;
 }
 
-.btn-danger {
+/* Gombok stílusa */
+.btn-danger, .btn-success {
+    font-size: 1rem;
+    padding: 10px;
+    transition: transform 0.2s ease;
     width: 100%;
-    font-size: 1.2rem;
 }
 
+.btn-danger:hover, .btn-success:hover {
+    transform: scale(1.05);
+}
 
-   /* HEADER */
-   header {
+/* Header */
+header {
     background: linear-gradient(90deg, #811331, #9c1c3a);
     color: #fff;
     padding: 1.5rem 2rem;
@@ -51,165 +73,317 @@ td {
     align-items: center;
     flex-wrap: wrap;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  }
-  
-  /* Nagyobb térköz a fejléc szövegei között */
-  header h1 {
+}
+
+header h1 {
     font-size: 2.8rem;
     font-weight: bold;
     color: #fff;
-  }
-  
-  /* Extra térköz a menüpontok között */
-  nav ul {
+}
+
+nav ul {
     list-style: none;
     display: flex;
-    gap: 30px; /* Növelt távolság a menüpontok között */
-  }
-  
-  nav ul li {
-    margin: 0 10px; /* Extra térköz a listaelemek között */
-  }
-  
-  nav ul li a {
+    gap: 30px;
+}
+
+nav ul li {
+    margin: 0 10px;
+}
+
+nav ul li a {
     color: #fff;
     text-decoration: none;
     font-weight: bold;
-    padding: 0.8rem 1.5rem; /* Nagyobb gombméret */
+    padding: 0.8rem 1.5rem;
     border: 2px solid transparent;
     border-radius: 5px;
     transition: all 0.3s ease;
-    display: inline-block; /* Térköz érvényesítése */
-  }
-  
-  nav ul li a:hover {
+    display: inline-block;
+}
+
+nav ul li a:hover {
     border: 2px solid #fff;
     background: #fff;
     color: #811331;
-  }
-/* Extra térköz mobil nézetben */
-@media (max-width: 768px) {
-    nav ul {
-        flex-direction: column;
-        gap: 15px; /* Nagyobb térköz mobil nézetben */
-    }
 }
-    /* Modal háttér */
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 1000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.4); /* Sötét háttér, de áttetsző */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        display: none;
-    }
 
-    /* Modal tartalom - KIS MÉRETŰ, KÖZÉPEN, LEKEREKÍTETT */
-    .modal-content {
-        background-color: white;
-        padding: 20px;
-        border-radius: 15px; /* Lekerekített szélek */
-        text-align: center;
-        width: 300px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        animation: fadeIn 0.3s ease-in-out;
-    }
+/* Navbar */
+.navbar {
+    padding: 1rem !important;
+}
 
-    /* Animáció a megjelenéshez */
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(-20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
+.navbar-brand {
+    font-size: 1.5rem !important;
+}
 
-    /* Modal gomb */
-    .modal-btn {
-        margin-top: 15px;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 8px; /* Gomb is lekerekített */
-        cursor: pointer;
-        background-color: #811331;
-        color: white;
-        font-size: 16px;
-        transition: background 0.3s ease-in-out;
-    }
+.nav-link {
+    font-size: 1rem !important;
+    padding: 0.5rem 1rem !important;
+    transition: background-color 0.3s ease;
+}
 
-    .modal-btn:hover {
-        background-color: #811331;
-    }
+.nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    color: #fff !important;
+}
 
-    /* Modal cím */
-    #notification-title {
-        font-size: 20px;
-        margin-bottom: 10px;
-        font-weight: bold;
-        color: #333;
-    }
-
-    /* Modal szöveg */
-    #notification-message {
-        font-size: 16px;
-        color: #555;
-    }
-
-    .navbar {
-        padding: 1.5rem 1rem !important;
-      }
-      
-      .navbar-brand {
-        font-size: 2rem !important;
-      }
-      .nav-link {
-        font-size: 1.0rem !important;
-        padding: 1rem 1rem !important; /* több hely a szövegek között */
-      }
-      /* Finom hover effekt: áttetsző fehér háttér, a szöveg megmarad látható */
-      .nav-link:hover {
-        background-color: rgba(255, 255, 255, 0.2) !important;
-        color: #fff !important;
-      }
-
-
-/* Kupon beviteli mező és gomb stílusai */
+/* Kupon szekció */
 #coupon-section {
-    width: 300px; /* Fix szélesség, hogy ne legyen túl széles */
-    float: right;
+    max-width: 100%;
+    margin: 0 auto;
 }
 
 #coupon-code {
     border-radius: 5px 0 0 5px;
+    font-size: 0.9rem;
+    height: 100%; /* Magasság igazítása */
 }
 
 #apply-coupon {
     border-radius: 0 5px 5px 0;
-    background-color: #811331;
-    border-color: #811331;
-}
-
-#apply-coupon:hover {
-    background-color: #9c1c3a;
-    border-color: #9c1c3a;
+    font-size: 0.9rem;
 }
 
 #coupon-message {
     color: #811331;
     font-weight: bold;
-    font-size: 0.9rem; /* Kisebb betűméret, hogy ne legyen túl nagy */
+    font-size: 0.85rem;
 }
 
-/* A Végösszeg és a kupon szekció közötti távolság finomhangolása */
-.d-flex .me-3 {
-    margin-right: 1rem; /* Bootstrap me-3 alapértelmezett értéke */
+/* Mobil kártyák stílusa */
+.cart-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.cart-card img {
+    max-width: 40px;
+    height: auto;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.cart-card .btn {
+    font-size: 0.8rem;
+    padding: 5px 10px;
+    margin: 2px;
+}
+
+.cart-card h5 {
+    font-size: 1rem;
+    margin: 5px 0;
+}
+
+.cart-card p {
+    font-size: 0.85rem;
+    margin: 5px 0;
+}
+
+/* Modal háttér */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    align-items: center;
+    justify-content: center;
+}
+
+/* Modal tartalom */
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    width: 90%;
+    max-width: 300px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Animáció a megjelenéshez */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Modal gomb */
+.modal-btn {
+    margin-top: 10px;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: #811331;
+    color: white;
+    font-size: 0.9rem;
+    transition: background 0.3s ease;
+}
+
+.modal-btn:hover {
+    background-color: #9c1c3a;
+}
+
+/* Modal cím */
+#notification-title {
+    font-size: 20px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Modal szöveg */
+#notification-message {
+    font-size: 16px;
+    color: #555;
+}
+
+/* Reszponzív調整ok */
+@media (max-width: 768px) {
+    nav ul {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    .navbar-brand {
+        font-size: 1.2rem !important;
+    }
+
+    .nav-link {
+        font-size: 0.9rem !important;
+        padding: 0.5rem !important;
+    }
+
+    #total-price {
+        font-size: 1.2rem;
+    }
+
+    .btn-danger, .btn-success {
+        font-size: 0.9rem;
+        padding: 8px;
+    }
+
+    .container {
+        padding: 10px;
+    }
+
+    /* Táblázat elrejtése mobilon */
+    .table-responsive {
+        display: none !important;
+    }
+
+    /* Kártyák biztosan láthatóak */
+    #cart-items-mobile {
+        display: block !important;
+    }
+
+    /* Kupon szekció és Rendelés leadás gomb mobilon */
+    #coupon-section, #submit-order {
+        margin-bottom: 10px;
+    }
+}
+
+@media (max-width: 576px) {
+    h1 {
+        font-size: 1.3rem;
+    }
+
+    #total-price {
+        font-size: 1rem;
+    }
+
+    .btn-danger, .btn-success {
+        font-size: 0.8rem;
+        padding: 6px;
+    }
+
+    .cart-card {
+        padding: 8px;
+    }
+
+    .cart-card img {
+        max-width: 30; /* Még kisebb képek 576px alatt */
+    }
+
+    .cart-card h5 {
+        font-size: 0.9rem;
+    }
+
+    .cart-card p {
+        font-size: 0.8rem;
+    }
+
+    .cart-card .btn {
+        font-size: 0.7rem;
+        padding: 4px 8px;
+    }
+
+    .cart-card input {
+        width: 50px;
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 320px) {
+    h1 {
+        font-size: 1.2rem;
+    }
+
+    #total-price {
+        font-size: 0.9rem;
+    }
+
+    .btn-danger, .btn-success {
+        font-size: 0.7rem;
+        padding: 5px;
+    }
+
+    .cart-card {
+        padding: 6px;
+    }
+
+    .cart-card img {
+        max-width: 25px; /* Még kisebb képek 320px alatt */
+    }
+
+    .cart-card h5 {
+        font-size: 0.8rem;
+    }
+
+    .cart-card p {
+        font-size: 0.7rem;
+    }
+
+    .cart-card .btn {
+        font-size: 0.6rem;
+        padding: 3px 6px;
+    }
+
+    .cart-card input {
+        width: 40px;
+        font-size: 0.7rem;
+    }
 }

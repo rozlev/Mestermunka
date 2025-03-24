@@ -5,17 +5,13 @@ document.addEventListener("DOMContentLoaded", function () {
     let couponCode = "";
 
     const cartItemsContainer = document.getElementById("cart-items");
+    const cartItemsMobileContainer = document.getElementById("cart-items-mobile"); // Hozzáadjuk a mobil konténert
     const totalPriceContainer = document.getElementById("total-price");
-    const orderButton = document.createElement("button");
+    const orderButton = document.getElementById("submit-order");
     const couponSection = document.getElementById("coupon-section");
     const couponCodeInput = document.getElementById("coupon-code");
     const couponMessage = document.getElementById("coupon-message");
     const applyCouponButton = document.getElementById("apply-coupon");
-
-    orderButton.textContent = "Rendelés leadás";
-    orderButton.classList.add("btn", "btn-success", "mt-3");
-    orderButton.id = "submit-order";
-    document.querySelector(".container").appendChild(orderButton);
 
     const confirmModal = document.getElementById("confirm-modal");
     const confirmOrderBtn = document.getElementById("confirm-order-btn");
@@ -100,7 +96,6 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        // Kupon ellenőrzése a szerveren keresztül
         fetch("validate_coupon.php", {
             method: "POST",
             headers: {
@@ -127,34 +122,59 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function renderCart() {
         cartItemsContainer.innerHTML = "";
+        cartItemsMobileContainer.innerHTML = ""; // Töröljük a mobil kártyákat is
         let totalPrice = 0;
 
         if (cart.length === 0) {
             cartItemsContainer.innerHTML = "<tr><td colspan='6'>A kosár üres</td></tr>";
+            cartItemsMobileContainer.innerHTML = "<p class='text-center'>A kosár üres</p>";
             totalPriceContainer.textContent = "0 HUF";
-            orderButton.style.display = "none";
+            orderButton.classList.add("d-none");
             couponSection.style.display = "none";
             return;
         } else {
-            orderButton.style.display = "block";
+            orderButton.classList.remove("d-none");
             couponSection.style.display = "block";
         }
 
         cart.forEach((item, index) => {
+            // Desktop táblázat
             const row = document.createElement("tr");
             row.innerHTML = `
-                <td><img src="${item.image}" width="50"></td>
+                <td><img src="${item.image}" alt="${item.name}" width="50"></td>
                 <td>${item.name}</td>
                 <td>${item.price} HUF</td>
                 <td>
-                    <button class="decrease-qty" data-index="${index}">-</button>
-                    <input type="number" value="${item.quantity}" class="qty-input" data-index="${index}">
-                    <button class="increase-qty" data-index="${index}">+</button>
+                    <button class="decrease-qty btn btn-sm btn-outline-secondary" data-index="${index}">-</button>
+                    <input type="number" value="${item.quantity}" class="qty-input form-control d-inline w-auto" data-index="${index}">
+                    <button class="increase-qty btn btn-sm btn-outline-secondary" data-index="${index}">+</button>
                 </td>
                 <td class="total-item-price" data-index="${index}">${item.price * item.quantity} HUF</td>
-                <td><button class="remove-item" data-index="${index}">❌</button></td>
+                <td><button class="remove-item btn btn-sm btn-danger" data-index="${index}">❌</button></td>
             `;
             cartItemsContainer.appendChild(row);
+
+            // Mobil kártyák
+            const card = document.createElement("div");
+            card.classList.add("cart-card");
+            card.innerHTML = `
+                <div class="d-flex align-items-center flex-column">
+                    <img src="${item.image}" alt="${item.name}">
+                    <div class="mt-2 text-center">
+                        <h5>${item.name}</h5>
+                        <p>Ár: ${item.price} HUF</p>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <button class="decrease-qty btn btn-sm btn-outline-secondary" data-index="${index}">-</button>
+                            <input type="number" value="${item.quantity}" class="qty-input form-control d-inline w-auto mx-2" data-index="${index}">
+                            <button class="increase-qty btn btn-sm btn-outline-secondary" data-index="${index}">+</button>
+                        </div>
+                        <p class="mt-2">Összesen: <span class="total-item-price" data-index="${index}">${item.price * item.quantity} HUF</span></p>
+                        <button class="remove-item btn btn-sm btn-danger mt-2" data-index="${index}">❌</button>
+                    </div>
+                </div>
+            `;
+            cartItemsMobileContainer.appendChild(card);
+
             totalPrice += item.price * item.quantity;
         });
 
