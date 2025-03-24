@@ -427,16 +427,26 @@ async function startGame() {
         player.invulnerable = false;
     }, 3000);
 
+    // Gomb elrejtése indítás után
+    const startButton = document.getElementById("startGameButton");
+    if (startButton) {
+        startButton.style.display = "none";
+    }
+
     gameLoop();
 }
 
+// Gomb eseménykezelő hozzáadása
 document.addEventListener("DOMContentLoaded", function() {
     const startButton = document.getElementById("startGameButton");
     if (startButton) {
         startButton.addEventListener("click", startGame);
     }
 
-    checkIfCanPlay(playerName); // Betöltéskor ellenőrizzük, hogy játszhat-e
+    // Csak ellenőrzés indul az oldal betöltésekor, de nem a játék
+    checkIfCanPlay(playerName);
 });
 
-startGame();
+// Töröljük ezt a sort a fájl aljáról, hogy ne induljon automatikusan:
+// startGame();
+
