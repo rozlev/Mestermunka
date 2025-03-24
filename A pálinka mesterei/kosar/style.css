@@ -182,10 +182,10 @@ td {
       }
 
 
-      /* Kupon beviteli mező és gomb stílusai */
+/* Kupon beviteli mező és gomb stílusai */
 #coupon-section {
-    max-width: 300px;
-    margin: 0 auto;
+    width: 300px; /* Fix szélesség, hogy ne legyen túl széles */
+    float: right;
 }
 
 #coupon-code {
@@ -206,4 +206,10 @@ td {
 #coupon-message {
     color: #811331;
     font-weight: bold;
+    font-size: 0.9rem; /* Kisebb betűméret, hogy ne legyen túl nagy */
+}
+
+/* A Végösszeg és a kupon szekció közötti távolság finomhangolása */
+.d-flex .me-3 {
+    margin-right: 1rem; /* Bootstrap me-3 alapértelmezett értéke */
 }

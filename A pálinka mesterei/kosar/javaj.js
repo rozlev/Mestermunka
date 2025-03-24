@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Itt nem hívjuk meg a validate_coupon.php-t, mert a kupon ellenőrzése a process_order.php-ban történik
         discountApplied = true;
-        discountPercentage = 10; // Példa: 10% kedvezmény
+        discountPercentage = 20; // Példa: 20% kedvezmény
         couponMessage.textContent = `Kupon beváltva! ${discountPercentage}% kedvezmény alkalmazva.`;
         renderCart();
     });
