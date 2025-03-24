@@ -1,8 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
     let cart = [];
-    let discountApplied = false; // Nyomon követjük, hogy van-e már alkalmazott kedvezmény
-    let discountPercentage = 0; // Kedvezmény százalékban
-    let couponCode = ""; // Tároljuk a kuponkódot
+    let discountApplied = false;
+    let discountPercentage = 0;
+    let couponCode = "";
 
     const cartItemsContainer = document.getElementById("cart-items");
     const totalPriceContainer = document.getElementById("total-price");
@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 cart: cart,
                 discountApplied: discountApplied,
                 discountPercentage: discountPercentage,
-                couponCode: couponCode // Kuponkód elküldése
+                couponCode: couponCode
             })
         })
         .then(response => response.json())
@@ -72,13 +72,13 @@ document.addEventListener("DOMContentLoaded", function () {
             } else {
                 showNotification("Rendelés sikeres", "Köszönjük a vásárlást!");
                 cart = [];
-                localStorage.setItem("cart", JSON.stringify(cart)); // Üres kosár mentése
+                localStorage.setItem("cart", JSON.stringify(cart));
                 totalPriceContainer.textContent = "0 HUF";
-                discountApplied = false; // Kedvezmény visszaállítása
+                discountApplied = false;
                 discountPercentage = 0;
-                couponCode = ""; // Kuponkód visszaállítása
+                couponCode = "";
                 couponMessage.textContent = "";
-                couponCodeInput.value = ""; // Beviteli mező ürítése
+                couponCodeInput.value = "";
                 renderCart();
             }
         })
@@ -100,11 +100,29 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        // Itt nem hívjuk meg a validate_coupon.php-t, mert a kupon ellenőrzése a process_order.php-ban történik
-        discountApplied = true;
-        discountPercentage = 20; // Példa: 20% kedvezmény
-        couponMessage.textContent = `Kupon beváltva! ${discountPercentage}% kedvezmény alkalmazva.`;
-        renderCart();
+        // Kupon ellenőrzése a szerveren keresztül
+        fetch("validate_coupon.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ couponCode: couponCode })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                couponMessage.textContent = data.error;
+            } else if (data.success) {
+                discountApplied = true;
+                discountPercentage = data.discountPercentage;
+                couponMessage.textContent = `Kupon beváltva! ${discountPercentage}% kedvezmény alkalmazva.`;
+                renderCart();
+            }
+        })
+        .catch(error => {
+            couponMessage.textContent = "Hiba történt a kupon ellenőrzése során!";
+            console.error("Error:", error);
+        });
     });
 
     function renderCart() {
@@ -115,11 +133,11 @@ document.addEventListener("DOMContentLoaded", function () {
             cartItemsContainer.innerHTML = "<tr><td colspan='6'>A kosár üres</td></tr>";
             totalPriceContainer.textContent = "0 HUF";
             orderButton.style.display = "none";
-            couponSection.style.display = "none"; // Kupon mező elrejtése
+            couponSection.style.display = "none";
             return;
         } else {
             orderButton.style.display = "block";
-            couponSection.style.display = "block"; // Kupon mező megjelenítése
+            couponSection.style.display = "block";
         }
 
         cart.forEach((item, index) => {
@@ -140,7 +158,6 @@ document.addEventListener("DOMContentLoaded", function () {
             totalPrice += item.price * item.quantity;
         });
 
-        // Kedvezmény alkalmazása, ha van
         if (discountApplied) {
             const discountAmount = totalPrice * (discountPercentage / 100);
             totalPrice -= discountAmount;
@@ -159,7 +176,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     newQuantity = 1;
                 }
                 cart[index].quantity = newQuantity;
-                localStorage.setItem("cart", JSON.stringify(cart)); // Mentés a localStorage-be
+                localStorage.setItem("cart", JSON.stringify(cart));
                 renderCart();
             });
         });
@@ -168,7 +185,7 @@ document.addEventListener("DOMContentLoaded", function () {
             button.addEventListener("click", function () {
                 const index = this.getAttribute("data-index");
                 cart[index].quantity += 1;
-                localStorage.setItem("cart", JSON.stringify(cart)); // Mentés a localStorage-be
+                localStorage.setItem("cart", JSON.stringify(cart));
                 renderCart();
             });
         });
@@ -178,7 +195,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 const index = this.getAttribute("data-index");
                 if (cart[index].quantity > 1) {
                     cart[index].quantity -= 1;
-                    localStorage.setItem("cart", JSON.stringify(cart)); // Mentés a localStorage-be
+                    localStorage.setItem("cart", JSON.stringify(cart));
                     renderCart();
                 }
             });
@@ -188,13 +205,12 @@ document.addEventListener("DOMContentLoaded", function () {
             button.addEventListener("click", function () {
                 const index = this.getAttribute("data-index");
                 cart.splice(index, 1);
-                localStorage.setItem("cart", JSON.stringify(cart)); // Mentés a localStorage-be
+                localStorage.setItem("cart", JSON.stringify(cart));
                 renderCart();
             });
         });
     }
 
-    // Kosár betöltése a localStorage-ból
     function loadCartFromLocalStorage() {
         const savedCart = localStorage.getItem("cart");
         if (savedCart) {
@@ -205,17 +221,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById("clear-cart").addEventListener("click", function () {
         cart = [];
-        localStorage.setItem("cart", JSON.stringify(cart)); // Üres kosár mentése
+        localStorage.setItem("cart", JSON.stringify(cart));
         totalPriceContainer.textContent = "0 HUF";
-        discountApplied = false; // Kedvezmény visszaállítása
+        discountApplied = false;
         discountPercentage = 0;
-        couponCode = ""; // Kuponkód visszaállítása
+        couponCode = "";
         couponMessage.textContent = "";
-        couponCodeInput.value = ""; // Beviteli mező ürítése
+        couponCodeInput.value = "";
         showNotification("Kosár törölve", "A kosár kiürítve!");
         renderCart();
     });
 
-    // Kosár betöltése az oldal betöltésekor a localStorage-ból
     loadCartFromLocalStorage();
 });
