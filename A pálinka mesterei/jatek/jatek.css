@@ -173,3 +173,21 @@ body {
         font-size: 12px;
     }
 }
+
+.btn-custom {
+    background: linear-gradient(90deg, #811331, #9c1c3a); /* Gradiens háttér */
+    color: #fff; /* Fehér szöveg */
+    font-weight: bold;
+    font-size: 1.2rem;
+    padding: 10px 20px;
+    border: 2px solid #fff;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.btn-custom:hover {
+    background: #ffffff; /* Fehér háttér hover esetén */
+    color: #811331; /* Sötét szöveg */
+    border: 2px solid #811331;
+}
