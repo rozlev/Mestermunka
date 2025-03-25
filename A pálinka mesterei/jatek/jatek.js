@@ -11,11 +11,11 @@ let playerName = "Névtelen Játékos"; // Default player name
 // Képek betöltése
 const stickmanImage = new Image();
 stickmanImage.src = "stickman.png";
-stickmanImage.onerror = () => console.error("Failed to load stickman.png");
+stickmanImage.onerror = () => console.error("Failed to load stickman.png"); // Error handling for image
 
 const palinkaImage = new Image();
 palinkaImage.src = "palinka.png";
-palinkaImage.onerror = () => console.error("Failed to load palinka.png");
+palinkaImage.onerror = () => console.error("Failed to load palinka.png"); // Error handling for image
 
 // Játékos adatok
 let player = {
@@ -61,22 +61,26 @@ function resizeCanvas() {
     const maxWidth = 800;
     const maxHeight = 600;
     const container = document.querySelector('.container');
-    const containerWidth = container ? container.offsetWidth : window.innerWidth;
+    const containerWidth = container.offsetWidth;
 
+    // A vászon szélessége a konténer szélességéhez igazodik
     canvas.width = Math.min(maxWidth, containerWidth * 0.9);
-    canvas.height = canvas.width * (maxHeight / maxWidth);
+    canvas.height = canvas.width * (maxHeight / maxWidth); // Arányos magasság
 
+    // Skála faktor tárolása
     window.canvasScale = {
         x: canvas.width / maxWidth,
         y: canvas.height / maxHeight
     };
 
+    // Játékos pozíciójának újraszámolása
     player.x = (canvas.width / 2 - 25) * window.canvasScale.x;
     player.y = (canvas.height - 100) * window.canvasScale.y;
     player.width = 50 * window.canvasScale.x;
     player.height = 50 * window.canvasScale.y;
     player.speed = 10 * window.canvasScale.x;
 
+    // Palack méretezése
     bottle.width = 40 * window.canvasScale.x;
     bottle.height = 40 * window.canvasScale.y;
     bottle.x = Math.random() * (canvas.width - bottle.width);
@@ -84,6 +88,7 @@ function resizeCanvas() {
     bottle.speedX = (Math.random() > 0.5 ? 3 : -3) * window.canvasScale.x;
     bottle.speedY = (Math.random() > 0.5 ? 3 : -3) * window.canvasScale.y;
 
+    // Akadályok méretezése
     obstacles.forEach(obstacle => {
         obstacle.width = 60 * window.canvasScale.x;
         obstacle.height = 60 * window.canvasScale.y;
@@ -94,15 +99,18 @@ function resizeCanvas() {
     });
 }
 
-if (canvas) {
-    resizeCanvas();
-    window.addEventListener("resize", resizeCanvas);
-}
+// Kezdeti méretezés
+resizeCanvas();
 
+// Ablak átméretezés kezelése
+window.addEventListener("resize", resizeCanvas);
+
+// Billentyűk
 let keys = {};
 window.addEventListener("keydown", (e) => keys[e.key] = true);
 window.addEventListener("keyup", (e) => keys[e.key] = false);
 
+// Ütközésdetektálás
 function isColliding(obj1, obj2) {
     return obj1.x < obj2.x + obj2.width &&
            obj1.x + obj1.width > obj2.x &&
@@ -110,6 +118,7 @@ function isColliding(obj1, obj2) {
            obj1.y + obj1.height > obj2.y;
 }
 
+// Játékos nevének lekérése
 async function fetchPlayerName() {
     let storedName = localStorage.getItem("felhasznaloNev");
     if (storedName) {
@@ -117,17 +126,19 @@ async function fetchPlayerName() {
     } else {
         playerName = "Névtelen Játékos";
     }
-    if (playerNameElement) {
-        playerNameElement.textContent = `Játékos: ${playerName}`;
-    }
+    playerNameElement.textContent = `Játékos: ${playerName}`;
 }
 
 async function logout() {
     localStorage.removeItem("felhasznaloNev");
-    localStorage.removeItem("currentCoupon"); // Kupon törlése kijelentkezéskor
     window.location.href = "logout.php";
 }
 
+document.addEventListener("DOMContentLoaded", function () {
+    fetchPlayerName();
+});
+
+// Pontszám frissítése szerveren
 async function updateScore(username, score) {
     try {
         const response = await fetch('updateScore.php', {
@@ -142,12 +153,9 @@ async function updateScore(username, score) {
         if (data.status !== "success") {
             console.error("Hiba a pontszám mentésekor:", data.message);
             return null;
-        } else if (data.message === "Admin pont nem mentve.") {
-            console.log("Admin felhasználó, pontszám nem mentve:", score);
-            return null; // Return null for admin users
         } else {
-            console.log("Pontszám sikeresen mentve:", score, "scoreID:", data.scoreID);
-            return data.scoreID; // Return the scoreID for non-admin users
+            console.log("Pontszám sikeresen mentve:", score);
+            return data.scoreID; // Return the scoreID
         }
     } catch (error) {
         console.error("Nem sikerült elküldeni a pontszámot:", error);
@@ -155,6 +163,7 @@ async function updateScore(username, score) {
     }
 }
 
+// Játék ciklus
 function gameLoop() {
     if (!running) {
         gameOver();
@@ -163,6 +172,7 @@ function gameLoop() {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    // Játékos mozgása
     if (keys["a"] && player.x > 0) {
         player.x -= player.speed;
         player.direction = "left";
@@ -174,11 +184,13 @@ function gameLoop() {
     if (keys["w"] && player.y > 0) player.y -= player.speed;
     if (keys["s"] && player.y < canvas.height - player.height) player.y += player.speed;
 
+    // Palack mozgása
     bottle.x += bottle.speedX;
     bottle.y += bottle.speedY;
     if (bottle.x <= 0 || bottle.x >= canvas.width - bottle.width) bottle.speedX *= -1;
     if (bottle.y <= 0 || bottle.y >= canvas.height - bottle.height) bottle.speedY *= -1;
 
+    // Akadályok mozgása
     for (let obstacle of obstacles) {
         obstacle.x += obstacle.speedX;
         obstacle.y += obstacle.speedY;
@@ -191,6 +203,7 @@ function gameLoop() {
         }
     }
 
+    // Ütközések kezelése
     if (isColliding(player, bottle)) {
         score++;
         scoreElement.textContent = `Pontszám: ${score}`;
@@ -221,6 +234,7 @@ function gameLoop() {
         }
     }
 
+    // Játékos kirajzolása
     if (player.isVisible) {
         if (player.direction === "left") {
             ctx.drawImage(stickmanImage, player.x, player.y, player.width, player.height);
@@ -232,8 +246,10 @@ function gameLoop() {
         }
     }
 
+    // Palack kirajzolása
     ctx.drawImage(palinkaImage, bottle.x, bottle.y, bottle.width, bottle.height);
 
+    // Akadályok kirajzolása
     ctx.fillStyle = "red";
     for (let obstacle of obstacles) {
         ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
@@ -242,6 +258,7 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);
 }
 
+// Felugró ablak az újrajátszáshoz és kupon megjelenítéséhez
 async function showGameOverPopup(scoreID) {
     const popup = document.createElement("div");
     popup.id = "gameOverPopup";
@@ -257,38 +274,23 @@ async function showGameOverPopup(scoreID) {
     `;
     document.body.appendChild(popup);
 
+    // Időszámítás frissítése
     const nextPlayTime = await getNextPlayTime(playerName);
     updateCountdown(nextPlayTime);
 
-    // Kupon ellenőrzése és kiírása
-    const couponSection = document.getElementById("couponSection");
+    // Ha a pontszám >= 15, kupon lekérdezése
     if (score >= 15) {
-        if (scoreID) {
-            const coupon = await fetchCoupon(scoreID);
-            if (coupon && !coupon.startsWith("Hiba") && !coupon.includes("Nincs elérhető kupon")) {
-                couponSection.innerHTML = `
-                    <p style="color: #FFD700;">Gratulálunk! Elértél 15 pontot, itt a kuponod:</p>
-                    <p style="font-weight: bold;">${coupon}</p>
-                `;
-            } else {
-                couponSection.innerHTML = `
-                    <p style="color: #FF6347;">${coupon || "Hiba a kupon lekérdezésekor!"}</p>
-                `;
-            }
-        } else {
-            couponSection.innerHTML = `
-                <p style="color: #FF6347;">Admin felhasználók nem jogosultak kuponra.</p>
-            `;
-        }
-    } else {
-        couponSection.innerHTML = `
-            <p style="color: #FF6347;">Nem értél el 15 pontot, így nem kapsz kupont.</p>
+        const coupon = await fetchCoupon(scoreID); // Pass the scoreID to fetchCoupon
+        document.getElementById("couponSection").innerHTML = `
+            <p style="color: #FFD700;">Gratulálunk! Elértél 15 pontot, itt a kuponod:</p>
+            <p style="font-weight: bold;">${coupon}</p>
         `;
     }
 
     document.getElementById("exitGame").addEventListener("click", () => popup.remove());
 }
 
+// Következő játék idejének lekérdezése
 async function getNextPlayTime(username) {
     try {
         const response = await fetch('checkCanPlay.php', {
@@ -306,6 +308,7 @@ async function getNextPlayTime(username) {
     }
 }
 
+// Időszámítás frissítése
 function updateCountdown(nextPlayTime) {
     const countdownTimer = document.getElementById("countdownTimer");
     if (!nextPlayTime) {
@@ -333,6 +336,7 @@ function updateCountdown(nextPlayTime) {
     }, 1000);
 }
 
+// Kupon lekérdezése az adatbázisból
 async function fetchCoupon(scoreID) {
     try {
         console.log("Sending fetchCoupon request with:", { username: playerName, scoreID: scoreID });
@@ -341,12 +345,10 @@ async function fetchCoupon(scoreID) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ username: playerName, scoreID: scoreID })
+            body: JSON.stringify({ username: playerName, scoreID: scoreID }) // Include scoreID
         });
         const data = await response.json();
         if (data.status === "success") {
-            // Kupon tárolása localStorage-ban
-            localStorage.setItem("currentCoupon", data.coupon);
             return data.coupon;
         } else {
             return "Hiba a kupon lekérdezésekor: " + data.message;
@@ -357,13 +359,14 @@ async function fetchCoupon(scoreID) {
     }
 }
 
+// Játék újraindítása
 async function restartGame() {
     const { canPlay } = await checkIfCanPlay(playerName);
 
     document.getElementById("gameOverPopup").remove();
 
     if (!canPlay) {
-        return;
+        return; // Ha nem játszhat, kilépünk, a popup már megjelenik a checkIfCanPlay-ben
     }
 
     score = 0;
@@ -377,6 +380,7 @@ async function restartGame() {
     gameLoop();
 }
 
+// Leaderboard betöltése és megjelenítése
 async function fetchLeaderboard() {
     try {
         const response = await fetch('getLeaderboard.php');
@@ -384,7 +388,7 @@ async function fetchLeaderboard() {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const leaderboard = await response.json();
-        console.log("Leaderboard data:", leaderboard);
+        console.log("Leaderboard data:", leaderboard); // Debug log
 
         let leaderboardHTML = "<h2>Leaderboard</h2><ol>";
         leaderboard.forEach((player, index) => {
@@ -392,10 +396,7 @@ async function fetchLeaderboard() {
         });
         leaderboardHTML += "</ol>";
 
-        const leaderboardElement = document.getElementById("leaderboard");
-        if (leaderboardElement) {
-            leaderboardElement.innerHTML = leaderboardHTML;
-        }
+        document.getElementById("leaderboard").innerHTML = leaderboardHTML;
     } catch (error) {
         console.error("Hiba a ranglista betöltésekor:", error);
     }
@@ -409,9 +410,12 @@ async function gameOver() {
     ctx.font = "20px Arial";
     ctx.fillText(`Pontszám: ${score}`, canvas.width / 2, canvas.height / 2 + 40);
 
-    const scoreID = await updateScore(playerName, score);
+    // Pontszám mentése és leaderboard frissítése
+    const scoreID = await updateScore(playerName, score); // Await the scoreID
     await fetchLeaderboard();
-    showGameOverPopup(scoreID);
+
+    // Megjelenítjük a popupot
+    showGameOverPopup(scoreID); // Pass the scoreID to showGameOverPopup
 }
 
 function showCountdownPopup(nextPlayTime) {
@@ -420,34 +424,24 @@ function showCountdownPopup(nextPlayTime) {
 
     const popup = document.createElement("div");
     popup.id = "countdownPopup";
-
-    // Kupon lekérdezése a localStorage-ból
-    const coupon = localStorage.getItem("currentCoupon");
-    let couponHTML = '';
-    if (coupon) {
-        couponHTML = `<p style="color: #FFD700;">Aktuális kupon: <strong>${coupon}</strong></p>`;
-    } else {
-        couponHTML = `<p style="color: #FF6347;">Nincs aktív kupon.</p>`;
-    }
-
     popup.innerHTML = `
         <div class="popup-content">
             <h2>Már játszottál ezen a héten!</h2>
             <p>Következő játékig hátralévő idő:</p>
             <p id="countdownTimer"></p>
-            ${couponHTML}
             <button id="closeCountdown">Bezárás</button>
         </div>
     `;
     document.body.appendChild(popup);
 
-    const popupWidth = 300;
-    const popupHeight = popup.offsetHeight;
+    // Középre igazítás JavaScripttel
+    const popupWidth = 300; // A CSS-ben megadott szélesség
+    const popupHeight = popup.offsetHeight; // A popup magassága dinamikusan
     popup.style.position = "fixed";
     popup.style.left = `${(window.innerWidth - popupWidth) / 2}px`;
     popup.style.top = `${(window.innerHeight - popupHeight) / 2}px`;
 
-    function updateCountdownPopup() {
+    function updateCountdown() {
         const now = new Date().getTime();
         const nextTime = new Date(nextPlayTime).getTime();
         const timeLeft = nextTime - now;
@@ -465,8 +459,8 @@ function showCountdownPopup(nextPlayTime) {
         document.getElementById("countdownTimer").textContent = `${days} nap, ${hours} óra, ${minutes} perc, ${seconds} mp`;
     }
 
-    updateCountdownPopup();
-    const countdownInterval = setInterval(updateCountdownPopup, 1000);
+    updateCountdown();
+    const countdownInterval = setInterval(updateCountdown, 1000);
 
     document.getElementById("closeCountdown").addEventListener("click", () => {
         clearInterval(countdownInterval);
@@ -474,6 +468,7 @@ function showCountdownPopup(nextPlayTime) {
     });
 }
 
+// Játékengedély ellenőrzése
 async function checkIfCanPlay(username) {
     try {
         const response = await fetch('checkCanPlay.php', {
@@ -485,7 +480,7 @@ async function checkIfCanPlay(username) {
         });
         
         const data = await response.json();
-        console.log("checkIfCanPlay response:", data);
+        console.log("checkIfCanPlay response:", data); // Debug log
         
         if (data.canPlay === false) {
             if (data.nextPlayTime) {
@@ -503,12 +498,13 @@ async function checkIfCanPlay(username) {
     }
 }
 
+// Játék indítása
 async function startGame() {
     await fetchPlayerName();
     const { canPlay } = await checkIfCanPlay(playerName);
     
     if (!canPlay) {
-        return;
+        return; // Ha nem játszhat, kilépünk, a popup már megjelenik a checkIfCanPlay-ben
     }
     
     await fetchLeaderboard();
@@ -518,6 +514,7 @@ async function startGame() {
         player.invulnerable = false;
     }, 3000);
 
+    // Gomb elrejtése indítás után
     const startButton = document.getElementById("startGameButton");
     if (startButton) {
         startButton.style.display = "none";
@@ -526,15 +523,13 @@ async function startGame() {
     gameLoop();
 }
 
+// Gomb eseménykezelő hozzáadása
 document.addEventListener("DOMContentLoaded", function() {
-    fetchPlayerName();
-
     const startButton = document.getElementById("startGameButton");
     if (startButton) {
         startButton.addEventListener("click", startGame);
     }
 
-    if (canvas) {
-        checkIfCanPlay(playerName);
-    }
+    // Csak ellenőrzés indul az oldal betöltésekor, de nem a játék
+    checkIfCanPlay(playerName);
 });

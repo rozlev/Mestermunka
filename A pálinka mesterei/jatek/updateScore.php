@@ -40,7 +40,12 @@ $stmt = $conn->prepare("INSERT INTO scores (player_id, points, date) VALUES (?, 
 $stmt->bind_param("ii", $userID, $score);
 
 if ($stmt->execute()) {
-    echo json_encode(["status" => "success", "message" => "Pontszám sikeresen mentve."]);
+    $scoreID = $conn->insert_id; // Get the newly inserted score_id
+    echo json_encode([
+        "status" => "success",
+        "message" => "Pontszám sikeresen mentve.",
+        "scoreID" => $scoreID // Return the score_id
+    ]);
 } else {
     echo json_encode(["status" => "error", "message" => "Hiba a pont mentése közben."]);
 }

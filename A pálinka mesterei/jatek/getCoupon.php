@@ -1,0 +1,95 @@
+<?php
+require_once __DIR__ . "/db_connection.php";
+
+header('Content-Type: application/json');
+
+// Hibajelzés bekapcsolása (éles környezetben kikapcsolandó)
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+try {
+    $data = json_decode(file_get_contents("php://input"), true);
+    $username = $data['username'] ?? '';
+    $scoreID = $data['scoreID'] ?? 0;
+
+    if (empty($username)) {
+        echo json_encode(["status" => "error", "message" => "Nincs felhasználónév megadva."]);
+        exit;
+    }
+
+    if (empty($scoreID)) {
+        echo json_encode(["status" => "error", "message" => "Nincs pontszám azonosító megadva."]);
+        exit;
+    }
+
+    $conn = getDBConnection();
+    if (!$conn) {
+        throw new Exception("Nem sikerült csatlakozni az adatbázishoz.");
+    }
+
+    // Felhasználó azonosítása
+    $stmt = $conn->prepare("SELECT UserID FROM user WHERE Nev = ?");
+    if (!$stmt) {
+        throw new Exception("SQL prepare failed: " . $conn->error);
+    }
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows === 0) {
+        echo json_encode(["status" => "error", "message" => "Felhasználó nem található."]);
+        exit;
+    }
+
+    $user = $result->fetch_assoc();
+    $userID = $user['UserID'];
+
+    // Pontszám ellenőrzése
+    $stmt = $conn->prepare("SELECT points FROM scores WHERE score_id = ? AND player_id = ?");
+    if (!$stmt) {
+        throw new Exception("SQL prepare failed: " . $conn->error);
+    }
+    $stmt->bind_param("ii", $scoreID, $userID);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows === 0) {
+        echo json_encode(["status" => "error", "message" => "Pontszám nem található vagy nem a felhasználóhoz tartozik."]);
+        exit;
+    }
+
+    $scoreData = $result->fetch_assoc();
+    $points = $scoreData['points'];
+
+    if ($points < 15) {
+        echo json_encode(["status" => "error", "message" => "A pontszám nem jogosít kuponra (minimum 15 pont szükséges)."]);
+        exit;
+    }
+
+    // Első elérhető kupon lekérdezése a kuponok táblából
+    $stmt = $conn->prepare("SELECT KuponKod FROM kuponok LIMIT 1");
+    if (!$stmt) {
+        throw new Exception("SQL prepare failed: " . $conn->error);
+    }
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $coupon = $result->fetch_assoc()['KuponKod'];
+        echo json_encode(["status" => "success", "coupon" => $coupon]);
+    } else {
+        // Ha nincs kupon, hibaüzenetet adunk vissza
+        echo json_encode(["status" => "error", "message" => "Nincs elérhető kupon az adatbázisban."]);
+        exit;
+    }
+
+    $stmt->close();
+    $conn->close();
+} catch (Exception $e) {
+    // Hibakezelés
+    error_log("Error in getCoupon.php: " . $e->getMessage());
+    echo json_encode(["status" => "error", "message" => "Szerver hiba: " . $e->getMessage()]);
+    exit;
+}
+?>
