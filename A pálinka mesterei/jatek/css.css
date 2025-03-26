@@ -1,13 +1,13 @@
 body {
     margin: 0;
     background-color: #ffffffaf;
-    font-family: 'Comic Sans MS', Arial, sans-serif;
+    font-family: Arial, sans-serif;
 }
 
 /* Navbar testreszabása */
 .navbar {
     background: linear-gradient(90deg, #811331, #9c1c3a) !important; /* Gradiens háttér */
-    padding: rem 2rem !important; /* Nagyobb padding a magasabb fejléc érdekében */
+    padding: 1rem 2rem !important; /* Nagyobb padding a magasabb fejléc érdekében */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Árnyék a fejléc alatt */
 }
 
@@ -71,9 +71,9 @@ body {
     padding-right: 2rem;
 }
 
-/* A meglévő CSS többi része változatlan marad */
+/* UI panel, leaderboard, and rules background to match navbar */
 .ui-panel {
-    background-color: #8e233fb0;
+    background: linear-gradient(90deg, #811331, #9c1c3a); /* Updated to match navbar */
 }
 
 .ui-panel span {
@@ -82,11 +82,11 @@ body {
 }
 
 #bemutato {
-    background-color: #8e233fb0;
+    background: linear-gradient(90deg, #811331, #9c1c3a); /* Updated to match navbar */
 }
 
 .leaderboard {
-    background-color: #8e233fb0;
+    background: linear-gradient(90deg, #811331, #9c1c3a); /* Updated to match navbar */
 }
 
 .leaderboard h2 {
@@ -189,5 +189,33 @@ body {
 .btn-custom:hover {
     background: #ffffff; /* Fehér háttér hover esetén */
     color: #811331; /* Sötét szöveg */
+    border: 2px solid #811331;
+}
+
+/* New additions for layout and pagination */
+.container {
+    max-width: 100%; /* Ensure container uses full width */
+}
+
+.row.justify-content-center[style="width: 90%;"] {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Pagination styling */
+#pagination button {
+    background: linear-gradient(90deg, #811331, #9c1c3a);
+    color: #fff;
+    border: 2px solid #fff;
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin: 0 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#pagination button:hover {
+    background: #ffffff;
+    color: #811331;
     border: 2px solid #811331;
 }

@@ -1,14 +1,11 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-// Score, lives, and player name elements
 const scoreElement = document.getElementById('score');
 const livesElement = document.getElementById('lives');
 const playerNameElement = document.getElementById('player-name');
 
-let playerName = "Névtelen Játékos"; // Default player name
-
-// Képek betöltése
+let playerName = "Névtelen Játékos";
 const stickmanImage = new Image();
 stickmanImage.src = "stickman.png";
 stickmanImage.onerror = () => console.error("Failed to load stickman.png");
@@ -17,7 +14,6 @@ const palinkaImage = new Image();
 palinkaImage.src = "palinka.png";
 palinkaImage.onerror = () => console.error("Failed to load palinka.png");
 
-// Játékos adatok
 let player = {
     x: 0,
     y: 0,
@@ -30,7 +26,6 @@ let player = {
     invulnerable: false
 };
 
-// Palack adatok
 let bottle = {
     x: 0,
     y: 0,
@@ -40,7 +35,6 @@ let bottle = {
     speedY: 0
 };
 
-// Akadályok
 let obstacles = [];
 for (let i = 0; i < 5; i++) {
     obstacles.push({
@@ -54,16 +48,17 @@ for (let i = 0; i < 5; i++) {
 }
 
 let score = 0;
-let running = true;
+let running = false; // Start with game not running
+let gameStarted = false;
+let gameOverTriggered = false; // Változó a gameOver többszöri meghívásának elkerüléséhez
 
-// Kezdeti méretek beállítása
 function resizeCanvas() {
-    const maxWidth = 800;
-    const maxHeight = 600;
+    const maxWidth = 1000;
+    const maxHeight = 750;
     const container = document.querySelector('.container');
     const containerWidth = container ? container.offsetWidth : window.innerWidth;
 
-    canvas.width = Math.min(maxWidth, containerWidth * 0.9);
+    canvas.width = Math.min(maxWidth, containerWidth * 0.8);
     canvas.height = canvas.width * (maxHeight / maxWidth);
 
     window.canvasScale = {
@@ -73,20 +68,20 @@ function resizeCanvas() {
 
     player.x = (canvas.width / 2 - 25) * window.canvasScale.x;
     player.y = (canvas.height - 100) * window.canvasScale.y;
-    player.width = 50 * window.canvasScale.x;
-    player.height = 50 * window.canvasScale.y;
+    player.width = 80 * window.canvasScale.x;
+    player.height = 80 * window.canvasScale.y;
     player.speed = 10 * window.canvasScale.x;
 
-    bottle.width = 40 * window.canvasScale.x;
-    bottle.height = 40 * window.canvasScale.y;
+    bottle.width = 60 * window.canvasScale.x;
+    bottle.height = 60 * window.canvasScale.y;
     bottle.x = Math.random() * (canvas.width - bottle.width);
     bottle.y = Math.random() * (canvas.height / 2 - bottle.height);
     bottle.speedX = (Math.random() > 0.5 ? 3 : -3) * window.canvasScale.x;
     bottle.speedY = (Math.random() > 0.5 ? 3 : -3) * window.canvasScale.y;
 
     obstacles.forEach(obstacle => {
-        obstacle.width = 60 * window.canvasScale.x;
-        obstacle.height = 60 * window.canvasScale.y;
+        obstacle.width = 90 * window.canvasScale.x;
+        obstacle.height = 90 * window.canvasScale.y;
         obstacle.x = Math.random() * (canvas.width - obstacle.width);
         obstacle.y = Math.random() * (canvas.height - obstacle.height);
         obstacle.speedX = (Math.random() > 0.5 ? 3 : 7) * window.canvasScale.x;
@@ -124,7 +119,7 @@ async function fetchPlayerName() {
 
 async function logout() {
     localStorage.removeItem("felhasznaloNev");
-    localStorage.removeItem("currentCoupon"); // Kupon törlése kijelentkezéskor
+    localStorage.removeItem("currentCoupon");
     window.location.href = "logout.php";
 }
 
@@ -144,10 +139,10 @@ async function updateScore(username, score) {
             return null;
         } else if (data.message === "Admin pont nem mentve.") {
             console.log("Admin felhasználó, pontszám nem mentve:", score);
-            return null; // Return null for admin users
+            return null;
         } else {
             console.log("Pontszám sikeresen mentve:", score, "scoreID:", data.scoreID);
-            return data.scoreID; // Return the scoreID for non-admin users
+            return data.scoreID;
         }
     } catch (error) {
         console.error("Nem sikerült elküldeni a pontszámot:", error);
@@ -155,13 +150,54 @@ async function updateScore(username, score) {
     }
 }
 
+function drawStartButton() {
+    const gradient = ctx.createLinearGradient(canvas.width / 2 - 100, 0, canvas.width / 2 + 100, 0);
+    gradient.addColorStop(0, "#811331");
+    gradient.addColorStop(1, "#9c1c3a");
+
+    ctx.fillStyle = gradient;
+    ctx.fillRect(canvas.width / 2 - 100, canvas.height / 2 - 25, 200, 50);
+
+    ctx.strokeStyle = "#fff";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(canvas.width / 2 - 100, canvas.height / 2 - 25, 200, 50);
+
+    ctx.fillStyle = "#fff";
+    ctx.font = "bold 20px Arial, sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("Játék indítása", canvas.width / 2, canvas.height / 2);
+}
+
+function isMouseOverButton(x, y) {
+    return x > canvas.width / 2 - 100 && x < canvas.width / 2 + 100 &&
+           y > canvas.height / 2 - 25 && y < canvas.height / 2 + 25;
+}
+
+canvas.addEventListener("click", async (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+    const y = (e.clientY - rect.top) * (canvas.height / rect.height);
+
+    if (!gameStarted && isMouseOverButton(x, y)) {
+        await startGame();
+    }
+});
+
 function gameLoop() {
-    if (!running) {
-        gameOver();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (!gameStarted) {
+        drawStartButton();
+        requestAnimationFrame(gameLoop);
         return;
     }
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (!running && !gameOverTriggered) {
+        gameOverTriggered = true; // Jelöljük, hogy a gameOver már meghívódott
+        gameOver();
+        return; // Kilépünk, hogy ne hívódjon meg a requestAnimationFrame
+    }
 
     if (keys["a"] && player.x > 0) {
         player.x -= player.speed;
@@ -199,7 +235,7 @@ function gameLoop() {
     }
 
     for (let obstacle of obstacles) {
-        if (isColliding(player, obstacle) && !player.invulnerable) {
+        if (isColliding(player, obstacle) && !player.invulnerable && running) { // Csak akkor csökkentsük az életeket, ha a játék fut
             player.lives--;
             livesElement.textContent = `Életek: ${player.lives}`;
             player.x = canvas.width / 2 - player.width / 2;
@@ -216,7 +252,9 @@ function gameLoop() {
             }, 3000);
 
             if (player.lives <= 0) {
-                running = false;
+                player.lives = 0; // Biztosítjuk, hogy ne menjen negatívba
+                livesElement.textContent = `Életek: ${player.lives}`;
+                running = false; // A játék vége
             }
         }
     }
@@ -239,15 +277,23 @@ function gameLoop() {
         ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
     }
 
-    requestAnimationFrame(gameLoop);
+    // Csak akkor hívjuk újra a gameLoop-ot, ha a játék fut
+    if (running) {
+        requestAnimationFrame(gameLoop);
+    }
 }
 
 async function showGameOverPopup(scoreID) {
+    // Eltávolítjuk a meglévő popupot, ha van
+    const existingPopup = document.getElementById("gameOverPopup");
+    if (existingPopup) {
+        existingPopup.remove();
+    }
+
     const popup = document.createElement("div");
     popup.id = "gameOverPopup";
     popup.innerHTML = `
         <div class="popup-content">
-            <h2>Játék vége!</h2>
             <p>Elért pontszámod: ${score}</p>
             <p>Következő játékig hátralévő idő:</p>
             <p id="countdownTimer">Betöltés...</p>
@@ -260,7 +306,6 @@ async function showGameOverPopup(scoreID) {
     const nextPlayTime = await getNextPlayTime(playerName);
     updateCountdown(nextPlayTime);
 
-    // Kupon ellenőrzése és kiírása
     const couponSection = document.getElementById("couponSection");
     if (score >= 15) {
         if (scoreID) {
@@ -345,7 +390,6 @@ async function fetchCoupon(scoreID) {
         });
         const data = await response.json();
         if (data.status === "success") {
-            // Kupon tárolása localStorage-ban
             localStorage.setItem("currentCoupon", data.coupon);
             return data.coupon;
         } else {
@@ -360,7 +404,7 @@ async function fetchCoupon(scoreID) {
 async function restartGame() {
     const { canPlay } = await checkIfCanPlay(playerName);
 
-    document.getElementById("gameOverPopup").remove();
+    document.getElementById("gameOverPopup")?.remove();
 
     if (!canPlay) {
         return;
@@ -369,6 +413,7 @@ async function restartGame() {
     score = 0;
     player.lives = 3;
     running = true;
+    gameOverTriggered = false; // Visszaállítjuk, hogy új játék esetén újra meghívhassuk a gameOver-t
     
     player.invulnerable = true;
     setTimeout(() => {
@@ -376,6 +421,9 @@ async function restartGame() {
     }, 3000);
     gameLoop();
 }
+
+let leaderboardPage = 0;
+const itemsPerPage = 3;
 
 async function fetchLeaderboard() {
     try {
@@ -386,15 +434,40 @@ async function fetchLeaderboard() {
         const leaderboard = await response.json();
         console.log("Leaderboard data:", leaderboard);
 
-        let leaderboardHTML = "<h2>Leaderboard</h2><ol>";
-        leaderboard.forEach((player, index) => {
-            leaderboardHTML += `<li>${index + 1}. ${player.username}: ${player.points} pont</li>`;
-        });
-        leaderboardHTML += "</ol>";
+        const leaderboardList = document.getElementById("leaderboard-list");
+        const pagination = document.getElementById("pagination");
+        leaderboardList.innerHTML = "";
 
-        const leaderboardElement = document.getElementById("leaderboard");
-        if (leaderboardElement) {
-            leaderboardElement.innerHTML = leaderboardHTML;
+        const start = leaderboardPage * itemsPerPage;
+        const end = start + itemsPerPage;
+        const paginatedLeaderboard = leaderboard.slice(start, end);
+
+        paginatedLeaderboard.forEach((player, index) => {
+            const li = document.createElement("li");
+            li.textContent = `${start + index + 1}. ${player.username}: ${player.points} pont`;
+            leaderboardList.appendChild(li);
+        });
+
+        pagination.innerHTML = "";
+        if (leaderboard.length > itemsPerPage) {
+            if (leaderboardPage > 0) {
+                const prevButton = document.createElement("button");
+                prevButton.textContent = "Előző";
+                prevButton.addEventListener("click", () => {
+                    leaderboardPage--;
+                    fetchLeaderboard();
+                });
+                pagination.appendChild(prevButton);
+            }
+            if (end < leaderboard.length) {
+                const nextButton = document.createElement("button");
+                nextButton.textContent = "Következő";
+                nextButton.addEventListener("click", () => {
+                    leaderboardPage++;
+                    fetchLeaderboard();
+                });
+                pagination.appendChild(nextButton);
+            }
         }
     } catch (error) {
         console.error("Hiba a ranglista betöltésekor:", error);
@@ -402,13 +475,6 @@ async function fetchLeaderboard() {
 }
 
 async function gameOver() {
-    ctx.fillStyle = "black";
-    ctx.font = "40px Arial";
-    ctx.textAlign = "center";
-    ctx.fillText("Játék vége", canvas.width / 2, canvas.height / 2);
-    ctx.font = "20px Arial";
-    ctx.fillText(`Pontszám: ${score}`, canvas.width / 2, canvas.height / 2 + 40);
-
     const scoreID = await updateScore(playerName, score);
     await fetchLeaderboard();
     showGameOverPopup(scoreID);
@@ -421,7 +487,6 @@ function showCountdownPopup(nextPlayTime) {
     const popup = document.createElement("div");
     popup.id = "countdownPopup";
 
-    // Kupon lekérdezése a localStorage-ból
     const coupon = localStorage.getItem("currentCoupon");
     let couponHTML = '';
     if (coupon) {
@@ -432,13 +497,13 @@ function showCountdownPopup(nextPlayTime) {
 
     popup.innerHTML = `
         <div class="popup-content">
-            <h2>Már játszottál ezen a héten!</h2>
             <p>Következő játékig hátralévő idő:</p>
-            <p id="countdownTimer"></p>
+            <p id="countdownTimer">Betöltés...</p>
             ${couponHTML}
             <button id="closeCountdown">Bezárás</button>
         </div>
     `;
+
     document.body.appendChild(popup);
 
     const popupWidth = 300;
@@ -513,28 +578,19 @@ async function startGame() {
     
     await fetchLeaderboard();
 
+    gameStarted = true;
+    running = true;
     player.invulnerable = true;
     setTimeout(() => {
         player.invulnerable = false;
     }, 3000);
-
-    const startButton = document.getElementById("startGameButton");
-    if (startButton) {
-        startButton.style.display = "none";
-    }
-
     gameLoop();
 }
 
 document.addEventListener("DOMContentLoaded", function() {
     fetchPlayerName();
-
-    const startButton = document.getElementById("startGameButton");
-    if (startButton) {
-        startButton.addEventListener("click", startGame);
-    }
-
     if (canvas) {
         checkIfCanPlay(playerName);
+        gameLoop(); // Start the loop to show the button
     }
 });

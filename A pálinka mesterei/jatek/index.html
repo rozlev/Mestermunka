@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pálinkavadász</title>
-    <link rel="stylesheet" href="jatek.css">
+    <link rel="stylesheet" href="css.css">
     <link rel="stylesheet" href="../bootstrap-5.3.3-dist/css/bootstrap.min.css">
 </head>
 <body>
@@ -23,37 +23,40 @@
                     <li class="nav-item">
                         <a class="nav-link text-white" href="../webshop/index.html">Webshop</a>
                     </li>
-                   
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="../palinka_blog/index.html">Pálinka készítés
-                        </a>
+                        <a class="nav-link text-white" href="../palinka_blog/index.html">Pálinka készítés</a>
                     </li>
-
+                </ul>
             </div>
         </div>
     </nav>
 
     <div class="container mt-4">
-        <div class="row">
-            <!-- UI Panel -->
-            <div class="col-12 col-md-4 col-lg-3 mb-3">
+        <div class="row justify-content-center">
+            <!-- UI Panel and Leaderboard above -->
+            <div class="col-12 col-md-6 mb-3">
                 <div class="ui-panel p-3 rounded text-white shadow">
                     <span id="score">Pontszám: 0</span>
                     <span id="lives">Életek: 3</span>
                     <span id="player-name">Játékos: Névtelen</span>
                 </div>
             </div>
-    <!-- Játék vászon és indító gomb -->
-    <div class="row justify-content-center">
-        <div class="col-12 col-lg-10">
-            <div class="text-center mb-3">
-                <button id="startGameButton" class="btn btn-custom">Játék indítása</button>
+            <div class="col-12 col-md-6 mb-3">
+                <div id="leaderboard" class="leaderboard p-3 rounded text-white shadow">
+                    <h2>Leaderboard</h2>
+                    <ol id="leaderboard-list"></ol>
+                    <div id="pagination" class="text-center mt-2"></div>
+                </div>
             </div>
-            <canvas id="gameCanvas" class="w-100 rounded shadow"></canvas>
         </div>
-    </div>
-            <!-- Játékszabályzat -->
-            <div class="col-12 col-md-4 col-lg-6 mb-3">
+
+        <div class="row justify-content-center" style="width: 90%;">
+            <!-- Game Canvas (80%) -->
+            <div class="col-12 col-md-9 mb-3">
+                <canvas id="gameCanvas" class="w-100 rounded shadow"></canvas>
+            </div>
+            <!-- Rules (20%) -->
+            <div class="col-12 col-md-3 mb-3">
                 <div id="bemutato" class="p-3 rounded text-white shadow">
                     <h2>Játékszabályzat</h2>
                     <ul>
@@ -66,18 +69,6 @@
                         <li>A játékos neve bejelentkezéskor jelenik meg, kijelentkezéskor "Névtelen" lesz.</li>
                     </ul>
                 </div>
-            </div>
-
-            <!-- Leaderboard -->
-            <div class="col-12 col-md-4 col-lg-3 mb-3">
-                <div id="leaderboard" class="leaderboard p-3 rounded text-white shadow"></div>
-            </div>
-        </div>
-
-        <!-- Játék vászon -->
-        <div class="row justify-content-center">
-            <div class="col-12 col-lg-10">
-
             </div>
         </div>
     </div>
