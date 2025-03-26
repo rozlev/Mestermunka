@@ -20,6 +20,12 @@ SET time_zone = "+00:00";
 --
 -- Database: `palinka_mesterei`
 --
+CREATE DATABASE IF NOT EXISTS `palinka_mesterei`
+CHARACTER SET utf8 
+COLLATE utf8_hungarian_ci;
+
+-- Adatbázis kiválasztása
+USE `palinka_mesterei`;
 
 DELIMITER $$
 --
