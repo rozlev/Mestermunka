@@ -67,8 +67,11 @@ try {
         exit;
     }
 
-    // Első elérhető kupon lekérdezése a kuponok táblából
-    $stmt = $conn->prepare("SELECT KuponKod FROM kuponok LIMIT 1");
+    // Tranzakció indítása a konzisztencia érdekében
+    $conn->begin_transaction();
+
+    // Első szabad kupon lekérdezése (UserID = NULL)
+    $stmt = $conn->prepare("SELECT KuponKod, KuponID FROM kuponok WHERE UserID IS NULL LIMIT 1 FOR UPDATE");
     if (!$stmt) {
         throw new Exception("SQL prepare failed: " . $conn->error);
     }
@@ -76,10 +79,24 @@ try {
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
-        $coupon = $result->fetch_assoc()['KuponKod'];
+        $couponData = $result->fetch_assoc();
+        $coupon = $couponData['KuponKod'];
+        $kuponID = $couponData['KuponID'];
+
+        // Kupon hozzárendelése a felhasználóhoz
+        $stmt = $conn->prepare("UPDATE kuponok SET UserID = ? WHERE KuponID = ?");
+        if (!$stmt) {
+            throw new Exception("SQL prepare failed: " . $conn->error);
+        }
+        $stmt->bind_param("ii", $userID, $kuponID);
+        $stmt->execute();
+
+        // Tranzakció véglegesítése
+        $conn->commit();
+
         echo json_encode(["status" => "success", "coupon" => $coupon]);
     } else {
-        // Ha nincs kupon, hibaüzenetet adunk vissza
+        $conn->rollback();
         echo json_encode(["status" => "error", "message" => "Nincs elérhető kupon az adatbázisban."]);
         exit;
     }
@@ -87,7 +104,9 @@ try {
     $stmt->close();
     $conn->close();
 } catch (Exception $e) {
-    // Hibakezelés
+    if (isset($conn) && $conn->in_transaction) {
+        $conn->rollback();
+    }
     error_log("Error in getCoupon.php: " . $e->getMessage());
     echo json_encode(["status" => "error", "message" => "Szerver hiba: " . $e->getMessage()]);
     exit;
