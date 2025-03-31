@@ -83,6 +83,7 @@ body {
 
 #bemutato {
     background: linear-gradient(90deg, #811331, #9c1c3a); /* Updated to match navbar */
+    min-width: 250px; /* Minimális szélesség a szélesebb megjelenésért */
 }
 
 .leaderboard {
@@ -153,10 +154,27 @@ body {
     background: #FFA500;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 991px) {
+    #bemutato {
+        font-size: 16px; /* Nagyobb betűméret mobil nézetben az olvashatóságért */
+        padding: 15px; /* Kényelmesebb padding */
+        min-width: 100%; /* Teljes szélesség kisebb képernyőkön */
+    }
+
     #gameCanvas {
         max-width: 100%;
         height: auto;
+    }
+
+    .row.justify-content-center[style="width: 90%;"] {
+        width: 95%; /* Kicsit szélesebb konténer mobil nézetben */
+    }
+}
+
+@media (max-width: 768px) {
+    #bemutato {
+        font-size: 14px; /* Kisebb, de olvasható betűméret */
+        padding: 10px;
     }
 
     .ui-panel {
@@ -164,13 +182,14 @@ body {
         padding: 5px;
     }
 
-    #bemutato {
-        font-size: 14px;
-        padding: 10px;
-    }
-
     .leaderboard {
         font-size: 12px;
+    }
+}
+
+@media (min-width: 992px) {
+    #bemutato {
+        min-width: 300px; /* Szélesebb szabályzat asztali nézetben */
     }
 }
 

@@ -48,9 +48,9 @@ for (let i = 0; i < 5; i++) {
 }
 
 let score = 0;
-let running = false; // Start with game not running
+let running = false;
 let gameStarted = false;
-let gameOverTriggered = false; // Változó a gameOver többszöri meghívásának elkerüléséhez
+let gameOverTriggered = false;
 
 function resizeCanvas() {
     const maxWidth = 1000;
@@ -194,9 +194,9 @@ function gameLoop() {
     }
 
     if (!running && !gameOverTriggered) {
-        gameOverTriggered = true; // Jelöljük, hogy a gameOver már meghívódott
+        gameOverTriggered = true;
         gameOver();
-        return; // Kilépünk, hogy ne hívódjon meg a requestAnimationFrame
+        return;
     }
 
     if (keys["a"] && player.x > 0) {
@@ -235,7 +235,7 @@ function gameLoop() {
     }
 
     for (let obstacle of obstacles) {
-        if (isColliding(player, obstacle) && !player.invulnerable && running) { // Csak akkor csökkentsük az életeket, ha a játék fut
+        if (isColliding(player, obstacle) && !player.invulnerable && running) {
             player.lives--;
             livesElement.textContent = `Életek: ${player.lives}`;
             player.x = canvas.width / 2 - player.width / 2;
@@ -252,9 +252,9 @@ function gameLoop() {
             }, 3000);
 
             if (player.lives <= 0) {
-                player.lives = 0; // Biztosítjuk, hogy ne menjen negatívba
+                player.lives = 0;
                 livesElement.textContent = `Életek: ${player.lives}`;
-                running = false; // A játék vége
+                running = false;
             }
         }
     }
@@ -277,18 +277,14 @@ function gameLoop() {
         ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
     }
 
-    // Csak akkor hívjuk újra a gameLoop-ot, ha a játék fut
     if (running) {
         requestAnimationFrame(gameLoop);
     }
 }
 
 async function showGameOverPopup(scoreID) {
-    // Eltávolítjuk a meglévő popupot, ha van
     const existingPopup = document.getElementById("gameOverPopup");
-    if (existingPopup) {
-        existingPopup.remove();
-    }
+    if (existingPopup) existingPopup.remove();
 
     const popup = document.createElement("div");
     popup.id = "gameOverPopup";
@@ -307,22 +303,16 @@ async function showGameOverPopup(scoreID) {
     updateCountdown(nextPlayTime);
 
     const couponSection = document.getElementById("couponSection");
-    if (score >= 15) {
-        if (scoreID) {
-            const coupon = await fetchCoupon(scoreID);
-            if (coupon && !coupon.startsWith("Hiba") && !coupon.includes("Nincs elérhető kupon")) {
-                couponSection.innerHTML = `
-                    <p style="color: #FFD700;">Gratulálunk! Elértél 15 pontot, itt a kuponod:</p>
-                    <p style="font-weight: bold;">${coupon}</p>
-                `;
-            } else {
-                couponSection.innerHTML = `
-                    <p style="color: #FF6347;">${coupon || "Hiba a kupon lekérdezésekor!"}</p>
-                `;
-            }
+    if (score >= 15 && scoreID) {
+        const coupon = await fetchCoupon(scoreID);
+        if (coupon && !coupon.startsWith("Hiba") && !coupon.includes("Nincs elérhető kupon")) {
+            couponSection.innerHTML = `
+                <p style="color: #FFD700;">Gratulálunk! Elértél 15 pontot, itt a kuponod:</p>
+                <p style="font-weight: bold;">${coupon}</p>
+            `;
         } else {
             couponSection.innerHTML = `
-                <p style="color: #FF6347;">Admin felhasználók nem jogosultak kuponra.</p>
+                <p style="color: #FF6347;">${coupon || "Hiba a kupon lekérdezésekor!"}</p>
             `;
         }
     } else {
@@ -413,7 +403,7 @@ async function restartGame() {
     score = 0;
     player.lives = 3;
     running = true;
-    gameOverTriggered = false; // Visszaállítjuk, hogy új játék esetén újra meghívhassuk a gameOver-t
+    gameOverTriggered = false;
     
     player.invulnerable = true;
     setTimeout(() => {
@@ -477,7 +467,12 @@ async function fetchLeaderboard() {
 async function gameOver() {
     const scoreID = await updateScore(playerName, score);
     await fetchLeaderboard();
-    showGameOverPopup(scoreID);
+
+    if (score >= 15 && scoreID) {
+        showGameOverPopup(scoreID);
+    } else {
+        showGameOverPopup(null);
+    }
 }
 
 function showCountdownPopup(nextPlayTime) {
@@ -489,7 +484,7 @@ function showCountdownPopup(nextPlayTime) {
 
     const coupon = localStorage.getItem("currentCoupon");
     let couponHTML = '';
-    if (coupon) {
+    if (coupon && score >= 15) {
         couponHTML = `<p style="color: #FFD700;">Aktuális kupon: <strong>${coupon}</strong></p>`;
     } else {
         couponHTML = `<p style="color: #FF6347;">Nincs aktív kupon.</p>`;
@@ -591,6 +586,6 @@ document.addEventListener("DOMContentLoaded", function() {
     fetchPlayerName();
     if (canvas) {
         checkIfCanPlay(playerName);
-        gameLoop(); // Start the loop to show the button
+        gameLoop();
     }
 });
