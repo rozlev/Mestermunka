@@ -82,8 +82,65 @@ body {
 }
 
 #bemutato {
-    background: linear-gradient(90deg, #811331, #9c1c3a); /* Updated to match navbar */
+    background: linear-gradient(90deg, #811331, #9c1c3a); /* Marad az eredeti háttér */
     min-width: 250px; /* Minimális szélesség a szélesebb megjelenésért */
+    max-width: 100%; /* Biztosítjuk, hogy ne lógjon ki a szülő konténerből */
+    box-sizing: border-box; /* A padding és border ne növelje a doboz méretét */
+    word-wrap: break-word; /* Hosszú szavak tördelése */
+    overflow-wrap: break-word; /* Modern böngészőkben a hosszú szavak tördeléséhez */
+    padding: 15px; /* Kényelmesebb padding */
+}
+
+/* A lista elemek és szövegek formázása a szabályzatban */
+#bemutato h2 {
+    font-size: clamp(18px, 5vw, 24px); /* Reszponzív betűméret a címhez */
+    margin-bottom: 15px; /* Térköz az alcím alatt */
+    text-align: center; /* Középre igazítás */
+}
+
+#bemutato ul {
+    padding-left: 20px; /* Lista behúzás */
+    margin: 0; /* Margó eltávolítása */
+}
+
+#bemutato li {
+    font-size: clamp(14px, 3vw, 16px); /* Reszponzív betűméret a lista elemekhez */
+    margin-bottom: 10px; /* Térköz a lista elemek között */
+    line-height: 1.5; /* Jobb olvashatóság érdekében növelt sorköz */
+    word-break: break-word; /* Hosszú szavak tördelése */
+    hyphens: auto; /* Automatikus elválasztás, ha szükséges */
+}
+
+/* Reszponzív szabályok különböző képernyőméretekhez */
+@media (max-width: 991px) {
+    #bemutato {
+        font-size: 16px; /* Nagyobb betűméret mobil nézetben az olvashatóságért */
+        padding: 15px; /* Kényelmesebb padding */
+        min-width: 100%; /* Teljes szélesség kisebb képernyőkön */
+        max-width: 100%; /* Biztosítjuk, hogy ne lógjon ki */
+    }
+
+    #bemutato li {
+        font-size: 14px; /* Kisebb, de olvasható betűméret */
+    }
+}
+
+@media (max-width: 768px) {
+    #bemutato {
+        font-size: 14px; /* Kisebb, de olvasható betűméret */
+        padding: 10px;
+    }
+
+    #bemutato li {
+        font-size: 12px; /* Még kisebb betűméret nagyon kicsi képernyőkön */
+    }
+}
+
+@media (min-width: 992px) {
+    #bemutato {
+        min-width: 300px; /* Szélesebb szabályzat asztali nézetben */
+        max-width: 100%; /* Biztosítjuk, hogy ne lógjon ki */
+    }
 }
 
 .leaderboard {
