@@ -40,15 +40,18 @@ $stmt->bind_param("i", $userID);
 $stmt->execute();
 $result = $stmt->get_result();
 
+$currentTime = time();
+$weekInSeconds = 7 * 24 * 60 * 60; // 7 nap másodpercben
+
 if ($result->num_rows > 0) {
     $lastPlayed = $result->fetch_assoc()['date'];
     $lastPlayedTime = strtotime($lastPlayed);
-    $currentTime = time();
-    $weekAgo = strtotime("-7 days", $currentTime);
-
-    if ($lastPlayedTime > $weekAgo) {
-        // Ha már játszott, visszaküldjük az utolsó játék idejét és a következő lehetséges időpontot
-        $nextPlayTime = $lastPlayedTime + (7 * 24 * 60 * 60); // 7 nap hozzáadása
+    
+    // Számoljuk ki a következő lehetséges játék időpontját
+    $nextPlayTime = $lastPlayedTime + $weekInSeconds;
+    
+    // Ha az aktuális idő kisebb mint a következő lehetséges időpont, még nem játszhat
+    if ($currentTime < $nextPlayTime) {
         echo json_encode([
             "status" => "error",
             "message" => "Hetente csak egyszer játszhatsz!",
@@ -61,6 +64,7 @@ if ($result->num_rows > 0) {
     }
 }
 
+// Ha ide eljutunk, akkor a felhasználó játszhat (vagy még nem játszott, vagy lejárt a várakozási idő)
 echo json_encode(["status" => "success", "message" => "Játszhatsz!", "canPlay" => true, "isAdmin" => false]);
 $stmt->close();
 $conn->close();
