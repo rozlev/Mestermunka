@@ -41,7 +41,7 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 $currentTime = time();
-$weekInSeconds = 7 * 1 * 1 * 1; // 7 nap másodpercben
+$weekInSeconds = 7 * 24 * 60 * 60; // 7 nap másodpercben
 
 if ($result->num_rows > 0) {
     $lastPlayed = $result->fetch_assoc()['date'];
