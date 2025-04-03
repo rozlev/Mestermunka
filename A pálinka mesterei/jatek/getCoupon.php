@@ -3,7 +3,6 @@ require_once __DIR__ . "/db_connection.php";
 
 header('Content-Type: application/json');
 
-// Hibajelzés bekapcsolása (éles környezetben kikapcsolandó)
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -28,8 +27,8 @@ try {
         throw new Exception("Nem sikerült csatlakozni az adatbázishoz.");
     }
 
-    // Felhasználó azonosítása
-    $stmt = $conn->prepare("SELECT UserID FROM user WHERE Nev = ?");
+    // Felhasználó azonosítása és admin státusz ellenőrzése
+    $stmt = $conn->prepare("SELECT UserID, Szerepkor FROM user WHERE Nev = ?");
     if (!$stmt) {
         throw new Exception("SQL prepare failed: " . $conn->error);
     }
@@ -44,6 +43,13 @@ try {
 
     $user = $result->fetch_assoc();
     $userID = $user['UserID'];
+    $role = $user['Szerepkor'];
+
+    // Ha admin, nem adunk kupont
+    if ($role === 'admin') {
+        echo json_encode(["status" => "error", "message" => "Adminisztrátorként nem szerezhetsz kupont."]);
+        exit;
+    }
 
     // Pontszám ellenőrzése
     $stmt = $conn->prepare("SELECT points FROM scores WHERE score_id = ? AND player_id = ?");

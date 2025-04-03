@@ -307,7 +307,6 @@ async function showGameOverPopup(scoreID) {
 
     const couponSection = document.getElementById("couponSection");
     if (isAdmin) {
-        // Admin esetén egyedi üzenet
         couponSection.innerHTML = `
             <p style="color: #FF6347;">Adminisztrátorként nem szerezhetsz kupont.</p>
         `;
@@ -492,7 +491,7 @@ function showCountdownPopup(nextPlayTime) {
 
     const coupon = localStorage.getItem("currentCoupon");
     let couponHTML = '';
-    if (coupon && score >= 15) {
+    if (coupon) {
         couponHTML = `<p style="color: #FFD700;">Aktuális kupon: <strong>${coupon}</strong></p>`;
     } else {
         couponHTML = `<p style="color: #FF6347;">Nincs aktív kupon.</p>`;
@@ -581,6 +580,9 @@ async function startGame() {
     
     // Admin státusz mentése
     isAdmin = adminStatus;
+    
+    // Töröljük a korábbi kupont a localStorage-ból minden új játék elején
+    localStorage.removeItem("currentCoupon");
     
     await fetchLeaderboard();
 

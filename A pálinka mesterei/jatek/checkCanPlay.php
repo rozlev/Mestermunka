@@ -28,9 +28,14 @@ $user = $result->fetch_assoc();
 $userID = $user['UserID'];
 $role = $user['Szerepkor'];
 
-// Admin mindig játszhat
+// Admin mindig játszhat, de nem szerezhet kupont
 if ($role === 'admin') {
-    echo json_encode(["status" => "success", "message" => "Admin mindig játszhat.", "canPlay" => true, "isAdmin" => true]);
+    echo json_encode([
+        "status" => "success", 
+        "message" => "Adminisztrátorként játszhatsz, de nem szerezhetsz kupont.", 
+        "canPlay" => true, 
+        "isAdmin" => true
+    ]);
     exit;
 }
 
@@ -41,7 +46,7 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 $currentTime = time();
-$weekInSeconds = 7 * 24 * 60 * 60; // 7 nap másodpercben
+$weekInSeconds = 7 * 1 * 1 * 1; // 7 nap másodpercben
 
 if ($result->num_rows > 0) {
     $lastPlayed = $result->fetch_assoc()['date'];
