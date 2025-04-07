@@ -4,7 +4,12 @@ document.addEventListener("DOMContentLoaded", function () {
     let ageDeny = document.getElementById("ageDeny");
     let ageWarningText = document.getElementById("ageWarningText");
 
-  
+    // Ellenőrizzük, hogy a felhasználó már igazolta-e az életkorát
+    if (!localStorage.getItem("ageVerified")) {
+        ageOverlay.style.display = "flex"; // Ha nem, a modal látható marad
+    } else {
+        ageOverlay.style.display = "none"; // Ha igen, az oldal rendesen megjelenik
+    }
 
     // Ha az "Igen" gombra kattint
     ageConfirm.addEventListener("click", function () {
