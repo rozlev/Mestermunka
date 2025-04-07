@@ -237,6 +237,6 @@
   <script src="bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
   <script src="java.js"></script>
   <script src="spony.js"></script>
-  <script src="age.js"></script>
+  <script src="koros.js"></script>
 </body> 
 </html>
