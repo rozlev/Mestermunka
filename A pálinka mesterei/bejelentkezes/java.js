@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const errorMessageDiv = document.getElementById("errorMessage");
 
     form.addEventListener("submit", function (event) {
-        event.preventDefault(); // Megakadályozza az oldal újratöltését
+        event.preventDefault(); 
 
         const formData = new FormData(form);
 

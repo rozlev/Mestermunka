@@ -4,25 +4,22 @@ document.addEventListener("DOMContentLoaded", function () {
     let ageDeny = document.getElementById("ageDeny");
     let ageWarningText = document.getElementById("ageWarningText");
 
-    // Ellenőrizzük, hogy a felhasználó már igazolta-e az életkorát
+ 
     if (!localStorage.getItem("ageVerified")) {
-        ageOverlay.style.display = "flex"; // Ha nem, a modal látható marad
+        ageOverlay.style.display = "flex"; 
     } else {
-        ageOverlay.style.display = "none"; // Ha igen, az oldal rendesen megjelenik
+        ageOverlay.style.display = "none"; 
     }
 
-    // Ha az "Igen" gombra kattint
     ageConfirm.addEventListener("click", function () {
         localStorage.setItem("ageVerified", "true");
-        ageOverlay.style.display = "none"; // Eltünteti a modalt
+        ageOverlay.style.display = "none"; 
     });
 
-    // Ha a "Nem" gombra kattint
     ageDeny.addEventListener("click", function () {
         ageWarningText.innerText = "Sajnáljuk, de az oldal használatához 18 évesnek kell lenned! Átirányítás 3 másodperc múlva...";
-        ageWarningText.style.display = "block"; // Megjeleníti a figyelmeztető szöveget
+        ageWarningText.style.display = "block"; 
 
-        // DOM frissítése előtt várunk egy kis időt (100ms), hogy biztosan megjelenjen a szöveg
         setTimeout(function () {
             setTimeout(function () {
                 window.location.href = "https://www.google.com";

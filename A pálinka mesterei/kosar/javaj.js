@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // Kupon beváltás kezelése
+  
     applyCouponButton.addEventListener("click", function () {
         couponCode = couponCodeInput.value.trim();
         if (!couponCode) {

@@ -13,7 +13,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const monthDiff = today.getMonth() - birthdate.getMonth();
         const dayDiff = today.getDate() - birthdate.getDate();
 
-        // Ellenőrizzük, hogy a felhasználó elmúlt-e 18 éves
         if (age < 18 || (age === 18 && (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)))) {
             errorBox.textContent = "Csak 18 éven felüliek regisztrálhatnak!";
             errorBox.style.display = "block";
@@ -27,9 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 method: "POST",
                 body: formData
             });
-
             const data = await response.json();
-
             if (data.error) {
                 errorBox.textContent = data.error;
                 errorBox.style.display = "block";

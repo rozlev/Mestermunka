@@ -62,9 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     console.error("Nincs .product-container az oldalon!");
                     return;
                 }
-
                 container.innerHTML = "";
-
                 data.forEach(palinka => {
                     const productDiv = document.createElement("div");
                     productDiv.classList.add("product");
@@ -88,7 +86,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     `;
                     container.appendChild(productDiv);
                 });
-
                 if (isLoggedIn) {
                     document.querySelectorAll(".add-to-cart-btn").forEach(button => {
                         button.addEventListener("click", function () {
