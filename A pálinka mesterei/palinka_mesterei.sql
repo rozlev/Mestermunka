@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Gép: 127.0.0.1
--- Létrehozás ideje: 2025. Már 27. 12:18
--- Kiszolgáló verziója: 10.4.28-MariaDB
--- PHP verzió: 8.2.4
+-- Host: 127.0.0.1
+-- Generation Time: Apr 17, 2025 at 01:04 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,12 +18,12 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Adatbázis: `palinka_mesterei`
+-- Database: `palinka_mesterei`
 --
 
 DELIMITER $$
 --
--- Eljárások
+-- Procedures
 --
 CREATE DEFINER=`root`@`localhost` PROCEDURE `FillKuponok` ()   BEGIN
     DECLARE i INT DEFAULT 0;
@@ -79,7 +79,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `ProcessKuponTorles` ()   BEGIN
 END$$
 
 --
--- Függvények
+-- Functions
 --
 CREATE DEFINER=`root`@`localhost` FUNCTION `GenerateKuponKod` () RETURNS VARCHAR(10) CHARSET utf8mb4 COLLATE utf8mb4_general_ci DETERMINISTIC BEGIN
     RETURN CONCAT(
@@ -95,7 +95,7 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `kepek`
+-- Table structure for table `kepek`
 --
 
 CREATE TABLE `kepek` (
@@ -106,7 +106,7 @@ CREATE TABLE `kepek` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `kepek`
+-- Dumping data for table `kepek`
 --
 
 INSERT INTO `kepek` (`KepID`, `PalinkaID`, `KepNev`, `KepURL`) VALUES
@@ -123,7 +123,7 @@ INSERT INTO `kepek` (`KepID`, `PalinkaID`, `KepNev`, `KepURL`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `kosar`
+-- Table structure for table `kosar`
 --
 
 CREATE TABLE `kosar` (
@@ -137,25 +137,7 @@ CREATE TABLE `kosar` (
 -- --------------------------------------------------------
 
 --
--- A nézet helyettes szerkezete `kosar_view`
--- (Lásd alább az aktuális nézetet)
---
-CREATE TABLE `kosar_view` (
-`KosarID` int(11)
-,`UserID` int(11)
-,`Felhasznalo` varchar(255)
-,`PalinkaID` int(11)
-,`Palinka` varchar(255)
-,`Egysegar` decimal(10,2)
-,`Darab` int(11)
-,`Osszeg` decimal(20,2)
-,`Datum` timestamp
-);
-
--- --------------------------------------------------------
-
---
--- Tábla szerkezet ehhez a táblához `kuponok`
+-- Table structure for table `kuponok`
 --
 
 CREATE TABLE `kuponok` (
@@ -166,7 +148,7 @@ CREATE TABLE `kuponok` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `kuponok`
+-- Dumping data for table `kuponok`
 --
 
 INSERT INTO `kuponok` (`KuponID`, `KuponKod`, `LetrehozasDatum`, `UserID`) VALUES
@@ -272,7 +254,7 @@ INSERT INTO `kuponok` (`KuponID`, `KuponKod`, `LetrehozasDatum`, `UserID`) VALUE
 (106, 'ZTU6310', '2025-03-27 11:18:26', NULL);
 
 --
--- Eseményindítók `kuponok`
+-- Triggers `kuponok`
 --
 DELIMITER $$
 CREATE TRIGGER `kupon_torles_elott` BEFORE DELETE ON `kuponok` FOR EACH ROW BEGIN
@@ -285,7 +267,7 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `kupon_torles_naplo`
+-- Table structure for table `kupon_torles_naplo`
 --
 
 CREATE TABLE `kupon_torles_naplo` (
@@ -297,7 +279,7 @@ CREATE TABLE `kupon_torles_naplo` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `kupon_torles_naplo`
+-- Dumping data for table `kupon_torles_naplo`
 --
 
 INSERT INTO `kupon_torles_naplo` (`TorlesID`, `ToroltKuponID`, `ToroltKuponKod`, `Feldolgozva`, `TorlesDatum`) VALUES
@@ -311,7 +293,7 @@ INSERT INTO `kupon_torles_naplo` (`TorlesID`, `ToroltKuponID`, `ToroltKuponKod`,
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `palinka`
+-- Table structure for table `palinka`
 --
 
 CREATE TABLE `palinka` (
@@ -324,12 +306,12 @@ CREATE TABLE `palinka` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `palinka`
+-- Dumping data for table `palinka`
 --
 
 INSERT INTO `palinka` (`PalinkaID`, `Nev`, `AlkoholTartalom`, `Ar`, `Kategoria`, `DB_szam`) VALUES
 (1, 'Málna Pálinka', 44.00, 5000.00, 'Gyümölcs', 31),
-(2, 'Eper Pálinka', 40.00, 7300.00, 'Gyümölcs', 40),
+(2, 'Eper Pálinka', 40.00, 7300.00, 'Gyümölcs', 39),
 (3, 'Füge Pálinka', 46.00, 9400.00, 'Gyümölcs', 77),
 (4, 'Cseresznye Pálinka', 38.00, 5000.00, 'Gyümölcs', 98),
 (6, 'Kajszi Pálinka', 49.00, 6600.00, 'Gyümölcs', 92),
@@ -341,8 +323,8 @@ INSERT INTO `palinka` (`PalinkaID`, `Nev`, `AlkoholTartalom`, `Ar`, `Kategoria`,
 -- --------------------------------------------------------
 
 --
--- A nézet helyettes szerkezete `ranking`
--- (Lásd alább az aktuális nézetet)
+-- Stand-in structure for view `ranking`
+-- (See below for the actual view)
 --
 CREATE TABLE `ranking` (
 `player_id` int(11)
@@ -354,7 +336,7 @@ CREATE TABLE `ranking` (
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `rendeles`
+-- Table structure for table `rendeles`
 --
 
 CREATE TABLE `rendeles` (
@@ -368,7 +350,7 @@ CREATE TABLE `rendeles` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `rendeles`
+-- Dumping data for table `rendeles`
 --
 
 INSERT INTO `rendeles` (`RendelesID`, `UserID`, `PalinkaID`, `Darab`, `ArTotal`, `RendelesDatum`, `RendelesCsoportID`) VALUES
@@ -390,12 +372,13 @@ INSERT INTO `rendeles` (`RendelesID`, `UserID`, `PalinkaID`, `Darab`, `ArTotal`,
 (19, 10, 1, 1, 5000.00, '2025-03-20', 'ORDER_67dbed432b61e'),
 (20, 9, 1, 1, 5000.00, '2025-03-20', 'ORDER_67dbf2938d248'),
 (21, 9, 2, 1, 7300.00, '2025-03-20', 'ORDER_67dbf2938d248'),
-(22, 10, 2, 1, 7300.00, '2025-03-27', 'ORDER_67e533e3790da');
+(22, 10, 2, 1, 7300.00, '2025-03-27', 'ORDER_67e533e3790da'),
+(23, 9, 2, 1, 7300.00, '2025-04-17', 'ORDER_6800df8be43be');
 
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `scores`
+-- Table structure for table `scores`
 --
 
 CREATE TABLE `scores` (
@@ -406,7 +389,7 @@ CREATE TABLE `scores` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `scores`
+-- Dumping data for table `scores`
 --
 
 INSERT INTO `scores` (`score_id`, `player_id`, `points`, `date`) VALUES
@@ -420,7 +403,7 @@ INSERT INTO `scores` (`score_id`, `player_id`, `points`, `date`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `user`
+-- Table structure for table `user`
 --
 
 CREATE TABLE `user` (
@@ -434,7 +417,7 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
 --
--- A tábla adatainak kiíratása `user`
+-- Dumping data for table `user`
 --
 
 INSERT INTO `user` (`UserID`, `Nev`, `Email`, `Jelszo`, `RegisztracioDatum`, `Eletkor`, `Szerepkor`) VALUES
@@ -449,34 +432,25 @@ INSERT INTO `user` (`UserID`, `Nev`, `Email`, `Jelszo`, `RegisztracioDatum`, `El
 -- --------------------------------------------------------
 
 --
--- Nézet szerkezete `kosar_view`
---
-DROP TABLE IF EXISTS `kosar_view`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `kosar_view`  AS SELECT `k`.`KosarID` AS `KosarID`, `k`.`UserID` AS `UserID`, `u`.`Nev` AS `Felhasznalo`, `k`.`PalinkaID` AS `PalinkaID`, `p`.`Nev` AS `Palinka`, `p`.`Ar` AS `Egysegar`, `k`.`Darab` AS `Darab`, `p`.`Ar`* `k`.`Darab` AS `Osszeg`, `k`.`Datum` AS `Datum` FROM ((`kosar` `k` join `user` `u` on(`k`.`UserID` = `u`.`UserID`)) join `palinka` `p` on(`k`.`PalinkaID` = `p`.`PalinkaID`)) ;
-
--- --------------------------------------------------------
-
---
--- Nézet szerkezete `ranking`
+-- Structure for view `ranking`
 --
 DROP TABLE IF EXISTS `ranking`;
 
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `ranking`  AS SELECT `u`.`UserID` AS `player_id`, `u`.`Nev` AS `username`, coalesce(sum(`s`.`points`),0) AS `total_score`, rank() over ( order by sum(`s`.`points`) desc) AS `rank_position` FROM (`user` `u` left join `scores` `s` on(`u`.`UserID` = `s`.`player_id`)) GROUP BY `u`.`UserID`, `u`.`Nev` ;
 
 --
--- Indexek a kiírt táblákhoz
+-- Indexes for dumped tables
 --
 
 --
--- A tábla indexei `kepek`
+-- Indexes for table `kepek`
 --
 ALTER TABLE `kepek`
   ADD PRIMARY KEY (`KepID`),
   ADD KEY `kepek_palinka_fk` (`PalinkaID`);
 
 --
--- A tábla indexei `kosar`
+-- Indexes for table `kosar`
 --
 ALTER TABLE `kosar`
   ADD PRIMARY KEY (`KosarID`),
@@ -484,7 +458,7 @@ ALTER TABLE `kosar`
   ADD KEY `PalinkaID` (`PalinkaID`);
 
 --
--- A tábla indexei `kuponok`
+-- Indexes for table `kuponok`
 --
 ALTER TABLE `kuponok`
   ADD PRIMARY KEY (`KuponID`),
@@ -492,19 +466,19 @@ ALTER TABLE `kuponok`
   ADD KEY `UserID` (`UserID`);
 
 --
--- A tábla indexei `kupon_torles_naplo`
+-- Indexes for table `kupon_torles_naplo`
 --
 ALTER TABLE `kupon_torles_naplo`
   ADD PRIMARY KEY (`TorlesID`);
 
 --
--- A tábla indexei `palinka`
+-- Indexes for table `palinka`
 --
 ALTER TABLE `palinka`
   ADD PRIMARY KEY (`PalinkaID`);
 
 --
--- A tábla indexei `rendeles`
+-- Indexes for table `rendeles`
 --
 ALTER TABLE `rendeles`
   ADD PRIMARY KEY (`RendelesID`),
@@ -512,110 +486,110 @@ ALTER TABLE `rendeles`
   ADD KEY `PalinkaID` (`PalinkaID`);
 
 --
--- A tábla indexei `scores`
+-- Indexes for table `scores`
 --
 ALTER TABLE `scores`
   ADD PRIMARY KEY (`score_id`),
   ADD KEY `player_id` (`player_id`);
 
 --
--- A tábla indexei `user`
+-- Indexes for table `user`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`UserID`),
   ADD UNIQUE KEY `Email` (`Email`);
 
 --
--- A kiírt táblák AUTO_INCREMENT értéke
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT a táblához `kepek`
+-- AUTO_INCREMENT for table `kepek`
 --
 ALTER TABLE `kepek`
   MODIFY `KepID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
--- AUTO_INCREMENT a táblához `kosar`
+-- AUTO_INCREMENT for table `kosar`
 --
 ALTER TABLE `kosar`
   MODIFY `KosarID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT a táblához `kuponok`
+-- AUTO_INCREMENT for table `kuponok`
 --
 ALTER TABLE `kuponok`
   MODIFY `KuponID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=107;
 
 --
--- AUTO_INCREMENT a táblához `kupon_torles_naplo`
+-- AUTO_INCREMENT for table `kupon_torles_naplo`
 --
 ALTER TABLE `kupon_torles_naplo`
   MODIFY `TorlesID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT a táblához `palinka`
+-- AUTO_INCREMENT for table `palinka`
 --
 ALTER TABLE `palinka`
   MODIFY `PalinkaID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
--- AUTO_INCREMENT a táblához `rendeles`
+-- AUTO_INCREMENT for table `rendeles`
 --
 ALTER TABLE `rendeles`
-  MODIFY `RendelesID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `RendelesID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
--- AUTO_INCREMENT a táblához `scores`
+-- AUTO_INCREMENT for table `scores`
 --
 ALTER TABLE `scores`
   MODIFY `score_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT a táblához `user`
+-- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
   MODIFY `UserID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
--- Megkötések a kiírt táblákhoz
+-- Constraints for dumped tables
 --
 
 --
--- Megkötések a táblához `kepek`
+-- Constraints for table `kepek`
 --
 ALTER TABLE `kepek`
   ADD CONSTRAINT `kepek_palinka_fk` FOREIGN KEY (`PalinkaID`) REFERENCES `palinka` (`PalinkaID`);
 
 --
--- Megkötések a táblához `kosar`
+-- Constraints for table `kosar`
 --
 ALTER TABLE `kosar`
   ADD CONSTRAINT `kosar_ibfk_1` FOREIGN KEY (`UserID`) REFERENCES `user` (`UserID`) ON DELETE CASCADE,
   ADD CONSTRAINT `kosar_ibfk_2` FOREIGN KEY (`PalinkaID`) REFERENCES `palinka` (`PalinkaID`) ON DELETE CASCADE;
 
 --
--- Megkötések a táblához `kuponok`
+-- Constraints for table `kuponok`
 --
 ALTER TABLE `kuponok`
   ADD CONSTRAINT `kuponok_ibfk_1` FOREIGN KEY (`UserID`) REFERENCES `user` (`UserID`) ON DELETE SET NULL;
 
 --
--- Megkötések a táblához `rendeles`
+-- Constraints for table `rendeles`
 --
 ALTER TABLE `rendeles`
   ADD CONSTRAINT `rendeles_ibfk_1` FOREIGN KEY (`UserID`) REFERENCES `user` (`UserID`),
   ADD CONSTRAINT `rendeles_ibfk_2` FOREIGN KEY (`PalinkaID`) REFERENCES `palinka` (`PalinkaID`);
 
 --
--- Megkötések a táblához `scores`
+-- Constraints for table `scores`
 --
 ALTER TABLE `scores`
   ADD CONSTRAINT `scores_ibfk_1` FOREIGN KEY (`player_id`) REFERENCES `user` (`UserID`) ON DELETE CASCADE;
 
 DELIMITER $$
 --
--- Események
+-- Events
 --
 CREATE DEFINER=`root`@`localhost` EVENT `CheckKuponTorles` ON SCHEDULE EVERY 1 SECOND STARTS '2025-03-24 12:59:21' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN
     CALL `ProcessKuponTorles`();
